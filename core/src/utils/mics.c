@@ -52,6 +52,9 @@ mics_t * mics_construct(const char * hardware) {
     if (strcmp(hardware, "minidsp_uma") == 0) {
         obj = mics_minidsp_uma();
     }
+    if (strcmp(hardware, "introlab_circular") == 0) {
+        obj = mics_introlab_circular();
+    }
 
     return obj;
 
@@ -94,6 +97,22 @@ static mics_t * mics_minidsp_uma(void) {
     obj->mics[4] = mic_cst((xyz_t) { .x = +0.000, .y = -0.043, .z = +0.000 }, (xyz_t) { .x = +0.000, .y = +0.000, .z = +1.000 }, "cardioid");
     obj->mics[5] = mic_cst((xyz_t) { .x = -0.037, .y = -0.021, .z = +0.000 }, (xyz_t) { .x = +0.000, .y = +0.000, .z = +1.000 }, "cardioid");
     obj->mics[6] = mic_cst((xyz_t) { .x = -0.037, .y = +0.021, .z = +0.000 }, (xyz_t) { .x = +0.000, .y = +0.000, .z = +1.000 }, "cardioid");
+
+    return obj;
+
+}
+
+static mics_t * mics_introlab_circular(void) {
+
+    mics_t * obj = (mics_t *) malloc(sizeof(mics_t));
+
+    obj->num_mics = 4;
+    obj->mics = (mic_t *) malloc(sizeof(mic_t) * obj->num_mics);
+
+    obj->mics[0] = mic_cst((xyz_t) { .x = +0.088, .y = +0.000, .z = +0.000 }, (xyz_t) { .x = +0.000, .y = +0.000, .z = +1.000 }, "cardioid");
+    obj->mics[1] = mic_cst((xyz_t) { .x = +0.000, .y = +0.000, .z = +0.000 }, (xyz_t) { .x = +0.000, .y = +0.000, .z = +1.000 }, "cardioid");
+    obj->mics[2] = mic_cst((xyz_t) { .x = +0.000, .y = +0.000, .z = +0.000 }, (xyz_t) { .x = +0.000, .y = +0.000, .z = +1.000 }, "cardioid");
+    obj->mics[3] = mic_cst((xyz_t) { .x = +0.000, .y = +0.000, .z = +0.000 }, (xyz_t) { .x = +0.000, .y = +0.000, .z = +1.000 }, "cardioid");
 
     return obj;
 

@@ -113,4 +113,7 @@ target_link_libraries(demo_mvdr odas2)
 add_executable(demo_enhance demo/demo_enhance.c)
 target_link_libraries(demo_enhance odas2)
 
+add_executable(example_ssl examples/example_ssl.c)
+target_link_libraries(example_ssl odas2)
+
 install(TARGETS odas2 DESTINATION lib)

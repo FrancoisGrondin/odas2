@@ -44,6 +44,7 @@ int main(int argc, char * argv[]) {
     while (wavin_read(wavin, hops) == 0) {
 
         stft_process(stft, hops, freqs);
+        msgout_write_hops(msgout, hops);
         msgout_write_freqs(msgout, freqs);
         
     }
