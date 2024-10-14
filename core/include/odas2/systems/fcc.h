@@ -31,10 +31,4 @@ void fcc_destroy(fcc_t * obj);
 
 int fcc_process(fcc_t * obj, const covs_t * covs, tdoas_t * tdoas);
 
-static float * fcc_taus(void);
-
-static float ** fcc_bases(void);
-
-static cplx_t ** fcc_dicts(void);
-
 #endif // __FCC_H

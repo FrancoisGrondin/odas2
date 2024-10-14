@@ -6,8 +6,6 @@ int test_delaysum(void) {
 
     {
 
-        const float sample_rate = 16000.0f;
-        const float sound_speed = 343.0f;
         const unsigned int num_channels = 4;
         const unsigned int num_pairs = 6;
         const unsigned int num_sources = 3;

@@ -8,7 +8,6 @@ int test_mvdr(void) {
 
         const unsigned int num_sources = 1;
         const unsigned int num_channels = 4;
-        const unsigned int num_pairs = 6;
         const unsigned int num_bins = 2;
 
         const cplx_t cov_xcorr0[2] = { { .real =  -8.0f, .imag =  +4.0f },

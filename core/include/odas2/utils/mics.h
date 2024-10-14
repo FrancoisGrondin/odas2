@@ -28,10 +28,4 @@ mics_t * mics_construct(const char * hardware);
 
 void mics_destroy(mics_t * obj);
 
-static mics_t * mics_respeaker_usb(void);
-
-static mics_t * mics_minidsp_uma(void);
-
-static mics_t * mics_introlab_circular(void);
-
 #endif // __MICS_H

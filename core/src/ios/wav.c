@@ -95,7 +95,7 @@ wavin_t * wavin_construct(const char * file_name, const unsigned int num_shifts,
     obj->file_pointer = fopen(file_name, "rb");
 
     wavhdr_t hdr;
-    size_t rtn = fread(&hdr, sizeof(wavhdr_t), 1, obj->file_pointer);
+    fread(&hdr, sizeof(wavhdr_t), 1, obj->file_pointer);
 
     if (wavhdr_cmp(hdr, wavhdr_cst(num_channels, sample_rate, 16)) == -1) {
         printf("Wave file does not match format requirements\n");

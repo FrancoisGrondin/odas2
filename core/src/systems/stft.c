@@ -4,6 +4,9 @@
 #include <stdlib.h>
 #include <string.h>
 
+static float * window_hann(const unsigned int num_samples);
+static float * window_sine(const unsigned int num_samples);
+
 stft_t * stft_construct(const unsigned int num_channels, const unsigned int num_samples, const unsigned int num_shifts, const unsigned int num_bins, const char * window) {
 
     stft_t * obj = (stft_t *) malloc(sizeof(stft_t));

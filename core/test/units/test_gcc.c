@@ -91,7 +91,6 @@ int test_gcc(void) {
     {
 
         const float eps_coarse = 0.2f;
-        const float eps_fine = 0.025f;
 
         const unsigned int num_channels = 3;
         const unsigned int num_pairs = 3;
@@ -131,7 +130,6 @@ int test_gcc(void) {
     {
 
         const float eps_coarse = 0.75f;
-        const float eps_fine = 0.025f;
 
         const unsigned int num_channels = 3;
         const unsigned int num_pairs = 3;

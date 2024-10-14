@@ -14,7 +14,6 @@ int test_ssl(void) {
         const unsigned int num_sources = 4;
         const unsigned int num_directions = 2;
         const unsigned int num_channels = 4;
-        const unsigned int num_pairs = 6;
 
         ssl_t * ssl = ssl_construct(mics, points, sample_rate, sound_speed, num_sources, num_directions);
         steering_t * steering = steering_construct(mics, sample_rate, sound_speed, num_sources);

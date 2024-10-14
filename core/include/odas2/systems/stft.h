@@ -51,8 +51,4 @@ void istft_destroy(istft_t * obj);
 
 int istft_process(istft_t * obj, const freqs_t * freqs, hops_t * hops);
 
-static float * window_hann(const unsigned int num_samples);
-
-static float * window_sine(const unsigned int num_samples);
-
 #endif // __STFT_H

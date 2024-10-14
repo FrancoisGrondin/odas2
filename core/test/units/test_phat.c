@@ -7,7 +7,6 @@ int test_phat(void) {
     {
 
         const unsigned int num_channels = 3;
-        const unsigned int num_pairs = 3;
         const unsigned int num_bins = 4;
 
         cplx_t cov_xcorr0[4] = { { .real = +2.0f, .imag = +1.0f },

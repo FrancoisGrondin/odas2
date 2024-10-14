@@ -70,10 +70,8 @@ int test_linalg(void) {
 
         unsigned int num_rows1 = 3;
         unsigned int num_cols1 = 4;
-        unsigned int num_elements1 = num_rows1 * num_cols1;
         unsigned int num_rows2 = 4;
         unsigned int num_cols2 = 2;
-        unsigned int num_elements2 = num_rows2 * num_cols2;
         unsigned int num_elements = num_rows1 * num_cols2;
 
         float elements1[12] = { +1.0f, +2.0f, +3.0f, +4.0f, +5.0f, +6.0f, +7.0f, +8.0f, +9.0f, +10.0f, +11.0f, +12.0f };
@@ -191,7 +189,6 @@ int test_linalg(void) {
 
         unsigned int num_rows = 4;
         unsigned int num_cols = 2;
-        unsigned int num_elements = num_rows * num_cols;
 
         float elements[8] = { +1.0f, +2.0f, +3.0f, +4.0f, +5.0f, +6.0f, +7.0f, +8.0f };
         float rtn;
@@ -313,10 +310,8 @@ int test_linalg(void) {
 
         unsigned int num_rows1 = 3;
         unsigned int num_cols1 = 4;
-        unsigned int num_elements1 = num_rows1 * num_cols1;
         unsigned int num_rows2 = 4;
         unsigned int num_cols2 = 2;
-        unsigned int num_elements2 = num_rows2 * num_cols2;
         unsigned int num_elements = num_rows1 * num_cols2;
 
         cplx_t elements1[12] = { { .real = +1.0f, .imag = +2.0f }, 
@@ -503,7 +498,6 @@ int test_linalg(void) {
 
         unsigned int num_rows = 4;
         unsigned int num_cols = 2;
-        unsigned int num_elements = num_rows * num_cols;
 
         cplx_t elements[8] = { { .real = +1.0f, .imag = +2.0f }, 
                                { .real = +3.0f, .imag = +4.0f }, 
@@ -672,8 +666,6 @@ int test_linalg(void) {
     {
 
         unsigned int num_rowscols = 4;
-        unsigned int num_diag_elements = 4;
-        unsigned int num_utri_elements = 6;
 
         float diag[4] = { +2.0f, +4.0f, +3.0f, +4.0f };
         float utri[6] = { +1.0f, +2.0f, +3.0f, +4.0f, +5.0f, +6.0f };
@@ -846,8 +838,6 @@ int test_linalg(void) {
     {
 
         unsigned int num_rowscols = 4;
-        unsigned int num_diag_elements = 4;
-        unsigned int num_utri_elements = 6;
         unsigned int num_elements = 16;
 
         float diag[4] = { +2.0f, +4.0f, +3.0f, +4.0f };
@@ -877,7 +867,6 @@ int test_linalg(void) {
         unsigned int num_rowscols = 4;
         unsigned int num_diag_elements = 4;
         unsigned int num_utri_elements = 6;
-        unsigned int num_elements = 16;
 
         float elements[16] = { +2.0f, +1.0f, +2.0f, +3.0f,
                                +1.0f, +4.0f, +4.0f, +5.0f,
@@ -909,8 +898,6 @@ int test_linalg(void) {
     {
 
         unsigned int num_rowscols = 4;
-        unsigned int num_diag_elements = 4;
-        unsigned int num_utri_elements = 6;
         unsigned int num_elements = 16;
 
         float diag[4] = { +2.0f, +4.0f, +3.0f, +4.0f };
@@ -1011,8 +998,6 @@ int test_linalg(void) {
     {
 
         unsigned int num_rowscols = 4;
-        unsigned int num_diag_elements = 4;
-        unsigned int num_utri_elements = 6;
 
         float diag[4] = { +1.0f, +2.0f, +3.0f, +4.0f };
         cplx_t utri[6] = { { .real = +1.0f, .imag = +2.0f }, 

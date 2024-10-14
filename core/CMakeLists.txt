@@ -11,6 +11,8 @@ include_directories("${PROJECT_SOURCE_DIR}/include")
 
 set(CMAKE_BUILD_TYPE "Release")
 
+set(CMAKE_C_FLAGS ${CMAKE_C_FLAGS} "-march=native -Wall -ffast-math")
+
 set(EXECUTABLE_OUTPUT_PATH "${PROJECT_SOURCE_DIR}/bin")
 set(LIBRARY_OUTPUT_PATH "${PROJECT_SOURCE_DIR}/lib")
 
