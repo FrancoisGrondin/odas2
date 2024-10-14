@@ -104,7 +104,7 @@ int msgout_write_doas(msgout_t * obj, const doas_t * doas) {
     fprintf(obj->file_pointer, "\"pots\":[");
 
     for (unsigned int index_direction = 0; index_direction < doas->num_directions; index_direction++) {
-        fprintf(obj->file_pointer, "{x: %+1.2f, y: %+1.2f, z: %+1.2f, energy: %+1.2f}", 
+        fprintf(obj->file_pointer, "{\"x\": %1.2f, \"y\": %1.2f, \"z\": %1.2f, \"energy\": %1.2f}", 
                     doas->pots[index_direction].direction.x,
                     doas->pots[index_direction].direction.y,
                     doas->pots[index_direction].direction.z,
