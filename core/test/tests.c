@@ -7,6 +7,7 @@
 #include "units/test_gcc.h"
 #include "units/test_linalg.h"
 #include "units/test_mics.h"
+#include "units/test_mixer.h"
 #include "units/test_mvdr.h"
 #include "units/test_points.h"
 #include "units/test_phat.h"
@@ -31,6 +32,7 @@ int main(int argc, char * argv[]) {
     error += test("Testing beamformer system........ ", test_beamformer());
     error += test("Testing delaysum system.......... ", test_delaysum());
     error += test("Testing gcc system............... ", test_gcc());
+    error += test("Testing mixer system............. ", test_mixer());
     error += test("Testing mvdr system.............. ", test_mvdr());
     error += test("Testing phat system.............. ", test_phat());
     error += test("Testing scm system............... ", test_scm());

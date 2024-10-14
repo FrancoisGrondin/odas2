@@ -44,6 +44,7 @@ set(SRC
     src/systems/enhancement.c
     src/systems/fcc.c
     src/systems/gcc.c
+    src/systems/mixer.c
     src/systems/mvdr.c
     src/systems/phat.c
     src/systems/postfilter.c
@@ -79,6 +80,7 @@ add_executable(tests
     test/units/test_gcc.c
     test/units/test_linalg.c
     test/units/test_mics.c
+    test/units/test_mixer.c
     test/units/test_mvdr.c
     test/units/test_phat.c
     test/units/test_points.c
@@ -114,6 +116,9 @@ target_link_libraries(demo_mvdr odas2)
 
 add_executable(demo_enhance demo/demo_enhance.c)
 target_link_libraries(demo_enhance odas2)
+
+add_executable(demo_mix demo/demo_mix.c)
+target_link_libraries(demo_mix odas2)
 
 add_executable(example_ssl examples/example_ssl.c)
 target_link_libraries(example_ssl odas2)
