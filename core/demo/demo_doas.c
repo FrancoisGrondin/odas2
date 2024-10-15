@@ -19,6 +19,15 @@
 
 int main(int argc, char * argv[]) {
 
+    //                                                                                
+    //                             Ms (all 1's)
+    //                                  |
+    //                                  *
+    // +----+   xs   +------+   Xs   +-----+   XXs   +------+   XXps   +---------+  tdoas   +-----+  doas   +-----+
+    // | In | -----* | STFT | -----* | SCM | ------* | PHAT | -------* | GCC/FCC | -------* | SSL | ------* | Out |
+    // +----+        +------+        +-----+         +------+          +---------+          +-----+         +-----+
+    //
+
     //
     // Parameters
     //
@@ -35,17 +44,6 @@ int main(int argc, char * argv[]) {
     const char          method[]        = "gcc";
     const char          micarray[]      = "respeaker_usb";
     const char          geometry[]      = "halfsphere";
-
-    //
-    // Pipeline
-    //                                                                                
-    //                             Ms (all 1's)
-    //                                  |
-    //                                  *
-    // +----+   xs   +------+   Xs   +-----+   XXs   +------+   XXps   +---------+  tdoas   +-----+  doas   +-----+
-    // | In | -----* | STFT | -----* | SCM | ------* | PHAT | -------* | GCC/FCC | -------* | SSL | ------* | Out |
-    // +----+        +------+        +-----+         +------+          +---------+          +-----+         +-----+
-    //
 
     //
     // Allocate memory

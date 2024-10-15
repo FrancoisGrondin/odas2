@@ -7,6 +7,12 @@
 int main(int argc, char * argv[]) {
 
     //
+    // +----+   xs   +------+   Xs   +-----+
+    // | In | -----* | STFT | -----* | Out |
+    // +----+        +------+        +-----+
+    //
+
+    //
     // Parameters
     //
 
@@ -15,14 +21,6 @@ int main(int argc, char * argv[]) {
     const unsigned int  num_samples         = 512;
     const unsigned int  num_bins            = 257;
     const unsigned int  sample_rate         = 16000;
-
-    //
-    // Processing
-    //
-    // +----+   xs   +------+   Xs   +-----+
-    // | In | -----* | STFT | -----* | Out |
-    // +----+        +------+        +-----+
-    //
 
     //
     // Allocate memory

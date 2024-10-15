@@ -16,6 +16,15 @@
 int main(int argc, char * argv[]) {
 
     //
+    //                             Ms (all 1's)
+    //                                  |
+    //                                  * 
+    // +----+   xs   +------+   Xs   +-----+   XXs   +------+   XXps   +---------+  tdoas   +-----+
+    // | In | -----* | STFT | -----* | SCM | ------* | PHAT | -------* | GCC/FCC | -------* | Out |
+    // +----+        +------+        +-----+         +------+          +---------+          +-----+
+    //
+
+    //
     // Parameters
     //
 
@@ -27,17 +36,6 @@ int main(int argc, char * argv[]) {
     const float         alpha           = 0.5f;
     const unsigned int  num_sources     = 2;
     const char          method[]        = "gcc";
-
-    //
-    // Pipeline
-    //
-    //                             Ms (all 1's)
-    //                                  |
-    //                                  * 
-    // +----+   xs   +------+   Xs   +-----+   XXs   +------+   XXps   +---------+  tdoas   +-----+
-    // | In | -----* | STFT | -----* | SCM | ------* | PHAT | -------* | GCC/FCC | -------* | Out |
-    // +----+        +------+        +-----+         +------+          +---------+          +-----+
-    //
 
     //
     // Allocate memory

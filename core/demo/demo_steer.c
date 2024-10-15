@@ -12,6 +12,23 @@
 
 int main(int argc, char * argv[]) {
 
+    //                                                                                
+    // +----+   xs   +------+   Xs   +------------+   Ys   +-------+   ys   +-----+
+    // | In | -----* | STFT | -----* | Beamformer | -----* | iSTFT | -----* | Out |
+    // +----+        +------+        +------------+        +-------+        +-----+
+    //                                      *
+    //                                      |
+    //                                      +---+ Ws
+    //                                          |
+    //         doas  +----------+  tdoas   +----------+
+    // targets ----* | Steering | -------* | DelaySum |
+    //               +----------+          +----------+
+    //
+
+    //
+    // Parameters
+    //
+
     const unsigned int  num_channels    = 4;
     const unsigned int  num_shifts      = 128;
     const unsigned int  num_samples     = 512;
@@ -21,6 +38,10 @@ int main(int argc, char * argv[]) {
     const float         sound_speed     = 343.0f;
     const char          micarray[]      = "respeaker_usb";
     const xyz_t         targets[]       = { { .x = -0.704f, .y = -0.704f, .z = -0.088f } };
+
+    //
+    // Allocate memory
+    //
 
     mics_t * mics = mics_construct(micarray);
 
@@ -42,6 +63,10 @@ int main(int argc, char * argv[]) {
 
     wavout_t * wavout = wavout_construct("/dev/stdout", num_shifts, num_sources, sample_rate);
 
+    //
+    // Process
+    //
+
     while (wavin_read(wavin, hops_in) == 0) {
         
         doas_target(doas, targets);
@@ -54,6 +79,10 @@ int main(int argc, char * argv[]) {
         wavout_write(wavout, hops_out);
 
     }
+
+    //
+    // Free memory
+    //
 
     mics_destroy(mics);
 

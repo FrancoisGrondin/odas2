@@ -5,6 +5,12 @@
 int main(int argc, char * argv[]) {
 
     //
+    // +----+   xs   +-------+   ys   +-----+
+    // | In | -----* | Mixer | -----* | Out |
+    // +----+        +-------+        +-----+
+    //
+
+    //
     // Parameters
     //
 
@@ -13,14 +19,6 @@ int main(int argc, char * argv[]) {
     const unsigned int  num_shifts          = 128;
     const unsigned int  sample_rate         = 16000;
     const char          channels[]          = "0,1";
-
-    //
-    // Pipeline
-    //
-    // +----+   xs   +-------+   ys   +-----+
-    // | In | -----* | Mixer | -----* | Out |
-    // +----+        +-------+        +-----+
-    //
 
     //
     // Allocate memory

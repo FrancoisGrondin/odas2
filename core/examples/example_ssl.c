@@ -18,6 +18,15 @@
 
 int main(int argc, char * argv[]) {
 
+    //                                                                                
+    //                             Ms (all 1's)
+    //                                  |
+    //                                  *
+    // +----+   xs   +------+   Xs   +-----+   XXs   +------+   XXps   +-----+  tdoas   +-----+  doas   +-----+
+    // | In | -----* | STFT | -----* | SCM | ------* | PHAT | -------* | GCC | -------* | SSL | ------* | Out |
+    // +----+        +------+        +-----+         +------+          +-----+          +-----+         +-----+
+    //
+
     //
     // Parameters
     //
@@ -33,17 +42,6 @@ int main(int argc, char * argv[]) {
     const unsigned int  num_directions  = 1;
     const char          micarray[]      = "introlab_circular";
     const char          geometry[]      = "halfsphere";
-
-    //
-    // Pipeline
-    //                                                                                
-    //                             Ms (all 1's)
-    //                                  |
-    //                                  *
-    // +----+   xs   +------+   Xs   +-----+   XXs   +------+   XXps   +-----+  tdoas   +-----+  doas   +-----+
-    // | In | -----* | STFT | -----* | SCM | ------* | PHAT | -------* | GCC | -------* | SSL | ------* | Out |
-    // +----+        +------+        +-----+         +------+          +-----+          +-----+         +-----+
-    //
 
     //
     // Allocate memory

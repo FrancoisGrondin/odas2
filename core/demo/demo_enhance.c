@@ -9,11 +9,28 @@
 
 int main(int argc, char * argv[]) {
 
+    //                                                                                
+    // +----+   xs   +------+   Xs   +-------------+   Ms   +------------+   Ys   +-------+   ys   +-----+
+    // | In | -----* | STFT | -----* | Enhancement | -----* | Postfilter | -----* | iSTFT | -----* | Out |
+    // +----+        +------+   |    +-------------+        +------------+        +-------+        +-----+
+    //                          |                                  *
+    //                          |                                  |
+    //                          +----------------------------------+
+    // 
+
+    //
+    // Parameters
+    //
+
     const unsigned int  num_channels        = 4;
     const unsigned int  num_shifts          = 128;
     const unsigned int  num_samples         = 512;
     const unsigned int  num_bins            = 257;    
     const unsigned int  sample_rate         = 16000;
+
+    //
+    // Allocate memory
+    //
 
     wavin_t * wavin = wavin_construct("/dev/stdin", num_shifts, num_channels, sample_rate);
     wavout_t * wavout = wavout_construct("/dev/stdout", num_shifts, num_channels, sample_rate);
@@ -29,6 +46,10 @@ int main(int argc, char * argv[]) {
     postfilter_t * postfilter = postfilter_construct(num_channels, num_bins);
     istft_t * istft = istft_construct(num_channels, num_samples, num_shifts, num_bins, "hann");
     
+    //
+    // Process
+    //
+
     while (wavin_read(wavin, hops_in) == 0) {
 
         stft_process(stft, hops_in, freqs_in);
@@ -38,6 +59,10 @@ int main(int argc, char * argv[]) {
         wavout_write(wavout, hops_out);
         
     }
+
+    //
+    // Free memory
+    //
 
     wavin_destroy(wavin);
     wavout_destroy(wavout);

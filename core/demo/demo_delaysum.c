@@ -20,21 +20,6 @@
 int main(int argc, char * argv[]) {
 
     //
-    // Parameters
-    //
-
-    const unsigned int  num_channels    = 4;
-    const unsigned int  num_shifts      = 128;
-    const unsigned int  num_samples     = 512;
-    const unsigned int  num_bins        = 257;
-    const unsigned int  sample_rate     = 16000;
-    const float         alpha           = 0.1;
-    const unsigned int  num_sources     = 1;
-    const char          method[]        = "gcc";
-
-    //
-    // Pipeline
-    //
     //                            Ms (all 1's)
     //                                  |
     //                                  * 
@@ -50,6 +35,19 @@ int main(int argc, char * argv[]) {
     //                          +--* | Bfmer | -----* | iSTFT | -----* | Out |
     //                               +-------+        +-------+        +-----+
     //
+
+    //
+    // Parameters
+    //
+
+    const unsigned int  num_channels    = 4;
+    const unsigned int  num_shifts      = 128;
+    const unsigned int  num_samples     = 512;
+    const unsigned int  num_bins        = 257;
+    const unsigned int  sample_rate     = 16000;
+    const float         alpha           = 0.1;
+    const unsigned int  num_sources     = 1;
+    const char          method[]        = "gcc";
     
     //
     // Allocate memory

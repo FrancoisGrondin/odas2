@@ -5,20 +5,18 @@
 int main(int argc, char * argv[]) {
 
     //
+    // +----+   xs   +-----+
+    // | In | -----* | Out |
+    // +----+        +-----+
+    //
+
+    //
     // Parameters
     //
 
     const unsigned int  num_channels        = 4;
     const unsigned int  num_shifts          = 128;
     const unsigned int  sample_rate         = 16000;
-
-    //
-    // Pipeline
-    //
-    // +----+   xs   +-----+
-    // | In | -----* | Out |
-    // +----+        +-----+
-    //
 
     //
     // Allocate memory
