@@ -1,0 +1,22 @@
+#------------------------------------------------------------
+# General configuration options
+#------------------------------------------------------------
+
+# Project-related settings
+PROJECT_NAME 			= "ODAS"
+PROJECT_NUMBER 			= "2.0"
+PROJECT_BRIEF			= "Open embeddeD Audio System"
+OUTPUT_DIRECTORY		= "doc"
+
+# Documentation output
+GENERATE_HTML			= YES
+GENERATE_LATEX			= NO
+
+# Paths
+INPUT					= "../include/odas2"
+FILE_PATTERNS			= *.h
+RECURSIVE				= YES
+
+# Documentation output
+OUTPUT_LANGUAGE			= English
+
