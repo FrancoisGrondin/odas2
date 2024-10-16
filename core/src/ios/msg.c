@@ -133,7 +133,7 @@ int msgout_write_tdoas(msgout_t * obj, const tdoas_t * tdoas) {
     for (unsigned int index_source = 0; index_source < tdoas->num_sources; index_source++) {
         fprintf(obj->file_pointer, "[");
         for (unsigned int index_pair = 0; index_pair < tdoas->num_pairs; index_pair++) {
-            fprintf(obj->file_pointer, "{delay: %+1.2f, amplitude: %+1.2f}", tdoas->taus[index_source][index_pair].delay, tdoas->taus[index_source][index_pair].amplitude);
+            fprintf(obj->file_pointer, "{\"delay\": %1.2f, \"amplitude\": %1.2f}", tdoas->taus[index_source][index_pair].delay, tdoas->taus[index_source][index_pair].amplitude);
             if (index_pair != (tdoas->num_pairs-1)) {
                 fprintf(obj->file_pointer, ",");
             }
