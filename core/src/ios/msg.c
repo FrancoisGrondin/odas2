@@ -45,6 +45,7 @@ int msgout_write_hops(msgout_t * obj, const hops_t * hops) {
 
     fprintf(obj->file_pointer, "]");
     fprintf(obj->file_pointer, "}\n");
+    fflush(obj->file_pointer);
 
     return 0;
 
@@ -75,6 +76,7 @@ int msgout_write_freqs(msgout_t * obj, const freqs_t * freqs) {
 
     fprintf(obj->file_pointer, "]");
     fprintf(obj->file_pointer, "}\n");
+    fflush(obj->file_pointer);
 
     return 0;
 
@@ -116,6 +118,7 @@ int msgout_write_doas(msgout_t * obj, const doas_t * doas) {
 
     fprintf(obj->file_pointer, "]");
     fprintf(obj->file_pointer, "}\n");
+    fflush(obj->file_pointer);
 
     return 0;  
 
@@ -146,6 +149,7 @@ int msgout_write_tdoas(msgout_t * obj, const tdoas_t * tdoas) {
 
     fprintf(obj->file_pointer, "]");
     fprintf(obj->file_pointer, "}\n");
+    fflush(obj->file_pointer);
 
     return 0;    
 
