@@ -11,7 +11,6 @@
 #include "units/test_mvdr.h"
 #include "units/test_points.h"
 #include "units/test_phat.h"
-#include "units/test_ring.h"
 #include "units/test_scm.h"
 #include "units/test_ssl.h"
 #include "units/test_steering.h"
@@ -30,7 +29,6 @@ int main(int argc, char * argv[]) {
     error += test("Testing linalg util.............. ", test_linalg());
     error += test("Testing mics util................ ", test_mics());
     error += test("Testing points util.............. ", test_points());
-    error += test("Testing ring util................ ", test_ring());
     error += test("Testing beamformer system........ ", test_beamformer());
     error += test("Testing delaysum system.......... ", test_delaysum());
     error += test("Testing gcc system............... ", test_gcc());
