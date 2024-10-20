@@ -69,7 +69,6 @@ add_library(odas2 SHARED
 
 target_link_libraries(odas2
     m
-    pthread
 )
 
 add_executable(tests
@@ -123,5 +122,8 @@ target_link_libraries(demo_mix odas2)
 
 add_executable(example_ssl examples/example_ssl.c)
 target_link_libraries(example_ssl odas2)
+
+add_executable(buffer tools/buffer.c)
+target_link_libraries(buffer pthread)
 
 install(TARGETS odas2 DESTINATION lib)
