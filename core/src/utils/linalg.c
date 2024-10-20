@@ -552,7 +552,7 @@ void smat_printf(const smat_t * obj) {
         
         for (unsigned int index_col = 0; index_col < obj->num_rowscols; index_col++) {
 
-            float value;
+            float value = 0.0f;
 
             if (index_row == index_col) {
 
@@ -738,7 +738,7 @@ void hmat_printf(const hmat_t * obj) {
         
         for (unsigned int index_col = 0; index_col < obj->num_rowscols; index_col++) {
 
-            cplx_t value;
+            cplx_t value = cplx_cst(0.0f, 0.0f);
 
             if (index_row == index_col) {
 

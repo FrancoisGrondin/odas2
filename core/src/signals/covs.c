@@ -55,7 +55,7 @@ void covs_fprintf(const covs_t * obj, FILE * fp) {
             
             for (unsigned int index_col = 0; index_col < obj->num_channels; index_col++) {
 
-                cplx_t value;
+                cplx_t value = cplx_cst(0.0f, 0.0f);
 
                 if (index_row == index_col) {
 
