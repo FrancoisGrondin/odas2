@@ -34,6 +34,12 @@ $ make
 $ cat audio/speeches.wav | core/bin/demo_wave | python3 interface/plot.py
 ```
 
+- Visualize the waveforms from 5 sec of recording of an audio file (assuming there is a device accessible at hw:1,0, with 4 channels, at 16000 samples/sec and 16 bits signed samples). Note that the buffer tool is needed in the pipeline here to avoid buffer overflow as the arecord feeds audio in a non-blocking manner.
+
+```
+$ arecord -f S16_LE -r 16000 -c 4 --device "hw:1,0" -d 5| core/bin/buffer | core/bin/demo_wave | python3 interface/plot.py
+```
+
 - Visualize the spectrograms from an audio file:
 
 ```
