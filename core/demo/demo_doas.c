@@ -32,17 +32,17 @@ int main(int argc, char * argv[]) {
     // Parameters
     //
 
-    const unsigned int  num_channels    = 4;
-    const unsigned int  num_shifts      = 128;
-    const unsigned int  num_samples     = 512;
+    const unsigned int  num_channels    = 6;
+    const unsigned int  num_shifts      = 256;
+    const unsigned int  num_samples     = 1024;
     const unsigned int  num_bins        = 257;
-    const unsigned int  sample_rate     = 16000;
+    const unsigned int  sample_rate     = 48000;
     const float         sound_speed     = 343.0f;
     const float         alpha           = 0.5f;
-    const unsigned int  num_sources     = 2;
-    const unsigned int  num_directions  = 2;
+    const unsigned int  num_sources     = 1;
+    const unsigned int  num_directions  = 1;
     const char          method[]        = "gcc";
-    const char          micarray[]      = "respeaker_usb";
+    const char          micarray[]      = "vibeus_circular";
     const char          geometry[]      = "halfsphere";
 
     //
