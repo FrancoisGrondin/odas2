@@ -120,8 +120,11 @@ target_link_libraries(demo_enhance odas2)
 add_executable(demo_mix demo/demo_mix.c)
 target_link_libraries(demo_mix odas2)
 
-add_executable(example_ssl examples/example_ssl.c)
-target_link_libraries(example_ssl odas2)
+add_executable(example_introlab_ssl examples/example_introlab_ssl.c)
+target_link_libraries(example_introlab_ssl odas2)
+
+add_executable(example_vibeus_ssl examples/example_vibeus_ssl.c)
+target_link_libraries(example_vibeus_ssl odas2)
 
 add_executable(buffer tools/buffer.c)
 target_link_libraries(buffer pthread)
