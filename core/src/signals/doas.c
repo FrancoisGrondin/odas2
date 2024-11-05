@@ -28,6 +28,7 @@ void doas_destroy(doas_t * obj) {
 void doas_target(doas_t * obj, const xyz_t * directions) {
 
     for (unsigned int index_direction = 0; index_direction < obj->num_directions; index_direction++) {
+        obj->pots[index_direction].id = 0;
         obj->pots[index_direction].direction = xyz_unit(directions[index_direction]);
         obj->pots[index_direction].energy = 1.0f;
     }
@@ -37,7 +38,7 @@ void doas_target(doas_t * obj, const xyz_t * directions) {
 void doas_fprintf(const doas_t * obj, FILE * fp) {
 
     for (unsigned int index_direction = 0; index_direction < obj->num_directions; index_direction++) {
-        fprintf(fp, "[%02u]: (%+1.3f, %+1.3f, %+1.3f) > %+1.3f\n", index_direction, 
+        fprintf(fp, "[%08u]: (%+1.3f, %+1.3f, %+1.3f) > %+1.3f\n", obj->pots[index_direction].id, 
                                                                    obj->pots[index_direction].direction.x,
                                                                    obj->pots[index_direction].direction.y,
                                                                    obj->pots[index_direction].direction.z,

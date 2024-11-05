@@ -22,10 +22,10 @@ int test_ssl(void) {
         doas_t * doas_dst = doas_construct("doas_dst", num_directions);
         tdoas_t * tdoas = tdoas_construct("tdoas", num_channels, num_sources);
 
-        doas_src->pots[0] = (pot_t) { .direction = (xyz_t) { .x = +1.000, .y = +0.000, .z = +0.000 }, .energy = 0.50 };
-        doas_src->pots[1] = (pot_t) { .direction = (xyz_t) { .x = +0.000, .y = +1.000, .z = +0.000 }, .energy = 0.25 };
-        doas_src->pots[2] = (pot_t) { .direction = (xyz_t) { .x = -0.707, .y = -0.707, .z = +0.000 }, .energy = 0.10 };
-        doas_src->pots[3] = (pot_t) { .direction = (xyz_t) { .x = +0.577, .y = +0.577, .z = +0.577 }, .energy = 0.05 };
+        doas_src->pots[0] = (pot_t) { .id = 0, .direction = (xyz_t) { .x = +1.000, .y = +0.000, .z = +0.000 }, .energy = 0.50 };
+        doas_src->pots[1] = (pot_t) { .id = 0, .direction = (xyz_t) { .x = +0.000, .y = +1.000, .z = +0.000 }, .energy = 0.25 };
+        doas_src->pots[2] = (pot_t) { .id = 0, .direction = (xyz_t) { .x = -0.707, .y = -0.707, .z = +0.000 }, .energy = 0.10 };
+        doas_src->pots[3] = (pot_t) { .id = 0, .direction = (xyz_t) { .x = +0.577, .y = +0.577, .z = +0.577 }, .energy = 0.05 };
 
         steering_process(steering, doas_src, tdoas);
         ssl_process(ssl, tdoas, doas_dst);

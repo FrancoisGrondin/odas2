@@ -1,0 +1,77 @@
+#include "test_sst.h"
+
+int test_sst(void) {
+
+    const float eps = 0.01f;
+
+    {
+
+        const unsigned int num_directions = 4;
+        const unsigned int num_tracks = 3;
+        const float delta_time = 128.0f / 16000.0f;
+        const float energy_threshold = 0.2f;
+
+        doas_t * doas_src = doas_construct("doas_src", num_directions);
+        doas_t * doas_dst = doas_construct("doas_dst", num_tracks);
+
+        sst_t * sst = sst_construct(num_tracks, num_directions, delta_time, energy_threshold);
+
+        pot_t target[4];
+
+        target[0] = (pot_t) { .id = 0, .direction = (xyz_t) { .x = +0.707, .y = +0.707, .z = +0.000 }, .energy = 0.50 };
+        target[1] = (pot_t) { .id = 0, .direction = (xyz_t) { .x = +0.000, .y = +1.000, .z = +0.000 }, .energy = 0.10 };
+        target[2] = (pot_t) { .id = 0, .direction = (xyz_t) { .x = -0.707, .y = -0.707, .z = +0.000 }, .energy = 0.10 };
+        target[3] = (pot_t) { .id = 0, .direction = (xyz_t) { .x = -1.000, .y = +0.000, .z = +0.000 }, .energy = 0.05 };
+
+        pot_t noise[7];
+
+        noise[0] = (pot_t) { .id = 0, .direction = (xyz_t) { .x = +0.001, .y = -0.002, .z = +0.001 }, .energy = +0.01 };
+        noise[1] = (pot_t) { .id = 0, .direction = (xyz_t) { .x = -0.002, .y = +0.001, .z = -0.003 }, .energy = -0.01 };
+        noise[2] = (pot_t) { .id = 0, .direction = (xyz_t) { .x = +0.015, .y = -0.012, .z = +0.004 }, .energy = +0.02 };
+        noise[3] = (pot_t) { .id = 0, .direction = (xyz_t) { .x = -0.012, .y = +0.007, .z = +0.013 }, .energy = +0.01 };
+        noise[4] = (pot_t) { .id = 0, .direction = (xyz_t) { .x = +0.001, .y = -0.012, .z = +0.011 }, .energy = +0.03 };
+        noise[5] = (pot_t) { .id = 0, .direction = (xyz_t) { .x = +0.020, .y = +0.021, .z = +0.008 }, .energy = -0.03 };
+        noise[6] = (pot_t) { .id = 0, .direction = (xyz_t) { .x = +0.005, .y = -0.005, .z = +0.001 }, .energy = -0.02 };
+
+        unsigned int index_noise = 0;
+
+        for (unsigned int index_frame = 0; index_frame < 20; index_frame++) {
+            
+            for (unsigned int index_pot = 0; index_pot < num_directions; index_pot++) {
+
+                doas_src->pots[index_pot] = target[index_pot];
+                doas_src->pots[index_pot].direction = xyz_unit(xyz_add(doas_src->pots[index_pot].direction, noise[index_noise].direction));
+                doas_src->pots[index_pot].energy += noise[index_noise].energy;
+
+                index_noise++;
+                index_noise %= 7;
+
+            }
+
+            sst_process(sst, doas_src, doas_dst);
+
+        }
+
+        if (!((doas_dst->pots[0].id != 0) && (xyz_mag(xyz_sub(doas_dst->pots[0].direction, target[0].direction)) < eps))) {
+            return -1;
+        }
+        if (!(doas_dst->pots[1].id == 0)) {
+            return -1;
+        }
+        if (!(doas_dst->pots[2].id == 0)) {
+            return -1;
+        }
+        if (!(doas_dst->pots[3].id == 0)) {
+            return -1;
+        }
+
+        doas_destroy(doas_src);
+        doas_destroy(doas_dst);
+
+        sst_destroy(sst);
+
+    }
+
+    return 0;
+
+}

@@ -5,6 +5,8 @@
 #include <string.h>
 #include <stdio.h>
 
+static const float kernel_gaussian[11] = { 1.00f, 0.96f, 0.85f, 0.70f, 0.53f, 0.37f, 0.24f, 0.14f, 0.08f, 0.04f, 0.02f };
+
 ssl_t * ssl_construct(const mics_t * mics, const points_t * points, const float sample_rate, const float sound_speed, const unsigned int num_sources, const unsigned int num_directions) {
 
 	ssl_t * obj = (ssl_t *) malloc(sizeof(ssl_t));
@@ -324,10 +326,10 @@ int ssl_process(ssl_t * obj, const tdoas_t * tdoas, doas_t * doas) {
         // Copy the potential source: the point that corresponds to this value is copied as the
         // potential source, and the energy corresponds to the maximum value. Energy is saved
         // as it can later provide useful insights to determine if a source is a true source
-        // or a false alarm.
+        // or a false alarm. Id is set to 0 since it is a potential source.
         //
 
-        doas->pots[index_direction] = (pot_t) { .direction = obj->points->points[max_index], .energy = obj->projections[max_index] };
+        doas->pots[index_direction] = (pot_t) { .id = 0, .direction = obj->points->points[max_index], .energy = obj->projections[max_index] };
 
         //
         // Remove this source for next scan

@@ -1,4 +1,5 @@
 #include <math.h>
+#include <stdio.h>
 #include <types/xyz.h>
 
 xyz_t xyz_cst(const float x, const float y, const float z) {
@@ -38,6 +39,17 @@ float xyz_mag(const xyz_t op) {
 
     // (x^2 + y^2 + z^2)^0.5
     rtn = sqrtf(op.x * op.x + op.y * op.y + op.z * op.z);
+
+    return rtn;
+
+}
+
+float xyz_l2(const xyz_t op) {
+
+    float rtn;
+
+    // (x^2 + y^2 + z^2)
+    rtn = op.x * op.x + op.y * op.y + op.z * op.z;
 
     return rtn;
 
@@ -92,5 +104,23 @@ xyz_t xyz_sub(const xyz_t op1, const xyz_t op2) {
     rtn.z = op1.z - op2.z;
 
     return rtn;
+
+}
+
+xyz_t xyz_scale(const xyz_t op, const float scale) {
+
+    xyz_t rtn;
+
+    rtn.x = op.x * scale;
+    rtn.y = op.y * scale;
+    rtn.z = op.z * scale;
+
+    return rtn;
+
+}
+
+void xyz_printf(const xyz_t op) {
+
+    printf("(%+1.3f, %+1.3f, %+1.3f)\n", op.x, op.y, op.z);
 
 }

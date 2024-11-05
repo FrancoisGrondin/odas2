@@ -11,6 +11,7 @@
 #include <odas2/systems/phat.h>
 #include <odas2/systems/scm.h>
 #include <odas2/systems/ssl.h>
+#include <odas2/systems/sst.h>
 #include <odas2/systems/stft.h>
 #include <odas2/utils/mics.h>
 #include <odas2/utils/points.h>
@@ -23,27 +24,30 @@ int main(int argc, char * argv[]) {
     //                             Ms (all 1's)
     //                                  |
     //                                  *
-    // +----+   xs   +------+   Xs   +-----+   XXs   +------+   XXps   +---------+  tdoas   +-----+  doas   +-----+
-    // | In | -----* | STFT | -----* | SCM | ------* | PHAT | -------* | GCC/FCC | -------* | SSL | ------* | Out |
-    // +----+        +------+        +-----+         +------+          +---------+          +-----+         +-----+
+    // +----+   xs   +------+   Xs   +-----+   XXs   +------+   XXps   +---------+  tdoas   +-----+  doas   +-----+  doas   +-----+
+    // | In | -----* | STFT | -----* | SCM | ------* | PHAT | -------* | GCC/FCC | -------* | SSL | ------* | SST | ------* | Out |
+    // +----+        +------+        +-----+         +------+          +---------+          +-----+         +-----+         +-----+
     //
 
     //
     // Parameters
     //
 
-    const unsigned int  num_channels    = 4;
-    const unsigned int  num_shifts      = 128;
-    const unsigned int  num_samples     = 512;
-    const unsigned int  num_bins        = 257;
-    const unsigned int  sample_rate     = 16000;
-    const float         sound_speed     = 343.0f;
-    const float         alpha           = 0.5f;
-    const unsigned int  num_sources     = 1;
-    const unsigned int  num_directions  = 1;
-    const char          method[]        = "gcc";
-    const char          micarray[]      = "respeaker_usb";
-    const char          geometry[]      = "halfsphere";
+    const unsigned int  num_channels        = 4;
+    const unsigned int  num_shifts          = 128;
+    const unsigned int  num_samples         = 512;
+    const unsigned int  num_bins            = 257;
+    const unsigned int  sample_rate         = 16000;
+    const float         sound_speed         = 343.0f;
+    const float         alpha               = 0.5f;
+    const unsigned int  num_sources         = 1;
+    const unsigned int  num_directions      = 2;
+    const unsigned int  num_tracks          = 3;
+    const float         delta_time          = 128.0f / 16000.0f;
+    const float         energy_threshold    = 0.5f;
+    const char          method[]            = "gcc";
+    const char          micarray[]          = "respeaker_usb";
+    const char          geometry[]          = "halfsphere";
 
     //
     // Allocate memory
@@ -60,7 +64,8 @@ int main(int argc, char * argv[]) {
     covs_t * covs = covs_construct("XXs", num_channels, num_bins);
     covs_t * covs_phat = covs_construct("XXps", num_channels, num_bins);
     tdoas_t * tdoas = tdoas_construct("tdoas", num_channels, num_sources);
-    doas_t * doas = doas_construct("doas", num_directions);
+    doas_t * doas_potential = doas_construct("potential", num_directions);
+    doas_t * doas_tracked = doas_construct("tracked", num_tracks);
 
     stft_t * stft = stft_construct(num_channels, num_samples, num_shifts, num_bins, "hann");    
     scm_t * scm = scm_construct(num_channels, num_bins, alpha);
@@ -68,6 +73,7 @@ int main(int argc, char * argv[]) {
     fcc_t * fcc = fcc_construct(num_sources, num_channels, num_bins);
     gcc_t * gcc = gcc_construct(num_sources, num_channels, num_bins);
     ssl_t * ssl = ssl_construct(mics, points, sample_rate, sound_speed, num_sources, num_directions);
+    sst_t * sst = sst_construct(num_tracks, num_directions, delta_time, energy_threshold);
 
     msgout_t * msgout = msgout_construct("/dev/stdout");
 
@@ -90,9 +96,10 @@ int main(int argc, char * argv[]) {
             fcc_process(fcc, covs_phat, tdoas);
         }
         
-        ssl_process(ssl, tdoas, doas);
+        ssl_process(ssl, tdoas, doas_potential);
+        sst_process(sst, doas_potential, doas_tracked);
 
-        msgout_write_doas(msgout, doas);
+        msgout_write_doas(msgout, doas_tracked);
 
     }
 
@@ -111,7 +118,8 @@ int main(int argc, char * argv[]) {
     covs_destroy(covs);
     covs_destroy(covs_phat);
     tdoas_destroy(tdoas);
-    doas_destroy(doas);
+    doas_destroy(doas_potential);
+    doas_destroy(doas_tracked);
     
     stft_destroy(stft);
     scm_destroy(scm);
@@ -119,6 +127,7 @@ int main(int argc, char * argv[]) {
     fcc_destroy(fcc);
     gcc_destroy(gcc);
     ssl_destroy(ssl);
+    sst_destroy(sst);
 
     msgout_destroy(msgout);
 

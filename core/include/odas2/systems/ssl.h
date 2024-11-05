@@ -49,6 +49,4 @@ int ssl_process(ssl_t * obj, const tdoas_t * tdoas, doas_t * doas);
 
 void ssl_printf(const ssl_t * obj);
 
-static const float kernel_gaussian[11] = { 1.00f, 0.96f, 0.85f, 0.70f, 0.53f, 0.37f, 0.24f, 0.14f, 0.08f, 0.04f, 0.02f };
-
 #endif // __SSL_H

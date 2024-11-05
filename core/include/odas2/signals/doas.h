@@ -6,6 +6,7 @@
 
 typedef struct pot_t {
 
+    unsigned int id;
     xyz_t direction;
     float energy;
 

@@ -50,6 +50,7 @@ set(SRC
     src/systems/postfilter.c
     src/systems/scm.c
     src/systems/ssl.c
+    src/systems/sst.c
     src/systems/steering.c
     src/systems/stft.c
 
@@ -86,6 +87,7 @@ add_executable(tests
     test/units/test_points.c
     test/units/test_scm.c
     test/units/test_ssl.c
+    test/units/test_sst.c
     test/units/test_steering.c
     test/units/test_stft.c
     test/units/test_xyz.c

@@ -15,6 +15,8 @@ xyz_t xyz_unit(const xyz_t op);
 
 float xyz_mag(const xyz_t op);
 
+float xyz_l2(const xyz_t op);
+
 float xyz_dot(const xyz_t op1, const xyz_t op2);
 
 xyz_t xyz_vec(const xyz_t op1, const xyz_t op2);
@@ -22,6 +24,8 @@ xyz_t xyz_vec(const xyz_t op1, const xyz_t op2);
 xyz_t xyz_add(const xyz_t op1, const xyz_t op2);
 
 xyz_t xyz_sub(const xyz_t op1, const xyz_t op2);
+
+xyz_t xyz_scale(const xyz_t op, const float scale);
 
 void xyz_printf(const xyz_t op);
 
