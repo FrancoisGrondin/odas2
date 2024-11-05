@@ -42,10 +42,10 @@ int steering_process(const steering_t * obj, const doas_t * doas, tdoas_t * tdoa
 
             for (unsigned int index_source = 0; index_source < obj->num_sources; index_source++) {
 
-                pot_t pot = doas->pots[index_source];
+                dir_t dir = doas->dirs[index_source];
 
-                tdoas->taus[index_source][index_pair].delay = (obj->sample_rate / obj->sound_speed) * xyz_dot(xyz_sub(mic2.position, mic1.position), pot.direction);
-                tdoas->taus[index_source][index_pair].amplitude = pot.energy;
+                tdoas->taus[index_source][index_pair].delay = (obj->sample_rate / obj->sound_speed) * xyz_dot(xyz_sub(mic2.position, mic1.position), dir.coord);
+                tdoas->taus[index_source][index_pair].amplitude = dir.energy;
 
             }
 

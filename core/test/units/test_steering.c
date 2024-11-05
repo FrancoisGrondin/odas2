@@ -22,9 +22,9 @@ int test_steering(void) {
         tdoas_t * tdoas = tdoas_construct("tdoas", num_channels, num_sources);
         steering_t * steering = steering_construct(mics, sample_rate, sound_speed, num_sources);
 
-        doas->pots[0] = (pot_t) { .direction = (xyz_t) { .x = -1.000, .y = +0.000, .z = +0.000 }, .energy = 0.10 };
-        doas->pots[1] = (pot_t) { .direction = (xyz_t) { .x = +0.000, .y = -1.000, .z = +0.000 }, .energy = 0.10 };
-        doas->pots[2] = (pot_t) { .direction = (xyz_t) { .x = +0.707, .y = +0.707, .z = +0.000 }, .energy = 0.10 };
+        doas->dirs[0] = (dir_t) { .coord = (xyz_t) { .x = -1.000, .y = +0.000, .z = +0.000 }, .energy = 0.10 };
+        doas->dirs[1] = (dir_t) { .coord = (xyz_t) { .x = +0.000, .y = -1.000, .z = +0.000 }, .energy = 0.10 };
+        doas->dirs[2] = (dir_t) { .coord = (xyz_t) { .x = +0.707, .y = +0.707, .z = +0.000 }, .energy = 0.10 };
 
         steering_process(steering, doas, tdoas);
 

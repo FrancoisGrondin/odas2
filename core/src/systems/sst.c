@@ -19,10 +19,9 @@ sst_t * sst_construct(const unsigned int num_tracks, const unsigned int num_dire
     obj->energy_new_threshold = energy_threshold * (0.040f / delta_time);
     obj->energy_delete_threshold = energy_threshold / 4.0f;
     obj->energy_decay = 0.95f;
-    obj->id_counter = 0;
 
-    obj->pasts = (pot_t *) calloc(obj->num_pasts, sizeof(pot_t));
-    obj->tracks = (pot_t *) calloc(obj->num_tracks, sizeof(pot_t));
+    obj->pasts = (dir_t *) calloc(obj->num_pasts, sizeof(dir_t));
+    obj->tracks = (dir_t *) calloc(obj->num_tracks, sizeof(dir_t));
 
     return obj;
 
@@ -50,7 +49,7 @@ int sst_process(sst_t * obj, doas_t * in, doas_t * out) {
         // Get current potential source
         //
 
-        pot_t pot = in->pots[index_direction];
+        dir_t pot = in->dirs[index_direction];
 
         //
         // Update the tracked sources, and also return the best score
@@ -65,12 +64,12 @@ int sst_process(sst_t * obj, doas_t * in, doas_t * out) {
 
             for (unsigned int index_track = 0; index_track < obj->num_tracks; index_track++) {
 
-                if (obj->tracks[index_track].id != 0) {
+                if (obj->tracks[index_track].type == TRACKED) {
 
-                    float dist2 = xyz_l2(xyz_sub(pot.direction, obj->tracks[index_track].direction));
+                    float dist2 = xyz_l2(xyz_sub(pot.coord, obj->tracks[index_track].coord));
                     float score = expf(-1.0f * dist2 / sigma2);
 
-                    obj->tracks[index_track].direction = xyz_unit(xyz_add(obj->tracks[index_track].direction, xyz_scale(pot.direction, score)));
+                    obj->tracks[index_track].coord = xyz_unit(xyz_add(obj->tracks[index_track].coord, xyz_scale(pot.coord, score)));
                     obj->tracks[index_track].energy += score * pot.energy;
 
                     if (score > best_score) {
@@ -105,21 +104,21 @@ int sst_process(sst_t * obj, doas_t * in, doas_t * out) {
 
             const float sigma2 = 0.01f;
 
-            pot_t new_source = { .id = 0, .direction = xyz_cst(0.0f, 0.0f, 0.0f), .energy = 0.0f };
+            dir_t new_source = { .type = TRACKED, .coord = xyz_cst(0.0f, 0.0f, 0.0f), .energy = 0.0f };
 
             for (unsigned int index_past = 0; index_past < obj->num_pasts; index_past++) {
 
-                pot_t past = obj->pasts[index_past];
+                dir_t past = obj->pasts[index_past];
 
-                float dist2 = xyz_l2(xyz_sub(pot.direction, past.direction));
+                float dist2 = xyz_l2(xyz_sub(pot.coord, past.coord));
                 float score = expf(-1.0f * dist2 / sigma2);
 
                 new_source.energy += score * past.energy;
-                new_source.direction = xyz_add(new_source.direction, xyz_scale(past.direction, score));
+                new_source.coord = xyz_add(new_source.coord, xyz_scale(past.coord, score));
 
             }
 
-            new_source.direction = xyz_unit(new_source.direction);
+            new_source.coord = xyz_unit(new_source.coord);
 
             //
             // If the score is good enough, then create a new tracked source
@@ -129,11 +128,10 @@ int sst_process(sst_t * obj, doas_t * in, doas_t * out) {
 
                 for (unsigned int index_track = 0; index_track < obj->num_tracks; index_track++) {
 
-                    if (obj->tracks[index_track].id == 0) {
+                    if (obj->tracks[index_track].type == UNDEFINED) {
 
-                        obj->id_counter++;
-                        obj->tracks[index_track].id = obj->id_counter;
-                        obj->tracks[index_track].direction = new_source.direction;
+                        obj->tracks[index_track].type = TRACKED;
+                        obj->tracks[index_track].coord = new_source.coord;
                         obj->tracks[index_track].energy = 1.0f;
 
                         break;
@@ -163,14 +161,14 @@ int sst_process(sst_t * obj, doas_t * in, doas_t * out) {
 
     for (unsigned int index_track = 0; index_track < obj->num_tracks; index_track++) {
 
-        if (obj->tracks[index_track].id != 0) {
+        if (obj->tracks[index_track].type == TRACKED) {
     
             obj->tracks[index_track].energy *= obj->energy_decay;
             
             if (obj->tracks[index_track].energy < obj->energy_delete_threshold) {
 
-                obj->tracks[index_track].id = 0;
-                obj->tracks[index_track].direction = xyz_cst(0.0f, 0.0f, 0.0f);
+                obj->tracks[index_track].type = UNDEFINED;
+                obj->tracks[index_track].coord = xyz_cst(0.0f, 0.0f, 0.0f);
                 obj->tracks[index_track].energy = 0.0f;
 
             }
@@ -185,13 +183,13 @@ int sst_process(sst_t * obj, doas_t * in, doas_t * out) {
     
     for (unsigned int index_track = 0; index_track < obj->num_tracks; index_track++) {
 
-        if (obj->tracks[index_track].id != 0) {
-            out->pots[index_track] = obj->tracks[index_track];
+        if (obj->tracks[index_track].type != UNDEFINED) {
+            out->dirs[index_track] = obj->tracks[index_track];
         }
         else {
-            out->pots[index_track].id = 0;
-            out->pots[index_track].direction = xyz_cst(0.0f, 0.0f, 0.0f);
-            out->pots[index_track].energy = 0.0f;
+            out->dirs[index_track].type = UNDEFINED;
+            out->dirs[index_track].coord = xyz_cst(0.0f, 0.0f, 0.0f);
+            out->dirs[index_track].energy = 0.0f;
         }
 
     }
@@ -204,10 +202,10 @@ void sst_printf(const sst_t * obj) {
 
     for (unsigned int index_track = 0; index_track < obj->num_tracks; index_track++) {
 
-        pot_t pot = obj->tracks[index_track];
+        dir_t dir = obj->tracks[index_track];
 
-        printf("[%02u]: { .id = %08u, { .x = %+1.3f, .y = %+1.3f, .z = %+1.3f }, .energy = %+1.3f }\n", 
-            index_track, pot.id, pot.direction.x, pot.direction.y, pot.direction.z, pot.energy);
+        printf("[%02u]: { { .x = %+1.3f, .y = %+1.3f, .z = %+1.3f }, .energy = %+1.3f }\n", 
+            index_track, dir.coord.x, dir.coord.y, dir.coord.z, dir.energy);
 
     }
 
@@ -215,10 +213,10 @@ void sst_printf(const sst_t * obj) {
 
     for (unsigned int index_past = 0; index_past < obj->num_pasts; index_past++) {
 
-        pot_t pot = obj->pasts[index_past];
+        dir_t dir = obj->pasts[index_past];
 
-        printf("[%02u]: { .id = %08u, { .x = %+1.3f, .y = %+1.3f, .z = %+1.3f }, .energy = %+1.3f }\n", 
-            index_past, pot.id, pot.direction.x, pot.direction.y, pot.direction.z, pot.energy);
+        printf("[%02u]: { { .x = %+1.3f, .y = %+1.3f, .z = %+1.3f }, .energy = %+1.3f }\n", 
+            index_past, dir.coord.x, dir.coord.y, dir.coord.z, dir.energy);
 
     }
 

@@ -4,20 +4,29 @@
 #include "../types/xyz.h"
 #include <stdio.h>
 
-typedef struct pot_t {
+typedef enum {
 
-    unsigned int id;
-    xyz_t direction;
+    UNDEFINED,
+    POTENTIAL,
+    TRACKED,
+    TARGET
+
+} src_t;
+
+typedef struct dir_t {
+
+    src_t type;
+    xyz_t coord;
     float energy;
 
-} pot_t;
+} dir_t;
 
 typedef struct doas_t {
 
     char label[64];
 
     unsigned int num_directions;
-    pot_t * pots;
+    dir_t * dirs;
 
 } doas_t;
 

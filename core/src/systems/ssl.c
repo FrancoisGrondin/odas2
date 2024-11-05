@@ -329,7 +329,7 @@ int ssl_process(ssl_t * obj, const tdoas_t * tdoas, doas_t * doas) {
         // or a false alarm. Id is set to 0 since it is a potential source.
         //
 
-        doas->pots[index_direction] = (pot_t) { .id = 0, .direction = obj->points->points[max_index], .energy = obj->projections[max_index] };
+        doas->dirs[index_direction] = (dir_t) { .type = POTENTIAL, .coord = obj->points->points[max_index], .energy = obj->projections[max_index] };
 
         //
         // Remove this source for next scan

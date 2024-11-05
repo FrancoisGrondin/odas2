@@ -12,7 +12,7 @@ doas_t * doas_construct(const char * label, const unsigned int num_directions) {
     strcpy(obj->label, label);
 
     obj->num_directions = num_directions;
-    obj->pots = (pot_t *) calloc(sizeof(pot_t), num_directions);
+    obj->dirs = (dir_t *) calloc(sizeof(dir_t), num_directions);
 
     return obj;
 
@@ -20,7 +20,7 @@ doas_t * doas_construct(const char * label, const unsigned int num_directions) {
 
 void doas_destroy(doas_t * obj) {
 
-    free(obj->pots);
+    free(obj->dirs);
     free(obj);
 
 }
@@ -28,9 +28,9 @@ void doas_destroy(doas_t * obj) {
 void doas_target(doas_t * obj, const xyz_t * directions) {
 
     for (unsigned int index_direction = 0; index_direction < obj->num_directions; index_direction++) {
-        obj->pots[index_direction].id = 0;
-        obj->pots[index_direction].direction = xyz_unit(directions[index_direction]);
-        obj->pots[index_direction].energy = 1.0f;
+        obj->dirs[index_direction].type = TARGET;
+        obj->dirs[index_direction].coord = xyz_unit(directions[index_direction]);
+        obj->dirs[index_direction].energy = 1.0f;
     }
     
 }
@@ -38,11 +38,11 @@ void doas_target(doas_t * obj, const xyz_t * directions) {
 void doas_fprintf(const doas_t * obj, FILE * fp) {
 
     for (unsigned int index_direction = 0; index_direction < obj->num_directions; index_direction++) {
-        fprintf(fp, "[%08u]: (%+1.3f, %+1.3f, %+1.3f) > %+1.3f\n", obj->pots[index_direction].id, 
-                                                                   obj->pots[index_direction].direction.x,
-                                                                   obj->pots[index_direction].direction.y,
-                                                                   obj->pots[index_direction].direction.z,
-                                                                   obj->pots[index_direction].energy);
+        fprintf(fp, "(%+1.3f, %+1.3f, %+1.3f) > %+1.3f\n", 
+            obj->dirs[index_direction].coord.x,
+            obj->dirs[index_direction].coord.y,
+            obj->dirs[index_direction].coord.z,
+            obj->dirs[index_direction].energy);
     }
 
 }

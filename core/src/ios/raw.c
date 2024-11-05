@@ -66,7 +66,7 @@ int rawout_write_masks(rawout_t * obj, const masks_t * masks) {
 int rawout_write_doas(rawout_t * obj, const doas_t * doas) {
 
 	for (unsigned int index_direction = 0; index_direction < doas->num_directions; index_direction++) {
-		fwrite(&(doas->pots[index_direction]), sizeof(pot_t), 1, obj->file_pointer);
+		fwrite(&(doas->dirs[index_direction]), sizeof(dir_t), 1, obj->file_pointer);
 	}
 
 	return 0;

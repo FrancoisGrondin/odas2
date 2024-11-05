@@ -103,15 +103,15 @@ int msgout_write_doas(msgout_t * obj, const doas_t * doas) {
     fprintf(obj->file_pointer, ",");
     fprintf(obj->file_pointer, "\"label\":\"%s\"", doas->label);
     fprintf(obj->file_pointer, ",");
-    fprintf(obj->file_pointer, "\"pots\":[");
+    fprintf(obj->file_pointer, "\"dirs\":[");
 
     for (unsigned int index_direction = 0; index_direction < doas->num_directions; index_direction++) {
-        fprintf(obj->file_pointer, "{\"id\": %u, \"x\": %1.2f, \"y\": %1.2f, \"z\": %1.2f, \"energy\": %1.2f}", 
-                    doas->pots[index_direction].id,
-                    doas->pots[index_direction].direction.x,
-                    doas->pots[index_direction].direction.y,
-                    doas->pots[index_direction].direction.z,
-                    doas->pots[index_direction].energy);
+        fprintf(obj->file_pointer, "{\"type\": %u, \"x\": %1.2f, \"y\": %1.2f, \"z\": %1.2f, \"energy\": %1.2f}", 
+                    doas->dirs[index_direction].type,
+                    doas->dirs[index_direction].coord.x,
+                    doas->dirs[index_direction].coord.y,
+                    doas->dirs[index_direction].coord.z,
+                    doas->dirs[index_direction].energy);
         if (index_direction != (doas->num_directions-1)) {
             fprintf(obj->file_pointer, ",");
         }        

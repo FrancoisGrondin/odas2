@@ -58,7 +58,7 @@ $ cat audio/mix.wav | core/bin/demo_delaysum > audio/bf.wav
 $ cat audio/mix.wav | core/bin/demo_mvdr > audio/bf.wav
 ```
 
-- Visualize the directions of arrival of sound (without filtering):
+- Visualize the directions of arrival of sound:
 
 ```
 $ cat audio/mix.wav | core/bin/demo_doas | python3 interface/plot.py
