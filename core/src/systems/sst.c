@@ -19,6 +19,7 @@ sst_t * sst_construct(const unsigned int num_tracks, const unsigned int num_dire
     obj->energy_new_threshold = energy_threshold * (0.040f / delta_time);
     obj->energy_delete_threshold = energy_threshold / 4.0f;
     obj->energy_decay = 0.95f;
+    obj->update_rate = 0.01f;
 
     obj->pasts = (dir_t *) calloc(obj->num_pasts, sizeof(dir_t));
     obj->tracks = (dir_t *) calloc(obj->num_tracks, sizeof(dir_t));
@@ -57,6 +58,7 @@ int sst_process(sst_t * obj, doas_t * in, doas_t * out) {
         //
 
         float best_score = 0.0f;
+        unsigned int best_match = 0;
 
         {
 
@@ -69,16 +71,18 @@ int sst_process(sst_t * obj, doas_t * in, doas_t * out) {
                     float dist2 = xyz_l2(xyz_sub(pot.coord, obj->tracks[index_track].coord));
                     float score = expf(-1.0f * dist2 / sigma2);
 
-                    obj->tracks[index_track].coord = xyz_unit(xyz_add(obj->tracks[index_track].coord, xyz_scale(pot.coord, score)));
-                    obj->tracks[index_track].energy += score * pot.energy;
-
                     if (score > best_score) {
                         best_score = score;
+                        best_match = index_track;
                     }
 
                 }
 
             }
+
+            float adapt = best_score * pot.energy * obj->update_rate;
+            obj->tracks[best_match].coord = xyz_unit(xyz_add(obj->tracks[best_match].coord, xyz_scale(pot.coord, adapt)));
+            obj->tracks[best_match].energy += best_score * pot.energy;
 
         }
 

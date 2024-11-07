@@ -18,6 +18,7 @@ typedef struct sst_t {
     float energy_new_threshold;
     float energy_delete_threshold;
     float energy_decay;
+    float update_rate;
 
     dir_t * pasts;
     dir_t * tracks;

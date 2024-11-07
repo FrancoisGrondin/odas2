@@ -41,6 +41,24 @@ def main():
 
                 cache[msg['label']]['data'].append(data)
 
+            if msg['type'] == "doas":
+
+                if msg['label'] not in cache:
+                    cache[msg['label']] = {}
+                    cache[msg['label']]['type'] = "doas"
+                    cache[msg['label']]['data'] = []
+
+                data = np.zeros((len(msg['dirs']), 5), dtype=np.float32)
+                
+                for src_index in range(len(msg['dirs'])):
+                    data[src_index, 0] = msg['dirs'][src_index]['type']
+                    data[src_index, 1] = msg['dirs'][src_index]['x']
+                    data[src_index, 2] = msg['dirs'][src_index]['y']
+                    data[src_index, 3] = msg['dirs'][src_index]['z']
+                    data[src_index, 4] = msg['dirs'][src_index]['energy']
+
+                cache[msg['label']]['data'].append(data)
+
     # Plot item by item
     for key in cache:
 
@@ -68,6 +86,26 @@ def main():
             for index_channel in range(num_channels):
 
                 axs[index_channel].imshow(np.transpose(np.log(np.abs(spex[index_channel, :, :])+1e-10)), aspect='auto', origin='lower')
+
+        if cache[key]['type'] == "doas":
+
+            doas = np.stack(cache[key]['data'], axis=0)
+            num_srcs = doas.shape[1]
+            num_frames = doas.shape[0]
+
+            fig, axs = plt.subplots(num_srcs)
+
+            for index_src in range(num_srcs):
+
+                indexes = np.arange(num_frames)
+                mask = doas[:, index_src, 0] != 0
+
+                axs[index_src].scatter(indexes[mask], doas[mask, index_src, 1])
+                axs[index_src].scatter(indexes[mask], doas[mask, index_src, 2])
+                axs[index_src].scatter(indexes[mask], doas[mask, index_src, 3])
+
+                axs[index_src].set_xlim([0, num_frames])
+                axs[index_src].set_ylim([-1, +1])
 
     plt.show()
 

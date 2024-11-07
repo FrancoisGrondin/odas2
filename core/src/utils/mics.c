@@ -9,6 +9,7 @@ static mics_t * mics_respeaker_usb(void);
 static mics_t * mics_minidsp_uma(void);
 static mics_t * mics_introlab_circular(void);
 static mics_t * mics_vibeus_circular(void);
+static mics_t * mics_soundskrit_mug(void);
 
 mic_t mic_cst(const xyz_t position, const xyz_t direction, const char * pattern) {
 
@@ -62,6 +63,9 @@ mics_t * mics_construct(const char * hardware) {
     }
     if (strcmp(hardware, "vibeus_circular") == 0) {
         obj = mics_vibeus_circular();
+    }
+    if (strcmp(hardware, "soundskrit_mug") == 0) {
+        obj = mics_soundskrit_mug();
     }
 
     return obj;
@@ -139,6 +143,21 @@ static mics_t * mics_vibeus_circular(void) {
     obj->mics[3] = mic_cst((xyz_t) { .x = -0.0225, .y = +0.0390, .z = +0.000 }, (xyz_t) { .x = +0.000, .y = +0.000, .z = +1.000 }, "omnidirectional");    
     obj->mics[4] = mic_cst((xyz_t) { .x = +0.0225, .y = -0.0390, .z = +0.000 }, (xyz_t) { .x = +0.000, .y = +0.000, .z = +1.000 }, "omnidirectional");
     obj->mics[5] = mic_cst((xyz_t) { .x = +0.0450, .y = +0.0000, .z = +0.000 }, (xyz_t) { .x = +0.000, .y = +0.000, .z = +1.000 }, "omnidirectional");    
+
+    return obj;
+
+}
+
+static mics_t * mics_soundskrit_mug(void) {
+
+    mics_t * obj = (mics_t *) malloc(sizeof(mics_t));
+
+    obj->num_mics = 3;
+    obj->mics = (mic_t *) malloc(sizeof(mic_t) * obj->num_mics);
+
+    obj->mics[0] = mic_cst((xyz_t) { .x = +0.03750, .y = +0.0000, .z = +0.000 }, (xyz_t) { .x = +0.000, .y = +0.000, .z = +1.000 }, "omnidirectional");
+    obj->mics[1] = mic_cst((xyz_t) { .x = -0.01875, .y = +0.0325, .z = +0.000 }, (xyz_t) { .x = +0.000, .y = +0.000, .z = +1.000 }, "omnidirectional");
+    obj->mics[2] = mic_cst((xyz_t) { .x = -0.01875, .y = -0.0325, .z = +0.000 }, (xyz_t) { .x = +0.000, .y = +0.000, .z = +1.000 }, "omnidirectional");    
 
     return obj;
 
