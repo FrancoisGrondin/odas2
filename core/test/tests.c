@@ -24,23 +24,23 @@ int main(int argc, char * argv[]) {
 
     int error = 0;
 
-    error += test("Testing xyz type................. ", test_xyz());
-    error += test("Testing cplx type................ ", test_cplx());
-    error += test("Testing fft util................. ", test_fft());
-    error += test("Testing linalg util.............. ", test_linalg());
-    error += test("Testing mics util................ ", test_mics());
-    error += test("Testing points util.............. ", test_points());
-    error += test("Testing beamformer system........ ", test_beamformer());
-    error += test("Testing delaysum system.......... ", test_delaysum());
-    error += test("Testing gcc system............... ", test_gcc());
-    error += test("Testing mixer system............. ", test_mixer());
-    error += test("Testing mvdr system.............. ", test_mvdr());
-    error += test("Testing phat system.............. ", test_phat());
-    error += test("Testing scm system............... ", test_scm());
-    error += test("Testing ssl system............... ", test_ssl());
-    error += test("Testing sst system............... ", test_sst());
-    error += test("Testing steering system.......... ", test_steering());
-    error += test("Testing stft system.............. ", test_stft());
+    error += test("Testing system beamformer........ ", test_beamformer());
+    error += test("Testing system delaysum.......... ", test_delaysum());
+    error += test("Testing system gcc............... ", test_gcc());
+    error += test("Testing system mixer............. ", test_mixer());
+    error += test("Testing system mvdr.............. ", test_mvdr());
+    error += test("Testing system phat.............. ", test_phat());
+    error += test("Testing system scm............... ", test_scm());
+    error += test("Testing system ssl............... ", test_ssl());
+    error += test("Testing system sst............... ", test_sst());
+    error += test("Testing system steering.......... ", test_steering());
+    error += test("Testing system stft.............. ", test_stft());
+    error += test("Testing type xyz................. ", test_xyz());
+    error += test("Testing type cplx................ ", test_cplx());
+    error += test("Testing util fft................. ", test_fft());
+    error += test("Testing util linalg.............. ", test_linalg());
+    error += test("Testing util mics................ ", test_mics());
+    error += test("Testing util points.............. ", test_points());
 
     return error;
 
