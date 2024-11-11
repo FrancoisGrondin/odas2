@@ -4,6 +4,10 @@
 #include "../types/xyz.h"
 #include <stdio.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef enum {
 
     UNDEFINED,
@@ -37,5 +41,9 @@ void doas_destroy(doas_t * obj);
 void doas_target(doas_t * obj, const xyz_t * directions);
 
 void doas_fprintf(const doas_t * obj, FILE * fp);
+
+#ifdef __cplusplus
+} //extern "C"
+#endif
 
 #endif // __DOAS_H

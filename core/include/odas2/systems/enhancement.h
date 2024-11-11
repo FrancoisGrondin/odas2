@@ -8,6 +8,10 @@
 #include "../signals/freqs.h"
 #include "../signals/masks.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct enhancement_t {
 
     unsigned int num_channels;
@@ -23,7 +27,7 @@ typedef struct enhancement_t {
     tensor * x;
     tensor * h;
     tensor * y;
-    tensor * m;    
+    tensor * m;
 
 } enhancement_t;
 
@@ -39,5 +43,9 @@ static const unsigned int num_dims_out;
 static const float beta;
 static const ugru_params rnn_params;
 static const linear_params fc_params;
+
+#ifdef __cplusplus
+} //extern "C"
+#endif
 
 #endif // __ENHANCEMENT_H

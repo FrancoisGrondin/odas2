@@ -5,6 +5,10 @@
 #include "../signals/covs.h"
 #include "../signals/tdoas.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct gcc_t {
 
     unsigned int num_sources;
@@ -26,5 +30,9 @@ gcc_t * gcc_construct(const unsigned int num_sources, const unsigned int num_cha
 void gcc_destroy(gcc_t * obj);
 
 int gcc_process(gcc_t * obj, const covs_t * covs, tdoas_t * tdoas);
+
+#ifdef __cplusplus
+} //extern "C"
+#endif
 
 #endif // __GCC_H

@@ -5,6 +5,10 @@
 #include "../signals/hops.h"
 #include "../signals/freqs.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct stft_t {
 
     unsigned int num_channels;
@@ -50,5 +54,9 @@ istft_t * istft_construct(const unsigned int num_channels, const unsigned int nu
 void istft_destroy(istft_t * obj);
 
 int istft_process(istft_t * obj, const freqs_t * freqs, hops_t * hops);
+
+#ifdef __cplusplus
+} //extern "C"
+#endif
 
 #endif // __STFT_H

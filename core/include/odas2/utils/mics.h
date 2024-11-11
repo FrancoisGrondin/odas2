@@ -3,6 +3,10 @@
 
 #include "../types/xyz.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct mic_t {
 
     xyz_t position;
@@ -27,5 +31,9 @@ void mic_printf(const mic_t mic);
 mics_t * mics_construct(const char * hardware);
 
 void mics_destroy(mics_t * obj);
+
+#ifdef __cplusplus
+} //extern "C"
+#endif
 
 #endif // __MICS_H

@@ -4,6 +4,10 @@
 #include "../types/cplx.h"
 #include <stdio.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct weights_t {
 
     char label[64];
@@ -12,6 +16,7 @@ typedef struct weights_t {
     unsigned int num_channels;
     unsigned int num_bins;
 
+    cplx_t * bins_buffer;
     cplx_t *** bins;
 
 } weights_t;
@@ -21,5 +26,9 @@ weights_t * weights_construct(const char * label, const unsigned int num_sources
 void weights_destroy(weights_t * obj);
 
 void weights_fprintf(const weights_t * obj, FILE * fp);
+
+#ifdef __cplusplus
+} //extern "C"
+#endif
 
 #endif // __WEIGHTS_H

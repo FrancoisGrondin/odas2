@@ -1,6 +1,10 @@
 #ifndef __TENSORS
 #define __TENSORS
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct tensor {
 
     unsigned int num_dims1;
@@ -30,5 +34,9 @@ void tensor_save_1d(const tensor * obj, const unsigned int index_dim1, const uns
 void tensor_printf(const tensor * obj);
 
 int tensors_compare(const tensor * tensor1, const tensor * tensor2, const float eps);
+
+#ifdef __cplusplus
+} //extern "C"
+#endif
 
 #endif // __TENSORS

@@ -5,6 +5,10 @@
 #include "../signals/doas.h"
 #include "../utils/points.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct sst_t {
 
     unsigned int num_tracks;
@@ -32,5 +36,9 @@ void sst_destroy(sst_t * obj);
 int sst_process(sst_t * obj, doas_t * in, doas_t * out);
 
 void sst_printf(const sst_t * obj);
+
+#ifdef __cplusplus
+} //extern "C"
+#endif
 
 #endif // __SST_H

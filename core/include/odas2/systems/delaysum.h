@@ -4,6 +4,10 @@
 #include "../signals/tdoas.h"
 #include "../signals/weights.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct delaysum_t {
 
     unsigned int num_sources;
@@ -17,5 +21,9 @@ delaysum_t * delaysum_construct(const unsigned int num_sources, const unsigned i
 void delaysum_destroy(delaysum_t * obj);
 
 int delaysum_process(delaysum_t * obj, const tdoas_t * tdoas, weights_t * coeffs);
+
+#ifdef __cplusplus
+} //extern "C"
+#endif
 
 #endif // __DELAYSUM_H

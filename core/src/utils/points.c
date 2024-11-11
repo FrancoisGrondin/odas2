@@ -3,6 +3,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+static const xyz_t sphere[2562];
+static const xyz_t halfsphere[1321];
+static const xyz_t arc[181];
+
 points_t * points_construct(const char * geometry) {
 
     points_t * obj = (points_t *) malloc(sizeof(points_t));
@@ -11,15 +15,19 @@ points_t * points_construct(const char * geometry) {
         obj->points = sphere;
         obj->num_points = sizeof(sphere) / sizeof(xyz_t);
     }
-    if (strcmp(geometry, "halfsphere") == 0) {
+    else if (strcmp(geometry, "halfsphere") == 0) {
         obj->points = halfsphere;
         obj->num_points = sizeof(halfsphere) / sizeof(xyz_t);
     }
-    if (strcmp(geometry, "arc") == 0) {
+    else if (strcmp(geometry, "arc") == 0) {
         obj->points = arc;
         obj->num_points = sizeof(arc) / sizeof(xyz_t);
     }
-    
+    else {
+        obj->points = NULL;
+        obj->num_points = 0;
+    }
+
     return obj;
 
 }

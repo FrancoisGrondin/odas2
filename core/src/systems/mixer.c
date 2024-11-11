@@ -6,10 +6,10 @@
 mixer_t * mixer_construct(const char * channels) {
 
     mixer_t * obj = (mixer_t *) malloc(sizeof(mixer_t));
-    
+
     //
     // This code parses a string like:
-    // 
+    //
     // channels = "2,11,7"
     //
     // and store the numbers in a list such as:
@@ -51,13 +51,20 @@ mixer_t * mixer_construct(const char * channels) {
 
     {
         unsigned int index_channel = 0;
+        unsigned int max_map_index = 0;
 
         char * ptr = strtok(str, delim);
         while(ptr != NULL) {
             obj->map[index_channel] = atoi(ptr);
+            if (obj->map[index_channel] > max_map_index) {
+                max_map_index = obj->map[index_channel];
+            }
+
             ptr = strtok(NULL, delim);
             index_channel++;
         }
+
+        obj->max_map_index = max_map_index;
     }
 
     //
@@ -81,8 +88,8 @@ int mixer_process(mixer_t * obj, const hops_t * hops_in, hops_t * hops_out) {
 
     for (unsigned int index_channel = 0; index_channel < obj->num_channels; index_channel++) {
 
-        memcpy(hops_out->samples[index_channel], 
-               hops_in->samples[obj->map[index_channel]], 
+        memcpy(hops_out->samples[index_channel],
+               hops_in->samples[obj->map[index_channel]],
                sizeof(float) * hops_in->num_shifts);
 
     }
