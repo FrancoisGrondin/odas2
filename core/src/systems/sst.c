@@ -37,7 +37,7 @@ void sst_destroy(sst_t * obj) {
 
 }
 
-int sst_process(sst_t * obj, doas_t * in, doas_t * out) {
+int sst_process(sst_t * obj, const doas_t * in, doas_t * out) {
 
     //
     // Loop for each potential source, and decide if associated
@@ -150,7 +150,7 @@ int sst_process(sst_t * obj, doas_t * in, doas_t * out) {
 
         //
         // Add the potential source to the buffer
-        //        
+        //
 
         for (unsigned int index_past = 0; index_past < obj->num_pasts - 1; index_past++) {
             obj->pasts[index_past] = obj->pasts[index_past+1];
@@ -166,9 +166,9 @@ int sst_process(sst_t * obj, doas_t * in, doas_t * out) {
     for (unsigned int index_track = 0; index_track < obj->num_tracks; index_track++) {
 
         if (obj->tracks[index_track].type == TRACKED) {
-    
+
             obj->tracks[index_track].energy *= obj->energy_decay;
-            
+
             if (obj->tracks[index_track].energy < obj->energy_delete_threshold) {
 
                 obj->tracks[index_track].type = UNDEFINED;
@@ -184,7 +184,7 @@ int sst_process(sst_t * obj, doas_t * in, doas_t * out) {
     //
     // Export doas to output
     //
-    
+
     for (unsigned int index_track = 0; index_track < obj->num_tracks; index_track++) {
 
         if (obj->tracks[index_track].type != UNDEFINED) {
@@ -208,7 +208,7 @@ void sst_printf(const sst_t * obj) {
 
         dir_t dir = obj->tracks[index_track];
 
-        printf("[%02u]: { { .x = %+1.3f, .y = %+1.3f, .z = %+1.3f }, .energy = %+1.3f }\n", 
+        printf("[%02u]: { { .x = %+1.3f, .y = %+1.3f, .z = %+1.3f }, .energy = %+1.3f }\n",
             index_track, dir.coord.x, dir.coord.y, dir.coord.z, dir.energy);
 
     }
@@ -219,7 +219,7 @@ void sst_printf(const sst_t * obj) {
 
         dir_t dir = obj->pasts[index_past];
 
-        printf("[%02u]: { { .x = %+1.3f, .y = %+1.3f, .z = %+1.3f }, .energy = %+1.3f }\n", 
+        printf("[%02u]: { { .x = %+1.3f, .y = %+1.3f, .z = %+1.3f }, .energy = %+1.3f }\n",
             index_past, dir.coord.x, dir.coord.y, dir.coord.z, dir.energy);
 
     }
@@ -227,4 +227,3 @@ void sst_printf(const sst_t * obj) {
     printf("\n");
 
 }
-

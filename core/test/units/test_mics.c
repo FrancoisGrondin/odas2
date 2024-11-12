@@ -26,6 +26,19 @@ int test_mics(void) {
     }
 
     {
+        mics_t * mics = mics_construct_uninitialized(16);
+
+        if (mics == NULL) {
+            return -2;
+        }
+        if (mics->num_mics != 16) {
+            return -2;
+        }
+
+        mics_destroy(mics);
+    }
+
+    {
 
         mics_t * mics = mics_construct("respeaker_usb");
         float dist_edge = 0.045f;
@@ -36,46 +49,46 @@ int test_mics(void) {
         float gain_side = 0.5f;
 
         if (!(fabsf(xyz_mag(xyz_sub(mics->mics[0].position, mics->mics[1].position)) - dist_edge) < eps)) {
-            return -2;
+            return -3;
         }
         if (!(fabsf(xyz_mag(xyz_sub(mics->mics[1].position, mics->mics[2].position)) - dist_edge) < eps)) {
-            return -2;
+            return -3;
         }
         if (!(fabsf(xyz_mag(xyz_sub(mics->mics[2].position, mics->mics[3].position)) - dist_edge) < eps)) {
-            return -2;
+            return -3;
         }
         if (!(fabsf(xyz_mag(xyz_sub(mics->mics[3].position, mics->mics[0].position)) - dist_edge) < eps)) {
-            return -2;
+            return -3;
         }
         if (!(fabsf(xyz_mag(xyz_sub(mics->mics[0].position, mics->mics[2].position)) - dist_diag) < eps)) {
-            return -2;
+            return -3;
         }
         if (!(fabsf(xyz_mag(xyz_sub(mics->mics[1].position, mics->mics[3].position)) - dist_diag) < eps)) {
-            return -2;
+            return -3;
         }
         if (!(fabsf(mic_gain(mics->mics[0], direction_top) - gain_top) < eps)) {
-            return -2;
+            return -3;
         }
         if (!(fabsf(mic_gain(mics->mics[0], direction_side) - gain_side) < eps)) {
-            return -2;
+            return -3;
         }
         if (!(fabsf(mic_gain(mics->mics[1], direction_top) - gain_top) < eps)) {
-            return -2;
+            return -3;
         }
         if (!(fabsf(mic_gain(mics->mics[1], direction_side) - gain_side) < eps)) {
-            return -2;
+            return -3;
         }
         if (!(fabsf(mic_gain(mics->mics[2], direction_top) - gain_top) < eps)) {
-            return -2;
+            return -3;
         }
         if (!(fabsf(mic_gain(mics->mics[2], direction_side) - gain_side) < eps)) {
-            return -2;
+            return -3;
         }
         if (!(fabsf(mic_gain(mics->mics[3], direction_top) - gain_top) < eps)) {
-            return -2;
+            return -3;
         }
         if (!(fabsf(mic_gain(mics->mics[3], direction_side) - gain_side) < eps)) {
-            return -2;
+            return -3;
         }
 
         mics_destroy(mics);

@@ -30,6 +30,8 @@ void mic_printf(const mic_t mic);
 
 mics_t * mics_construct(const char * hardware);
 
+mics_t * mics_construct_uninitialized(const unsigned int num_mics);
+
 void mics_destroy(mics_t * obj);
 
 #ifdef __cplusplus
