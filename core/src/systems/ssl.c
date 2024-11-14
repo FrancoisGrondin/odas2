@@ -5,7 +5,7 @@
 #include <string.h>
 #include <stdio.h>
 
-static const float kernel_gaussian[11] = { 1.00f, 0.96f, 0.85f, 0.70f, 0.53f, 0.37f, 0.24f, 0.14f, 0.08f, 0.04f, 0.02f };
+static const float kernel_window[16] = { 1.00f, 1.00f, 0.99f, 0.99f, 0.98f, 0.97f, 0.96f, 0.85f, 0.70f, 0.53f, 0.37f, 0.24f, 0.14f, 0.08f, 0.04f, 0.02f };
 
 ssl_t * ssl_construct(const mics_t * mics, const points_t * points, const float sample_rate, const float sound_speed, const unsigned int num_sources, const unsigned int num_directions) {
 
@@ -112,8 +112,8 @@ ssl_t * ssl_construct(const mics_t * mics, const points_t * points, const float 
     // Kernel (only one half because symmetrical)
     //
 
-    obj->kernel_size = sizeof(kernel_gaussian) / sizeof(float);
-    obj->kernel = kernel_gaussian;
+    obj->kernel_size = sizeof(kernel_window) / sizeof(float);
+    obj->kernel = kernel_window;
 
     //
     // Will hold the synthesized signals with kernels. One signal per pair.

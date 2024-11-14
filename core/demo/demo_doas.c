@@ -2,6 +2,7 @@
 #include <odas2/ios/wav.h>
 #include <odas2/signals/covs.h>
 #include <odas2/signals/doas.h>
+#include <odas2/signals/dsf.h>
 #include <odas2/signals/freqs.h>
 #include <odas2/signals/hops.h>
 #include <odas2/signals/masks.h>
@@ -21,9 +22,9 @@
 int main(int argc, char * argv[]) {
 
     //                                                                                
-    //                             Ms (all 1's)
-    //                                  |
-    //                                  *
+    //                             Ms (all 1's)                                                       dsf (default values)
+    //                                  |                                                                      |
+    //                                  *                                                                      *
     // +----+   xs   +------+   Xs   +-----+   XXs   +------+   XXps   +---------+  tdoas   +-----+  doas   +-----+  doas   +-----+
     // | In | -----* | STFT | -----* | SCM | ------* | PHAT | -------* | GCC/FCC | -------* | SSL | ------* | SST | ------* | Out |
     // +----+        +------+        +-----+         +------+          +---------+          +-----+         +-----+         +-----+
@@ -43,8 +44,7 @@ int main(int argc, char * argv[]) {
     const unsigned int  num_sources         = 1;
     const unsigned int  num_directions      = 2;
     const unsigned int  num_tracks          = 3;
-    const float         delta_time          = 128.0f / 16000.0f;
-    const float         energy_threshold    = 0.5f;
+    const unsigned int  num_pasts           = 40;
     const char          method[]            = "gcc";
     const char          micarray[]          = "respeaker_usb";
     const char          geometry[]          = "halfsphere";
@@ -65,6 +65,7 @@ int main(int argc, char * argv[]) {
     covs_t * covs_phat = covs_construct("XXps", num_channels, num_bins);
     tdoas_t * tdoas = tdoas_construct("tdoas", num_channels, num_sources);
     doas_t * doas_potential = doas_construct("potential", num_directions);
+    dsf_t * dsf = dsf_construct("dsf");
     doas_t * doas_tracked = doas_construct("tracked", num_tracks);
 
     stft_t * stft = stft_construct(num_channels, num_samples, num_shifts, num_bins, "hann");    
@@ -73,7 +74,7 @@ int main(int argc, char * argv[]) {
     fcc_t * fcc = fcc_construct(num_sources, num_channels, num_bins);
     gcc_t * gcc = gcc_construct(num_sources, num_channels, num_bins);
     ssl_t * ssl = ssl_construct(mics, points, sample_rate, sound_speed, num_sources, num_directions);
-    sst_t * sst = sst_construct(num_tracks, num_directions, delta_time, energy_threshold);
+    sst_t * sst = sst_construct(num_tracks, num_directions, num_pasts);
 
     msgout_t * msgout = msgout_construct("/dev/stdout");
 
@@ -97,7 +98,7 @@ int main(int argc, char * argv[]) {
         }
         
         ssl_process(ssl, tdoas, doas_potential);
-        sst_process(sst, doas_potential, doas_tracked);
+        sst_process(sst, dsf, doas_potential, doas_tracked);
 
         msgout_write_doas(msgout, doas_tracked);
 

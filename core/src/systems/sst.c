@@ -4,22 +4,13 @@
 #include <stdlib.h>
 #include <string.h>
 
-sst_t * sst_construct(const unsigned int num_tracks, const unsigned int num_directions, const float delta_time, const float energy_threshold) {
+sst_t * sst_construct(const unsigned int num_tracks, const unsigned int num_directions, const unsigned int num_pasts) {
 
     sst_t * obj = (sst_t *) malloc(sizeof(sst_t));
 
     obj->num_tracks = num_tracks;
     obj->num_directions = num_directions;
-    obj->num_pasts = (int) ((0.040f / delta_time) * num_directions);
-
-    obj->delta_time = delta_time;
-    obj->energy_threshold = energy_threshold;
-
-    obj->score_min = 0.25f;
-    obj->energy_new_threshold = energy_threshold * (0.040f / delta_time);
-    obj->energy_delete_threshold = energy_threshold / 4.0f;
-    obj->energy_decay = 0.95f;
-    obj->update_rate = 0.01f;
+    obj->num_pasts = num_pasts;
 
     obj->pasts = (dir_t *) calloc(obj->num_pasts, sizeof(dir_t));
     obj->tracks = (dir_t *) calloc(obj->num_tracks, sizeof(dir_t));
@@ -37,7 +28,7 @@ void sst_destroy(sst_t * obj) {
 
 }
 
-int sst_process(sst_t * obj, doas_t * in, doas_t * out) {
+int sst_process(sst_t * obj, const dsf_t * dsf, doas_t * in, doas_t * out) {
 
     //
     // Loop for each potential source, and decide if associated
@@ -47,10 +38,11 @@ int sst_process(sst_t * obj, doas_t * in, doas_t * out) {
     for (unsigned int index_direction = 0; index_direction < obj->num_directions; index_direction++) {
 
         //
-        // Get current potential source
+        // Get current potential source and fix the energy according to sigmoid
         //
 
         dir_t pot = in->dirs[index_direction];
+        pot.energy = 1.0f / (1.0f + expf(-1.0f * dsf->sigmoid_slope * (pot.energy - dsf->sigmoid_mean)));
 
         //
         // Update the tracked sources, and also return the best score
@@ -62,14 +54,12 @@ int sst_process(sst_t * obj, doas_t * in, doas_t * out) {
 
         {
 
-            const float sigma2 = 0.05f;
-
             for (unsigned int index_track = 0; index_track < obj->num_tracks; index_track++) {
 
                 if (obj->tracks[index_track].type == TRACKED) {
 
                     float dist2 = xyz_l2(xyz_sub(pot.coord, obj->tracks[index_track].coord));
-                    float score = expf(-1.0f * dist2 / sigma2);
+                    float score = expf(-1.0f * dist2 / dsf->tracked_source_sigma2);
 
                     if (score > best_score) {
                         best_score = score;
@@ -80,33 +70,34 @@ int sst_process(sst_t * obj, doas_t * in, doas_t * out) {
 
             }
 
-            float adapt = best_score * pot.energy * obj->update_rate;
+        }
+
+        //
+        // If the score is high enough, then update the corresponding
+        // tracked source, otherwise check for a new source to be added
+        //
+
+        if (best_score > dsf->tracked_source_threshold) {
+
+            // Update the corresponding tracked source
+
+            float adapt = pot.energy * dsf->tracked_source_rate;
             obj->tracks[best_match].coord = xyz_unit(xyz_add(obj->tracks[best_match].coord, xyz_scale(pot.coord, adapt)));
-            obj->tracks[best_match].energy += best_score * pot.energy;
+            obj->tracks[best_match].energy += pot.energy;
 
-        }
+            if (obj->tracks[best_match].energy > 1.0f) {
+                obj->tracks[best_match].energy = 1.0f;
+            }
 
-        //
-        // Set the energy to zero if the best score is too high, as this
-        // potential source should not be used to produce a new source since
-        // there is already a match with a tracked source
-        //
-
-        if (best_score > obj->score_min) {
+            // And then reset the energy
             pot.energy = 0.0f;
+
         }
-
-        //
-        // Check if there is a new source to be added
-        //
-
-        if (pot.energy > 0.0f) {
+        else {
 
             //
             // Compute the match of this source with past sources
             //
-
-            const float sigma2 = 0.01f;
 
             dir_t new_source = { .type = TRACKED, .coord = xyz_cst(0.0f, 0.0f, 0.0f), .energy = 0.0f };
 
@@ -115,7 +106,7 @@ int sst_process(sst_t * obj, doas_t * in, doas_t * out) {
                 dir_t past = obj->pasts[index_past];
 
                 float dist2 = xyz_l2(xyz_sub(pot.coord, past.coord));
-                float score = expf(-1.0f * dist2 / sigma2);
+                float score = expf(-1.0f * dist2 / dsf->new_source_sigma2);
 
                 new_source.energy += score * past.energy;
                 new_source.coord = xyz_add(new_source.coord, xyz_scale(past.coord, score));
@@ -123,12 +114,14 @@ int sst_process(sst_t * obj, doas_t * in, doas_t * out) {
             }
 
             new_source.coord = xyz_unit(new_source.coord);
+            new_source.energy /= obj->num_pasts;
+            new_source.energy *= obj->num_directions;
 
             //
             // If the score is good enough, then create a new tracked source
             //
 
-            if (new_source.energy > obj->energy_new_threshold) {
+            if (new_source.energy > dsf->new_threshold) {
 
                 for (unsigned int index_track = 0; index_track < obj->num_tracks; index_track++) {
 
@@ -167,9 +160,9 @@ int sst_process(sst_t * obj, doas_t * in, doas_t * out) {
 
         if (obj->tracks[index_track].type == TRACKED) {
     
-            obj->tracks[index_track].energy *= obj->energy_decay;
+            obj->tracks[index_track].energy *= dsf->delete_decay;
             
-            if (obj->tracks[index_track].energy < obj->energy_delete_threshold) {
+            if (obj->tracks[index_track].energy < dsf->delete_threshold) {
 
                 obj->tracks[index_track].type = UNDEFINED;
                 obj->tracks[index_track].coord = xyz_cst(0.0f, 0.0f, 0.0f);

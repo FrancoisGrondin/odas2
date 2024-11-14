@@ -8,13 +8,13 @@ int test_sst(void) {
 
         const unsigned int num_directions = 4;
         const unsigned int num_tracks = 3;
-        const float delta_time = 128.0f / 16000.0f;
-        const float energy_threshold = 0.2f;
+        const unsigned int num_pasts = 40;
 
         doas_t * doas_src = doas_construct("doas_src", num_directions);
         doas_t * doas_dst = doas_construct("doas_dst", num_tracks);
+        dsf_t * dsf = dsf_construct("dsf");
 
-        sst_t * sst = sst_construct(num_tracks, num_directions, delta_time, energy_threshold);
+        sst_t * sst = sst_construct(num_tracks, num_directions, num_pasts);
 
         dir_t target[4];
 
@@ -48,9 +48,10 @@ int test_sst(void) {
 
             }
 
-            sst_process(sst, doas_src, doas_dst);
+            sst_process(sst, dsf, doas_src, doas_dst);
 
         }
+
 
         if (!((doas_dst->dirs[0].type == TRACKED) && (xyz_mag(xyz_sub(doas_dst->dirs[0].coord, target[0].coord)) < eps))) {
             return -1;
@@ -67,6 +68,7 @@ int test_sst(void) {
 
         doas_destroy(doas_src);
         doas_destroy(doas_dst);
+        dsf_destroy(dsf);
 
         sst_destroy(sst);
 

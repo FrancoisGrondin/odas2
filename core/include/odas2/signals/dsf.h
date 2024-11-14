@@ -1,0 +1,26 @@
+#ifndef __DSF_H
+#define __DSF_H
+
+#include <stdio.h>
+
+typedef struct dsf_t {
+
+	char label[64];
+
+	float sigmoid_mean;
+	float sigmoid_slope;
+	float tracked_source_sigma2;
+	float tracked_source_threshold;
+	float tracked_source_rate;
+	float new_source_sigma2;
+    float new_threshold;
+    float delete_threshold;
+    float delete_decay;
+    
+} dsf_t;
+
+dsf_t * dsf_construct(const char * label);
+
+void dsf_destroy(dsf_t * obj);
+
+#endif // __DSF_H

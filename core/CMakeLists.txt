@@ -33,6 +33,7 @@ set(SRC
     
     src/signals/covs.c
     src/signals/doas.c
+    src/signals/dsf.c
     src/signals/freqs.c
     src/signals/hops.c
     src/signals/masks.c

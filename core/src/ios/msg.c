@@ -106,7 +106,7 @@ int msgout_write_doas(msgout_t * obj, const doas_t * doas) {
     fprintf(obj->file_pointer, "\"dirs\":[");
 
     for (unsigned int index_direction = 0; index_direction < doas->num_directions; index_direction++) {
-        fprintf(obj->file_pointer, "{\"type\": %u, \"x\": %1.2f, \"y\": %1.2f, \"z\": %1.2f, \"energy\": %1.2f}", 
+        fprintf(obj->file_pointer, "{\"type\": %u, \"x\": %1.3f, \"y\": %1.3f, \"z\": %1.3f, \"energy\": %1.3f}", 
                     doas->dirs[index_direction].type,
                     doas->dirs[index_direction].coord.x,
                     doas->dirs[index_direction].coord.y,
@@ -137,7 +137,7 @@ int msgout_write_tdoas(msgout_t * obj, const tdoas_t * tdoas) {
     for (unsigned int index_source = 0; index_source < tdoas->num_sources; index_source++) {
         fprintf(obj->file_pointer, "[");
         for (unsigned int index_pair = 0; index_pair < tdoas->num_pairs; index_pair++) {
-            fprintf(obj->file_pointer, "{\"delay\": %1.2f, \"amplitude\": %1.2f}", tdoas->taus[index_source][index_pair].delay, tdoas->taus[index_source][index_pair].amplitude);
+            fprintf(obj->file_pointer, "{\"delay\": %1.3f, \"amplitude\": %1.3f}", tdoas->taus[index_source][index_pair].delay, tdoas->taus[index_source][index_pair].amplitude);
             if (index_pair != (tdoas->num_pairs-1)) {
                 fprintf(obj->file_pointer, ",");
             }
