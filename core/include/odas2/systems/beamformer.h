@@ -4,6 +4,10 @@
 #include "../signals/freqs.h"
 #include "../signals/weights.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct beamformer_t {
 
     unsigned int num_sources;
@@ -17,5 +21,9 @@ beamformer_t * beamformer_construct(const unsigned int num_sources, const unsign
 void beamformer_destroy(beamformer_t * obj);
 
 int beamformer_process(beamformer_t * obj, const freqs_t * in, const weights_t * weights, freqs_t * out);
+
+#ifdef __cplusplus
+} //extern "C"
+#endif
 
 #endif // __BEAMFORMER_H

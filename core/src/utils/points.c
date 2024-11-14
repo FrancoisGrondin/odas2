@@ -16,19 +16,23 @@ points_t * points_construct(const char * geometry) {
         obj->points = sphere;
         obj->num_points = sizeof(sphere) / sizeof(xyz_t);
     }
-    if (strcmp(geometry, "halfsphere") == 0) {
+    else if (strcmp(geometry, "halfsphere") == 0) {
         obj->points = halfsphere;
         obj->num_points = sizeof(halfsphere) / sizeof(xyz_t);
     }
-    if (strcmp(geometry, "arc") == 0) {
+    else if (strcmp(geometry, "arc") == 0) {
         obj->points = arc;
         obj->num_points = sizeof(arc) / sizeof(xyz_t);
     }
-    if (strcmp(geometry, "circle") == 0) {
+    else if (strcmp(geometry, "circle") == 0) {
         obj->points = circle;
         obj->num_points = sizeof(circle) / sizeof(xyz_t);
     }
-    
+    else {
+        obj->points = NULL;
+        obj->num_points = 0;
+    }
+
     return obj;
 
 }
@@ -4482,3 +4486,4 @@ static const xyz_t circle[360] = {
     { .x = +0.999848f, .y = -0.017452f, .z = +0.000000f }
 
 };
+

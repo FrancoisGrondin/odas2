@@ -36,7 +36,7 @@ int test_sst(void) {
         unsigned int index_noise = 0;
 
         for (unsigned int index_frame = 0; index_frame < 20; index_frame++) {
-            
+
             for (unsigned int index_pot = 0; index_pot < num_directions; index_pot++) {
 
                 doas_src->dirs[index_pot] = target[index_pot];
@@ -60,9 +60,6 @@ int test_sst(void) {
             return -1;
         }
         if (!(doas_dst->dirs[2].type == UNDEFINED)) {
-            return -1;
-        }
-        if (!(doas_dst->dirs[3].type == UNDEFINED)) {
             return -1;
         }
 

@@ -6,6 +6,10 @@
 #include "../signals/freqs.h"
 #include "../signals/masks.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct scm_t {
 
     unsigned int num_channels;
@@ -53,6 +57,8 @@ void iscm_destroy(iscm_t * obj);
 
 int iscm_process(iscm_t * obj, const freqs_t * freqs, const masks_t * masks, covs_t * covs);
 
-
+#ifdef __cplusplus
+} //extern "C"
+#endif
 
 #endif // __SCM_H

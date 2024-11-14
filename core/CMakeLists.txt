@@ -1,5 +1,5 @@
-project(odas3)
-cmake_minimum_required(VERSION 2.4.6)
+project(odas2)
+cmake_minimum_required(VERSION 3.15...3.27)
 
 if(COMMAND cmake_policy)
     cmake_policy(SET CMP0003 NEW)
@@ -9,7 +9,11 @@ find_package(PkgConfig REQUIRED)
 
 include_directories("${PROJECT_SOURCE_DIR}/include")
 
-set(CMAKE_BUILD_TYPE "Release")
+if(NOT CMAKE_BUILD_TYPE)
+    SET(CMAKE_BUILD_TYPE "Release")
+endif(NOT CMAKE_BUILD_TYPE)
+
+option(BUILD_SHARED_LIBS "Build using shared libraries" ON)
 
 set(CMAKE_C_FLAGS ${CMAKE_C_FLAGS} "-march=native -Wall -ffast-math")
 
@@ -30,7 +34,7 @@ set(SRC
     src/ios/msg.c
     src/ios/wav.c
     src/ios/raw.c
-    
+
     src/signals/covs.c
     src/signals/doas.c
     src/signals/dsf.c
@@ -39,7 +43,7 @@ set(SRC
     src/signals/masks.c
     src/signals/tdoas.c
     src/signals/weights.c
-    
+
     src/systems/beamformer.c
     src/systems/delaysum.c
     src/systems/enhancement.c
@@ -57,15 +61,14 @@ set(SRC
 
     src/types/cplx.c
     src/types/xyz.c
-    
+
     src/utils/fft.c
     src/utils/linalg.c
     src/utils/mics.c
     src/utils/points.c
-
 )
 
-add_library(odas2 SHARED
+add_library(odas2
     ${SRC}
 )
 

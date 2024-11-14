@@ -5,6 +5,10 @@
 #include "../signals/tdoas.h"
 #include "../utils/mics.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct steering_t {
 
     unsigned int num_channels;
@@ -22,5 +26,9 @@ steering_t * steering_construct(const mics_t * mics, const float sample_rate, co
 void steering_destroy(steering_t * obj);
 
 int steering_process(const steering_t * obj, const doas_t * doas, tdoas_t * tdoas);
+
+#ifdef __cplusplus
+} //extern "C"
+#endif
 
 #endif // __STEERING_H

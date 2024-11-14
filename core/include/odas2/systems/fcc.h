@@ -5,6 +5,10 @@
 #include "../signals/covs.h"
 #include "../signals/tdoas.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct fcc_t {
 
     unsigned int num_channels;
@@ -30,5 +34,9 @@ fcc_t * fcc_construct(const unsigned int num_sources, const unsigned int num_cha
 void fcc_destroy(fcc_t * obj);
 
 int fcc_process(fcc_t * obj, const covs_t * covs, tdoas_t * tdoas);
+
+#ifdef __cplusplus
+} //extern "C"
+#endif
 
 #endif // __FCC_H

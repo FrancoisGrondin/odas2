@@ -58,6 +58,3 @@ int steering_process(const steering_t * obj, const doas_t * doas, tdoas_t * tdoa
     return 0;
 
 }
-
-    
-

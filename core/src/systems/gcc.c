@@ -19,7 +19,7 @@ gcc_t * gcc_construct(const unsigned int num_sources, const unsigned int num_cha
 
     obj->XX = (cplx_t *) calloc(sizeof(cplx_t), (obj->num_bins - 1) * obj->interpolation_factor + 1);
     obj->xx = (float *) calloc(sizeof(float), obj->num_samples * obj->interpolation_factor);
-    
+
     return obj;
 
 }
@@ -38,42 +38,42 @@ void gcc_destroy(gcc_t * obj) {
 int gcc_process(gcc_t * obj, const covs_t * covs, tdoas_t * tdoas) {
 
     //
-    // The number of samples for the iFFT corresponds to kN, where N is the 
+    // The number of samples for the iFFT corresponds to kN, where N is the
     // frame size and k is the interpolation rate.
     //
     unsigned int num_samples_interp = obj->num_samples * obj->interpolation_factor;
-    
+
     //
     // Due to interpolation, we have fractional sample spaced by (1/k).
     // For instance, if k=2, we get 0.0, 0.5, 1.0, 1.5, ... such thate delta_tau = 0.5.
     //
     float delta_tau = 1.0f / ((float) obj->interpolation_factor);
-    
+
     //
     // This is the scale factor to ensure the maximum value is 1.0 after iFFT.
     // This is required because the extra bins after interpolation are set to 0, and this
     // needs to be accounted for.
     //
     // Given the number of bins F = (N/2)+1, we get scale = ((F-1) * k + 1) / ((F-1) * k * 2).
-    // For instance, if N = 512 and k = 2, we get F = 257, and 
+    // For instance, if N = 512 and k = 2, we get F = 257, and
     // scale = ((257-1) * 2 + 1) / ((257-1) * 2 * 2) = 513 / 1024.
     // In this case, the max value would be 513/1024, and thus dividing by scale brings this to 1.
-    // 
+    //
     float scale = ((float) (obj->num_bins - 1) * obj->interpolation_factor + 1) / ((float) (obj->num_bins - 1) * obj->interpolation_factor * 2);
 
     //
     // Compute GCC for each pair
     //
     for (unsigned int index_pair = 0; index_pair < obj->num_pairs; index_pair++) {
-        
-        // 
+
+        //
         // Set all values to 0. For instance, with F = 257 and k = 2:
         //
         // [  0  |  0  |  0  |  0  | ... |  0  ]
         //   (0)   (1)   (2)   (3)   ...  (512)
         //
         memset(obj->XX, 0x00, sizeof(cplx_t) * ((obj->num_bins - 1) * obj->interpolation_factor + 1));
-        
+
         //
         // Then load the coefficients:
         //
@@ -90,12 +90,12 @@ int gcc_process(gcc_t * obj, const covs_t * covs, tdoas_t * tdoas) {
         //
         fft_irfft(obj->fft, obj->XX, obj->xx);
 
-        // 
+        //
         // Scan for multiple peaks in this cross-correlation result
         //
         for (unsigned int index_source = 0; index_source < obj->num_sources; index_source++) {
 
-            // 
+            //
             // Find maximum value
             //
 
@@ -125,7 +125,7 @@ int gcc_process(gcc_t * obj, const covs_t * covs, tdoas_t * tdoas) {
                 tau_max = ((float) max_index) / ((float) obj->interpolation_factor);
             }
 
-            // 
+            //
             // Get the left and right values next to the maximum to perform quadratic interpolation.
             //
             unsigned int max_index_right = (unsigned int) (((signed int) max_index + 1) % num_samples_interp);
@@ -137,11 +137,11 @@ int gcc_process(gcc_t * obj, const covs_t * covs, tdoas_t * tdoas) {
             // a (-delta_tau)^2 + b (-delta_tau) + c = y_prev
             // a (0)^2          + b (0)          + c = y_max
             // a (+delta_tau)^2 + b (+delta_tau) + c = y_next
-            // 
+            //
             // Solve for a, b, and c, and then get the maximum tau value = tau_max + -b/(2*a), and the
             // maximum amplitude value = c - (b^2)/(4a). The equations used here have been simplified
             // by substituting values of a, b, and c using variables delta_tau, y_prev, y_max and y_next.
-            // Note the scaling by (1/scale) to make sure the maximum value is 1.0. 
+            // Note the scaling by (1/scale) to make sure the maximum value is 1.0.
             //
             float y_prev = obj->xx[max_index_left];
             float y_max = obj->xx[max_index];
@@ -159,7 +159,7 @@ int gcc_process(gcc_t * obj, const covs_t * covs, tdoas_t * tdoas) {
             tdoas->taus[index_source][index_pair].delay = tau_hat;
             tdoas->taus[index_source][index_pair].amplitude = amp_hat;
 
-            // 
+            //
             // If there are other maximum to find, we first need to remove the previously found
             // maximum value. To do that, scan each side of the curve, and set samples to zeros
             // as long as the slope is negative. This allows to reset peaks with large lobes, which

@@ -6,6 +6,10 @@
 #include "../signals/freqs.h"
 #include "../signals/weights.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct mvdr_t {
 
     unsigned int num_channels;
@@ -18,5 +22,9 @@ mvdr_t * mvdr_construct(const unsigned int num_channels, const unsigned int num_
 void mvdr_destroy(mvdr_t * obj);
 
 int mvdr_process(mvdr_t * obj, const covs_t * covs, weights_t * weights);
+
+#ifdef __cplusplus
+} //extern "C"
+#endif
 
 #endif // __MVDR_H

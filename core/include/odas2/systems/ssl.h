@@ -6,6 +6,10 @@
 #include "../utils/mics.h"
 #include "../utils/points.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct aoa_t {
 
     float degree;
@@ -48,5 +52,9 @@ void ssl_destroy(ssl_t * obj);
 int ssl_process(ssl_t * obj, const tdoas_t * tdoas, doas_t * doas);
 
 void ssl_printf(const ssl_t * obj);
+
+#ifdef __cplusplus
+} //extern "C"
+#endif
 
 #endif // __SSL_H

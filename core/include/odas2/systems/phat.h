@@ -3,6 +3,10 @@
 
 #include "../signals/covs.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct phat_t {
 
     unsigned int num_channels;
@@ -16,5 +20,9 @@ phat_t * phat_construct(const unsigned int num_channels, const unsigned int num_
 void phat_destroy(phat_t * obj);
 
 int phat_process(phat_t * obj, const covs_t * covs_in, covs_t * covs_out);
+
+#ifdef __cplusplus
+} //extern "C"
+#endif
 
 #endif // __PHAT_H

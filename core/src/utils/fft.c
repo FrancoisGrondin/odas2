@@ -160,7 +160,7 @@ static void fft_compute_forward(fft_t * obj) {
 
     // Copy back to working array
     memcpy(obj->working, obj->reverse, sizeof(cplx_t) * (obj->num_samples/2));
-    
+
     // Number of groups starts at N/2, and will reduce
     // to N/4, N/8, ..., 1 at each next level
     // For example, with N = 256, we have:
@@ -266,7 +266,7 @@ static cplx_t * fft_coefficients(const unsigned int num_samples) {
     }
 
     return rtn;
-    
+
 }
 
 static unsigned int * fft_revbits(const unsigned int num_samples) {

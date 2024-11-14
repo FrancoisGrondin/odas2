@@ -3,6 +3,10 @@
 
 #include <stdio.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct tau_t {
 
     float delay;
@@ -27,5 +31,9 @@ tdoas_t * tdoas_construct(const char * label, const unsigned int num_channels, c
 void tdoas_destroy(tdoas_t * obj);
 
 void tdoas_fprintf(const tdoas_t * obj, FILE * fp);
+
+#ifdef __cplusplus
+} //extern "C"
+#endif
 
 #endif // __TDOAS_H
