@@ -3,6 +3,10 @@
 
 #include <stdio.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct dsf_t {
 
 	char label[64];
@@ -16,11 +20,15 @@ typedef struct dsf_t {
     float new_threshold;
     float delete_threshold;
     float delete_decay;
-    
+
 } dsf_t;
 
 dsf_t * dsf_construct(const char * label);
 
 void dsf_destroy(dsf_t * obj);
+
+#ifdef __cplusplus
+} //extern "C"
+#endif
 
 #endif // __DSF_H

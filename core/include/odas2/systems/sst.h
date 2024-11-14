@@ -25,7 +25,7 @@ sst_t * sst_construct(const unsigned int num_tracks, const unsigned int num_dire
 
 void sst_destroy(sst_t * obj);
 
-int sst_process(sst_t * obj, const dsf_t * dsf, doas_t * in, doas_t * out);
+int sst_process(sst_t * obj, const dsf_t * dsf, const doas_t * in, doas_t * out);
 
 void sst_printf(const sst_t * obj);
 

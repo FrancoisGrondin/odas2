@@ -28,7 +28,7 @@ void sst_destroy(sst_t * obj) {
 
 }
 
-int sst_process(sst_t * obj, const dsf_t * dsf, doas_t * in, doas_t * out) {
+int sst_process(sst_t * obj, const dsf_t * dsf, const doas_t * in, doas_t * out) {
 
     //
     // Loop for each potential source, and decide if associated
@@ -159,9 +159,9 @@ int sst_process(sst_t * obj, const dsf_t * dsf, doas_t * in, doas_t * out) {
     for (unsigned int index_track = 0; index_track < obj->num_tracks; index_track++) {
 
         if (obj->tracks[index_track].type == TRACKED) {
-    
+
             obj->tracks[index_track].energy *= dsf->delete_decay;
-            
+
             if (obj->tracks[index_track].energy < dsf->delete_threshold) {
 
                 obj->tracks[index_track].type = UNDEFINED;
