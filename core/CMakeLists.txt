@@ -59,9 +59,6 @@ set(SRC
     src/systems/steering.c
     src/systems/stft.c
 
-    src/types/cplx.c
-    src/types/xyz.c
-
     src/utils/fft.c
     src/utils/linalg.c
     src/utils/mics.c
