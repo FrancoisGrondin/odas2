@@ -4,6 +4,13 @@
 #include <stdlib.h>
 #include <string.h>
 
+static const unsigned int num_dims_in;
+static const unsigned int num_dims_hidden;
+static const unsigned int num_dims_out;
+static const float beta;
+static const ugru_params rnn_params;
+static const linear_params fc_params;
+
 enhancement_t * enhancement_construct(const unsigned int num_channels, const unsigned int num_bins) {
 
     enhancement_t * obj = (enhancement_t *) malloc(sizeof(enhancement_t));
@@ -90,3 +97,4 @@ static const linear_params fc_params = {
     .b = (float []) { +0.0 }
 
 };
+
