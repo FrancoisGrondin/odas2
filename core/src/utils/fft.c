@@ -182,16 +182,18 @@ static void fft_compute_forward(fft_t * obj) {
             // In each group, loop for each butterfly
             for (unsigned int index_butterfly = 0; index_butterfly < num_butterflies; index_butterfly++) {
 
-                // Butterfly has the following architecture:
-                //
-                // x1 +-----+-----+ y1
-                //           \   /
-                //            \ /
-                //             X
-                //            / \
-                //       T   /   \
-                // x2 +-----+-----+ y2
-                //            -1
+                /*
+                * Butterfly has the following architecture:
+                *
+                * x1 +-----+-----+ y1
+                *           \   /
+                *            \ /
+                *             X
+                *            / \
+                *       T   /   \
+                * x2 +-----+-----+ y2
+                *            -1
+                */
 
                 // Get twiddle factor value
                 cplx_t twiddle = obj->twiddle[index_butterfly * num_groups];
