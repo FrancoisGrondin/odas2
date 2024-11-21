@@ -21,7 +21,7 @@
 
 int main(int argc, char * argv[]) {
 
-    //                                                                                
+    //
     //                             Ms (all 1's)                                                       dsf (default values)
     //                                  |                                                                      |
     //                                  *                                                                      *
@@ -46,7 +46,7 @@ int main(int argc, char * argv[]) {
     const unsigned int  num_tracks          = 3;
     const unsigned int  num_pasts           = 40;
     const char          method[]            = "gcc";
-    const char          micarray[]          = "respeaker_usb";
+    const char          micarray[]          = "respeaker_usb_4";
     const char          geometry[]          = "halfsphere";
 
     //

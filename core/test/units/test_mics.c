@@ -6,9 +6,10 @@ int test_mics(void) {
 
     {
 
-        mics_t * mics1 = mics_construct("respeaker_usb");
-        mics_t * mics2 = mics_construct("minidsp_uma");
-        mics_t * mics3 = mics_construct("wrong_name");
+        mics_t * mics1 = mics_construct("respeaker_usb_4");
+        mics_t * mics2 = mics_construct("respeaker_usb_6");
+        mics_t * mics3 = mics_construct("minidsp_uma");
+        mics_t * mics4 = mics_construct("wrong_name");
 
         if (mics1 == NULL) {
             return -1;
@@ -16,13 +17,16 @@ int test_mics(void) {
         if (mics2 == NULL) {
             return -1;
         }
-        if (!(mics3 == NULL)) {
+        if (mics3 == NULL) {
+            return -1;
+        }
+        if (!(mics4 == NULL)) {
             return -1;
         }
 
         mics_destroy(mics1);
         mics_destroy(mics2);
-
+        mics_destroy(mics3);
     }
 
     {
@@ -40,7 +44,7 @@ int test_mics(void) {
 
     {
 
-        mics_t * mics = mics_construct("respeaker_usb");
+        mics_t * mics = mics_construct("respeaker_usb_4");
         float dist_edge = 0.045f;
         float dist_diag = 0.064f;
         xyz_t direction_top  = xyz_cst(0.0f, 0.0f, 1.0f);

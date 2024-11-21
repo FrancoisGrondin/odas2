@@ -12,7 +12,7 @@
 
 int main(int argc, char * argv[]) {
 
-    //                                                                                
+    //
     // +----+   xs   +------+   Xs   +------------+   Ys   +-------+   ys   +-----+
     // | In | -----* | STFT | -----* | Beamformer | -----* | iSTFT | -----* | Out |
     // +----+        +------+        +------------+        +-------+        +-----+
@@ -36,7 +36,7 @@ int main(int argc, char * argv[]) {
     const unsigned int  sample_rate     = 16000;
     const unsigned int  num_sources     = 1;
     const float         sound_speed     = 343.0f;
-    const char          micarray[]      = "respeaker_usb";
+    const char          micarray[]      = "respeaker_usb_4";
     const xyz_t         targets[]       = { { .x = -0.704f, .y = -0.704f, .z = -0.088f } };
 
     //
@@ -48,12 +48,12 @@ int main(int argc, char * argv[]) {
     wavin_t * wavin = wavin_construct("/dev/stdin", num_shifts, num_channels, sample_rate);
     doas_t * doas = doas_construct("doas", num_sources);
 
-    hops_t * hops_in = hops_construct("xs", num_channels, num_shifts); 
+    hops_t * hops_in = hops_construct("xs", num_channels, num_shifts);
     freqs_t * freqs_in = freqs_construct("Xs", num_channels, num_bins);
     tdoas_t * tdoas = tdoas_construct("tdoas", num_channels, num_sources);
     weights_t * weights = weights_construct("Ws", num_sources, num_channels, num_bins);
     freqs_t * freqs_out = freqs_construct("Ys", num_sources, num_bins);
-    hops_t * hops_out = hops_construct("ys", num_sources, num_shifts); 
+    hops_t * hops_out = hops_construct("ys", num_sources, num_shifts);
 
     stft_t * stft = stft_construct(num_channels, num_samples, num_shifts, num_bins, "hann");
     steering_t * steering = steering_construct(mics, sample_rate, sound_speed, num_sources);
@@ -68,7 +68,7 @@ int main(int argc, char * argv[]) {
     //
 
     while (wavin_read(wavin, hops_in) == 0) {
-        
+
         doas_target(doas, targets);
 
         stft_process(stft, hops_in, freqs_in);

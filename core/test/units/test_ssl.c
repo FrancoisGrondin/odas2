@@ -6,7 +6,7 @@ int test_ssl(void) {
 
     {
 
-        mics_t * mics = mics_construct("respeaker_usb");
+        mics_t * mics = mics_construct("respeaker_usb_4");
         points_t * points = points_construct("halfsphere");
 
         const float sample_rate = 16000.0f;
@@ -40,7 +40,7 @@ int test_ssl(void) {
               (fabsf(doas_src->dirs[1].coord.y - doas_dst->dirs[1].coord.y) < eps) &&
               (fabsf(doas_src->dirs[1].coord.z - doas_dst->dirs[1].coord.z) < eps))) {
             return -1;
-        }       
+        }
 
         doas_destroy(doas_src);
         doas_destroy(doas_dst);

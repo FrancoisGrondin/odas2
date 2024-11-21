@@ -5,7 +5,8 @@
 #include <string.h>
 #include <stdio.h>
 
-static mics_t * mics_respeaker_usb(void);
+static mics_t * mics_respeaker_usb_4(void);
+static mics_t * mics_respeaker_usb_6(void);
 static mics_t * mics_minidsp_uma(void);
 static mics_t * mics_introlab_circular(void);
 static mics_t * mics_vibeus_circular(void);
@@ -52,8 +53,11 @@ mics_t * mics_construct(const char * hardware) {
 
     mics_t * obj = (mics_t *) NULL;
 
-    if (strcmp(hardware, "respeaker_usb") == 0) {
-        obj = mics_respeaker_usb();
+    if (strcmp(hardware, "respeaker_usb_4") == 0) {
+        obj = mics_respeaker_usb_4();
+    }
+    if (strcmp(hardware, "respeaker_usb_6") == 0) {
+        obj = mics_respeaker_usb_6();
     }
     if (strcmp(hardware, "minidsp_uma") == 0) {
         obj = mics_minidsp_uma();
@@ -89,7 +93,7 @@ void mics_destroy(mics_t * obj) {
 
 }
 
-static mics_t * mics_respeaker_usb(void) {
+static mics_t * mics_respeaker_usb_4(void) {
 
     mics_t * obj = (mics_t *) malloc(sizeof(mics_t));
 
@@ -100,6 +104,24 @@ static mics_t * mics_respeaker_usb(void) {
     obj->mics[1] = mic_cst((xyz_t) { .x = +0.000, .y = -0.032, .z = +0.000 }, (xyz_t) { .x = +0.000, .y = +0.000, .z = +1.000 }, "cardioid");
     obj->mics[2] = mic_cst((xyz_t) { .x = +0.032, .y = +0.000, .z = +0.000 }, (xyz_t) { .x = +0.000, .y = +0.000, .z = +1.000 }, "cardioid");
     obj->mics[3] = mic_cst((xyz_t) { .x = +0.000, .y = +0.032, .z = +0.000 }, (xyz_t) { .x = +0.000, .y = +0.000, .z = +1.000 }, "cardioid");
+
+    return obj;
+
+}
+
+static mics_t * mics_respeaker_usb_6(void) {
+
+    mics_t * obj = (mics_t *) malloc(sizeof(mics_t));
+
+    obj->num_mics = 6;
+    obj->mics = (mic_t *) malloc(sizeof(mic_t) * obj->num_mics);
+
+    obj->mics[0] = mic_cst((xyz_t) { .x = -0.0232, .y = +0.0401, .z = +0.000 }, (xyz_t) { .x = +0.000, .y = +0.000, .z = +1.000 }, "cardioid");
+    obj->mics[1] = mic_cst((xyz_t) { .x = -0.0463, .y = -0.0000, .z = +0.000 }, (xyz_t) { .x = +0.000, .y = +0.000, .z = +1.000 }, "cardioid");
+    obj->mics[2] = mic_cst((xyz_t) { .x = -0.0232, .y = -0.0401, .z = +0.000 }, (xyz_t) { .x = +0.000, .y = +0.000, .z = +1.000 }, "cardioid");
+    obj->mics[3] = mic_cst((xyz_t) { .x = +0.0232, .y = -0.0401, .z = +0.000 }, (xyz_t) { .x = +0.000, .y = +0.000, .z = +1.000 }, "cardioid");
+    obj->mics[4] = mic_cst((xyz_t) { .x = +0.0463, .y = +0.0000, .z = +0.000 }, (xyz_t) { .x = +0.000, .y = +0.000, .z = +1.000 }, "cardioid");
+    obj->mics[5] = mic_cst((xyz_t) { .x = +0.0232, .y = +0.0401, .z = +0.000 }, (xyz_t) { .x = +0.000, .y = +0.000, .z = +1.000 }, "cardioid");
 
     return obj;
 
