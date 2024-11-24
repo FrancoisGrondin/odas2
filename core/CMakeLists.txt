@@ -132,6 +132,9 @@ target_link_libraries(example_vibeus_ssl odas2)
 add_executable(example_soundskrit_sst examples/example_soundskrit_sst.c)
 target_link_libraries(example_soundskrit_sst odas2)
 
+add_executable(example_sc16_sst examples/example_sc16_sst.c)
+target_link_libraries(example_sc16_sst odas2)
+
 add_executable(buffer tools/buffer.c)
 target_link_libraries(buffer pthread)
 
