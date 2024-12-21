@@ -96,7 +96,8 @@ wavin_t * wavin_construct(const char * file_name, const unsigned int num_shifts,
 
     wavhdr_t hdr;
     size_t rtn = fread(&hdr, sizeof(wavhdr_t), 1, obj->file_pointer);
-    if (rtn != sizeof(wavhdr_t)) {
+
+    if (rtn != 1) {
         printf("Cannot open file\n");
         exit(EXIT_FAILURE);
     }
