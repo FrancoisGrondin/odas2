@@ -7,7 +7,7 @@
 
 #ifdef _MSC_VER
 #define PACKED_ATTRIBUTE
-__pragma( pack(push, 1) ) structure
+__pragma( pack(push, 1) )
 #else
 #define PACKED_ATTRIBUTE __attribute__((__packed__))
 #endif
