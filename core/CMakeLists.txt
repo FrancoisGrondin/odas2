@@ -5,8 +5,6 @@ if(COMMAND cmake_policy)
     cmake_policy(SET CMP0003 NEW)
 endif(COMMAND cmake_policy)
 
-find_package(PkgConfig REQUIRED)
-
 include_directories("${PROJECT_SOURCE_DIR}/include")
 
 if(NOT CMAKE_BUILD_TYPE)
@@ -135,7 +133,9 @@ target_link_libraries(example_soundskrit_sst odas2)
 add_executable(example_sc16_sst examples/example_sc16_sst.c)
 target_link_libraries(example_sc16_sst odas2)
 
-add_executable(buffer tools/buffer.c)
-target_link_libraries(buffer pthread)
+if (UNIX)
+    add_executable(buffer tools/buffer.c)
+    target_link_libraries(buffer pthread)
+endif ()
 
 install(TARGETS odas2 DESTINATION lib)
