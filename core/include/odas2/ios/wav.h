@@ -5,6 +5,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#ifdef _MSC_VER
+#define PACKED_ATTRIBUTE
+__pragma( pack(push, 1) ) structure
+#else
+#define PACKED_ATTRIBUTE __attribute__((__packed__))
+#endif
+
 typedef struct wavhdr_t {
 
     char chunk_id[4];
@@ -21,14 +28,18 @@ typedef struct wavhdr_t {
     char subchunk2_id[4];
     unsigned int subchunk2_size;
 
-} __attribute__((packed)) wavhdr_t;
+} PACKED_ATTRIBUTE wavhdr_t;
+
+#ifdef _MSC_VER
+__pragma( pack(pop))
+#endif
 
 typedef struct wavin_t {
 
     unsigned int num_channels;
     unsigned int num_shifts;
     unsigned int sample_rate;
-    
+
     FILE * file_pointer;
     short * buffer;
 
@@ -39,7 +50,7 @@ typedef struct wavout_t {
     unsigned int num_channels;
     unsigned int num_shifts;
     unsigned int sample_rate;
-    
+
     FILE * file_pointer;
     short * buffer;
 
