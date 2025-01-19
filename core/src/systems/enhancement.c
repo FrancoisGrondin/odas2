@@ -72,28 +72,36 @@ int enhancement_process(enhancement_t * obj, const freqs_t * freqs, masks_t * ma
 
 }
 
-static const unsigned int num_dims_in = 257;
-static const unsigned int num_dims_hidden = 128;
-static const unsigned int num_dims_out = 257;
+#define NUM_DIMS_IN 257
+#define NUM_DIMS_HIDDEN 128
+#define NUM_DIMS_OUT 257
 
 static const float beta = 0.25f;
 
+static const float rnn_params_W_ih[3 * NUM_DIMS_HIDDEN * NUM_DIMS_IN] = { +0.0 };
+static const float rnn_params_W_hh[3 * NUM_DIMS_HIDDEN * NUM_DIMS_HIDDEN] = { +0.0 };
+static const float rnn_params_b_ih[3 * NUM_DIMS_HIDDEN] = { +0.0 };
+static const float rnn_params_b_hh[3 * NUM_DIMS_HIDDEN] = { +0.0 };
+
 static const ugru_params rnn_params = {
 
-    .num_dims_in = num_dims_in,
-    .num_dims_out = num_dims_hidden,
-    .W_ih = (const float []) { +0.0 },
-    .W_hh = (const float []) { +0.0 },
-    .b_ih = (const float []) { +0.0 },
-    .b_hh = (const float []) { +0.0 }
+    .num_dims_in = NUM_DIMS_IN,
+    .num_dims_out = NUM_DIMS_HIDDEN,
+    .W_ih = rnn_params_W_ih,
+    .W_hh = rnn_params_W_hh,
+    .b_ih = rnn_params_b_ih,
+    .b_hh = rnn_params_b_hh
 
 };
 
+static const float fc_params_W[NUM_DIMS_HIDDEN * NUM_DIMS_OUT] = { +0.0 };
+static const float fc_params_b[NUM_DIMS_OUT] = { +0.0 };
+
 static const linear_params fc_params = {
 
-    .num_dims_in = num_dims_hidden,
-    .num_dims_out = num_dims_out,
-    .W = (const float []) { +0.0 },
-    .b = (const float []) { +0.0 }
+    .num_dims_in = NUM_DIMS_HIDDEN,
+    .num_dims_out = NUM_DIMS_OUT,
+    .W = fc_params_W,
+    .b = fc_params_b
 
 };
