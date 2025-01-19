@@ -1,3 +1,4 @@
+
 #include "test_delaysum.h"
 
 int test_delaysum(void) {
@@ -29,20 +30,20 @@ int test_delaysum(void) {
 
         for (unsigned int index_source = 0; index_source < num_sources; index_source++) {
             for (unsigned int index_channel = 0; index_channel < num_channels; index_channel++) {
-                
+
                 float delay = delays[index_source][index_channel] - delays[index_source][0];
-                
+
                 for (unsigned int index_bin = 0; index_bin < num_bins; index_bin++) {
-                
+
                     float target_real = (1.0f / num_channels) * cosf(2.0f * M_PI * index_bin * delay / ((num_bins - 1) * 2));
                     float target_imag = (1.0f / num_channels) * sinf(2.0f * M_PI * index_bin * delay / ((num_bins - 1) * 2));
-                
+
                     if (!(fabsf(weights->bins[index_source][index_channel][index_bin].real - target_real) < eps)) {
                         return -1;
                     }
                     if (!(fabsf(weights->bins[index_source][index_channel][index_bin].imag - target_imag) < eps)) {
                         return -1;
-                    }                
+                    }
 
                 }
             }

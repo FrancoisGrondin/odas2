@@ -23,6 +23,8 @@ include_directories(include/odas2)
 
 add_subdirectory(include)
 
+add_compile_definitions(_USE_MATH_DEFINES)
+
 set(SRC
 
     src/dnns/functionals.c
