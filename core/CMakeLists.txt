@@ -13,7 +13,7 @@ endif(NOT CMAKE_BUILD_TYPE)
 
 option(BUILD_SHARED_LIBS "Build using shared libraries" ON)
 
-set(CMAKE_C_FLAGS ${CMAKE_C_FLAGS} "-march=native -Wall -ffast-math")
+#set(CMAKE_C_FLAGS ${CMAKE_C_FLAGS} "-march=native -Wall -ffast-math")
 
 set(EXECUTABLE_OUTPUT_PATH "${PROJECT_SOURCE_DIR}/bin")
 set(LIBRARY_OUTPUT_PATH "${PROJECT_SOURCE_DIR}/lib")
