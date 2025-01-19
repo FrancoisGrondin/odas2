@@ -67,9 +67,11 @@ add_library(odas2
     ${SRC}
 )
 
-target_link_libraries(odas2
-    m
-)
+if (NOT MSVC)
+    target_link_libraries(odas2
+        m
+    )
+endif ()
 
 add_executable(tests
     test/tests.c
