@@ -14,15 +14,11 @@ endif(NOT CMAKE_BUILD_TYPE)
 option(BUILD_SHARED_LIBS "Build using shared libraries" ON)
 
 if(NOT MSVC)
-    set(CMAKE_C_FLAGS ${CMAKE_C_FLAGS} " -march=native -Wall")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=native -Wall")
 endif(NOT MSVC)
 
-if (APPLE)
-    message(FATAL_ERROR ${CMAKE_SYSTEM_PROCESSOR})
-endif()
-
-if(NOT APPLE AND NOT ${CMAKE_SYSTEM_PROCESSOR} MATCHES "aarch64")
-    set(CMAKE_C_FLAGS ${CMAKE_C_FLAGS} " -ffast-math")
+if(NOT APPLE AND NOT ${CMAKE_SYSTEM_PROCESSOR} MATCHES "arm64")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -ffast-math")
 endif()
 
 set(EXECUTABLE_OUTPUT_PATH "${PROJECT_SOURCE_DIR}/bin")
