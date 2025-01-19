@@ -13,7 +13,13 @@ endif(NOT CMAKE_BUILD_TYPE)
 
 option(BUILD_SHARED_LIBS "Build using shared libraries" ON)
 
-set(CMAKE_C_FLAGS ${CMAKE_C_FLAGS} "-Wall -ffast-math")
+if(NOT MSVC)
+    set(CMAKE_C_FLAGS ${CMAKE_C_FLAGS} " -march=native -Wall")
+endif(NOT MSVC)
+
+if(NOT APPLE AND NOT ${CMAKE_SYSTEM_PROCESSOR} MATCHES "aarch64")
+    set(CMAKE_C_FLAGS ${CMAKE_C_FLAGS} " -ffast-math")
+endif()
 
 set(EXECUTABLE_OUTPUT_PATH "${PROJECT_SOURCE_DIR}/bin")
 set(LIBRARY_OUTPUT_PATH "${PROJECT_SOURCE_DIR}/lib")
@@ -69,11 +75,9 @@ add_library(odas2
     ${SRC}
 )
 
-if (NOT MSVC)
-    target_link_libraries(odas2
-        m
-    )
-endif ()
+if(NOT MSVC)
+    target_link_libraries(odas2 m)
+endif()
 
 add_executable(tests
     test/tests.c
