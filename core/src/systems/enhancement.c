@@ -82,10 +82,10 @@ static const ugru_params rnn_params = {
 
     .num_dims_in = num_dims_in,
     .num_dims_out = num_dims_hidden,
-    .W_ih = (float []) { +0.0 },
-    .W_hh = (float []) { +0.0 },
-    .b_ih = (float []) { +0.0 },
-    .b_hh = (float []) { +0.0 }
+    .W_ih = (const float []) { +0.0 },
+    .W_hh = (const float []) { +0.0 },
+    .b_ih = (const float []) { +0.0 },
+    .b_hh = (const float []) { +0.0 }
 
 };
 
@@ -93,8 +93,7 @@ static const linear_params fc_params = {
 
     .num_dims_in = num_dims_hidden,
     .num_dims_out = num_dims_out,
-    .W = (float []) { +0.0 },
-    .b = (float []) { +0.0 }
+    .W = (const float []) { +0.0 },
+    .b = (const float []) { +0.0 }
 
 };
-

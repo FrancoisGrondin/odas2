@@ -1,5 +1,6 @@
 #include <systems/delaysum.h>
 
+#define _USE_MATH_DEFINES
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
@@ -36,9 +37,9 @@ int delaysum_process(delaysum_t * obj, const tdoas_t * tdoas, weights_t * coeffs
     unsigned int frame_size = (obj->num_bins - 1) * 2;
 
     for (unsigned int index_source = 0; index_source < obj->num_sources; index_source++) {
-        
+
         for (unsigned int index_channel = 0; index_channel < obj->num_channels; index_channel++) {
-            
+
             float delay = tdoas->taus[index_source][index_channel].delay - tdoas->taus[index_source][0].delay;
 
             for (unsigned int index_bin = 0; index_bin < obj->num_bins; index_bin++) {

@@ -1,5 +1,6 @@
 #include <systems/stft.h>
 
+#define _USE_MATH_DEFINES
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
@@ -94,7 +95,7 @@ int stft_process(stft_t * obj, const hops_t * hops, freqs_t * freqs) {
 
         //
         // Perform FFT
-        // 
+        //
         // Frame:  [ a*3 | b*4 | c*5 | d*6 | e*7 | f*8 | g*A | h*B ]
         // Result: [  X  |  X  |  X  |  X  |  X  ]
         //
@@ -119,7 +120,7 @@ istft_t * istft_construct(const unsigned int num_channels, const unsigned int nu
     obj->num_samples = num_samples;
     obj->num_shifts = num_shifts;
     obj->num_bins = num_bins;
-    
+
     obj->window = NULL;
 
     if (strcmp(window, "hann") == 0) {
@@ -157,7 +158,7 @@ void istft_destroy(istft_t * obj) {
 
     free(obj->window);
 
-    free(obj);    
+    free(obj);
 
 }
 
@@ -191,7 +192,7 @@ int istft_process(istft_t * obj, const freqs_t * freqs, hops_t * hops) {
         //
         for (unsigned int index_sample = 0; index_sample < obj->num_samples; index_sample++) {
             obj->frames[index_channel][index_sample] += obj->frame_real[index_sample] * obj->window[index_sample];
-        }        
+        }
 
         //
         // Extract hop
@@ -200,7 +201,7 @@ int istft_process(istft_t * obj, const freqs_t * freqs, hops_t * hops) {
         // Result: [a*1+A|b*2+B]
         //
         memcpy(&(hops->samples[index_channel][0]), &(obj->frames[index_channel][0]), sizeof(float) * obj->num_shifts);
-        
+
         //
         // Shift to the left
         //
@@ -208,14 +209,14 @@ int istft_process(istft_t * obj, const freqs_t * freqs, hops_t * hops) {
         // Result: [c*3+C|d*4+D|e*5+E|f*6+F|g*7+G|h*8+H|  -  |  -  ]
         //
         memmove(&(obj->frames[index_channel][0]), &(obj->frames[index_channel][obj->num_shifts]), sizeof(float) * (obj->num_samples - obj->num_shifts));
-        
+
         //
         // Reset hop at the end to zero
         //
         // Frame:  [c*3+C|d*4+D|e*5+E|f*6+F|g*7+G|h*8+H|  -  |  -  ]
         // Result: [c*3+C|d*4+D|e*5+E|f*6+F|g*7+G|h*8+H|  0  |  0  ]
         //
-        memset(&(obj->frames[index_channel][obj->num_samples - obj->num_shifts]), 0x00, sizeof(float) * obj->num_shifts);    
+        memset(&(obj->frames[index_channel][obj->num_samples - obj->num_shifts]), 0x00, sizeof(float) * obj->num_shifts);
 
     }
 

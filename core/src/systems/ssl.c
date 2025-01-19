@@ -1,5 +1,6 @@
 #include <systems/ssl.h>
 
+#define _USE_MATH_DEFINES
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
@@ -43,7 +44,7 @@ ssl_t * ssl_construct(const mics_t * mics, const points_t * points, const float 
     obj->aoas = (aoa_t **) malloc(sizeof(aoa_t *) * obj->num_sources);
     for (unsigned int index_source = 0; index_source < obj->num_sources; index_source++) {
         obj->aoas[index_source] = (aoa_t *) malloc(sizeof(aoa_t) * obj->num_pairs);
-    }    
+    }
 
     //
     // Pointers to the mics and points object for further reference (avoid copy to save space)
@@ -51,7 +52,7 @@ ssl_t * ssl_construct(const mics_t * mics, const points_t * points, const float 
 
     obj->mics = mics;
     obj->points = points;
-    
+
     //
     // Create the table that will link each point to the AoAs
     //
@@ -178,12 +179,12 @@ int ssl_process(ssl_t * obj, const tdoas_t * tdoas, doas_t * doas) {
     //
 
     for (unsigned int index_source = 0; index_source < obj->num_sources; index_source++) {
-        
+
         for (unsigned int index_pair = 0; index_pair < obj->num_pairs; index_pair++) {
-        
+
             obj->aoas[index_source][index_pair].degree = (180.0f / M_PI) * acosf((obj->sound_speed/obj->sample_rate) * tdoas->taus[index_source][index_pair].delay / obj->distances[index_pair]);
             obj->aoas[index_source][index_pair].amplitude = tdoas->taus[index_source][index_pair].amplitude;
-        
+
         }
 
     }
@@ -224,7 +225,7 @@ int ssl_process(ssl_t * obj, const tdoas_t * tdoas, doas_t * doas) {
         // The kernel provides some tolerance for mismatch between the measured AoA and the
         // reference AoA for the matrix geometry. This mismatch can be due to numerous things,
         // including:
-        // 
+        //
         //  - Different speed of sound (speed varies with temperature and humidity)
         //  - Error in the measured positions of each microphone
         //  - Error in the estimated TDoAs using GCC-PHAT/FCC-PHAT
@@ -253,10 +254,10 @@ int ssl_process(ssl_t * obj, const tdoas_t * tdoas, doas_t * doas) {
                 obj->synthesis[index_pair][index_table] += aoa.amplitude * obj->kernel[0];
 
                 for (unsigned char index_kernel = 1; index_kernel < obj->kernel_size; index_kernel++) {
-                    
+
                     signed int index_left = ((signed int) index_table) - ((signed int) index_kernel);
                     signed int index_right = ((signed int) index_table) + ((signed int) index_kernel);
-                    
+
                     if (index_left > 0) {
                         obj->synthesis[index_pair][index_left] += aoa.amplitude * obj->kernel[index_kernel];
                     }
@@ -266,7 +267,7 @@ int ssl_process(ssl_t * obj, const tdoas_t * tdoas, doas_t * doas) {
 
                 }
 
-            }            
+            }
 
         }
 
@@ -275,7 +276,7 @@ int ssl_process(ssl_t * obj, const tdoas_t * tdoas, doas_t * doas) {
         //
 
         for (unsigned int index_point = 0; index_point < obj->num_points; index_point++) {
-            
+
             //
             // Each point is associated to a set of indexes. For instance, for a given
             // point when we have 6 pairs of microphones, we could have something like this:
@@ -296,9 +297,9 @@ int ssl_process(ssl_t * obj, const tdoas_t * tdoas, doas_t * doas) {
             //
 
             float energy = 0.0f;
-            
+
             for (unsigned int index_pair = 0; index_pair < obj->num_pairs; index_pair++) {
-            
+
                 energy += obj->synthesis[index_pair][obj->table[index_point * obj->num_pairs + index_pair]];
             }
 
@@ -313,11 +314,11 @@ int ssl_process(ssl_t * obj, const tdoas_t * tdoas, doas_t * doas) {
         unsigned int max_index = 0;
 
         for (unsigned int index_point = 0; index_point < obj->num_points; index_point++) {
-            
+
             if (obj->projections[index_point] > obj->projections[max_index]) {
-            
+
                 max_index = index_point;
-            
+
             }
 
         }
@@ -337,11 +338,11 @@ int ssl_process(ssl_t * obj, const tdoas_t * tdoas, doas_t * doas) {
         // The goal here is to find the AoAs that contributed to the maximum value.
         // When an angle is within the kernel interval, its corresponding amplitude is reduced by
         // the energy level. The amplitude cannot be negative, and is set to 0 if this is
-        // the case. 
+        // the case.
         //
         // For instance, if there are 6 pairs and we found at source which AoAs correspond to:
-        // 
-        // [ 112 |  0  |  4  | 178 | 181 | 100 ] with a energy level of 0.4, 
+        //
+        // [ 112 |  0  |  4  | 178 | 181 | 100 ] with a energy level of 0.4,
         //
         // and the measured AoAs are the following:
         //
@@ -357,8 +358,8 @@ int ssl_process(ssl_t * obj, const tdoas_t * tdoas, doas_t * doas) {
         //           Amplitude:   0.0   0.2   0.0   0.5   0.0   0.0
         //
         // Source 2: AoA:       [ 140 | 100 | 100 | 180 | 101 | 133 ]
-        //           Amplitude:   0.2   0.3   0.4   0.1   0.3   0.2        
-        // 
+        //           Amplitude:   0.2   0.3   0.4   0.1   0.3   0.2
+        //
 
         for (unsigned int index_pair = 0; index_pair < obj->num_pairs; index_pair++) {
 
@@ -396,7 +397,7 @@ int ssl_process(ssl_t * obj, const tdoas_t * tdoas, doas_t * doas) {
 void ssl_printf(const ssl_t * obj) {
 
     for (unsigned int index_point = 0; index_point < obj->num_points; index_point++) {
-        
+
         printf("[%04u]: ", index_point);
         xyz_t point = obj->points->points[index_point];
 
@@ -404,7 +405,7 @@ void ssl_printf(const ssl_t * obj) {
         for (unsigned int index_pair = 0; index_pair < obj->num_pairs; index_pair++) {
             printf("%03u ", obj->table[index_point * obj->num_pairs + index_pair]);
         }
-        
+
         printf("> %+1.4f\n", obj->norms[index_point]);
     }
 
