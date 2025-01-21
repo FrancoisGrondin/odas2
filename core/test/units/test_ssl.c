@@ -22,10 +22,10 @@ int test_ssl(void) {
         doas_t * doas_dst = doas_construct("doas_dst", num_directions);
         tdoas_t * tdoas = tdoas_construct("tdoas", num_channels, num_sources);
 
-        doas_src->dirs[0] = (dir_t) { .type = TARGET, .coord = (xyz_t) { .x = +1.000, .y = +0.000, .z = +0.000 }, .energy = 0.50 };
-        doas_src->dirs[1] = (dir_t) { .type = TARGET, .coord = (xyz_t) { .x = +0.000, .y = +1.000, .z = +0.000 }, .energy = 0.25 };
-        doas_src->dirs[2] = (dir_t) { .type = TARGET, .coord = (xyz_t) { .x = -0.707, .y = -0.707, .z = +0.000 }, .energy = 0.10 };
-        doas_src->dirs[3] = (dir_t) { .type = TARGET, .coord = (xyz_t) { .x = +0.577, .y = +0.577, .z = +0.577 }, .energy = 0.05 };
+        doas_src->dirs[0] = (dir_t) { .type = TARGET, .coord = (xyz_t) { .x = +1.000, .y = +0.000, .z = +0.000 }, .energy = 0.50, .tracking_id = 0 };
+        doas_src->dirs[1] = (dir_t) { .type = TARGET, .coord = (xyz_t) { .x = +0.000, .y = +1.000, .z = +0.000 }, .energy = 0.25, .tracking_id = 0 };
+        doas_src->dirs[2] = (dir_t) { .type = TARGET, .coord = (xyz_t) { .x = -0.707, .y = -0.707, .z = +0.000 }, .energy = 0.10, .tracking_id = 0 };
+        doas_src->dirs[3] = (dir_t) { .type = TARGET, .coord = (xyz_t) { .x = +0.577, .y = +0.577, .z = +0.577 }, .energy = 0.05, .tracking_id = 0 };
 
         steering_process(steering, doas_src, tdoas);
         ssl_process(ssl, tdoas, doas_dst);

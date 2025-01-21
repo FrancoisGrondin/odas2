@@ -15,6 +15,8 @@ sst_t * sst_construct(const unsigned int num_tracks, const unsigned int num_dire
     obj->pasts = (dir_t *) calloc(obj->num_pasts, sizeof(dir_t));
     obj->tracks = (dir_t *) calloc(obj->num_tracks, sizeof(dir_t));
 
+    obj->last_tracking_id = 0;
+
     return obj;
 
 }
@@ -130,6 +132,7 @@ int sst_process(sst_t * obj, const dsf_t * dsf, const doas_t * in, doas_t * out)
                         obj->tracks[index_track].type = TRACKED;
                         obj->tracks[index_track].coord = new_source.coord;
                         obj->tracks[index_track].energy = 1.0f;
+                        obj->tracks[index_track].tracking_id = ++obj->last_tracking_id;
 
                         break;
 

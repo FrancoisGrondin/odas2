@@ -19,6 +19,8 @@ typedef struct sst_t {
     dir_t * pasts;
     dir_t * tracks;
 
+    unsigned int last_tracking_id;
+
 } sst_t;
 
 sst_t * sst_construct(const unsigned int num_tracks, const unsigned int num_directions, const unsigned int num_pasts);

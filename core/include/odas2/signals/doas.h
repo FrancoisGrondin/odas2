@@ -22,6 +22,7 @@ typedef struct dir_t {
     src_t type;
     xyz_t coord;
     float energy;
+    unsigned int tracking_id;
 
 } dir_t;
 
