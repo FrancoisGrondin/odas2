@@ -37,11 +37,6 @@ jobs:
         shell: bash
         run: ls -la
 
-      - name: Ls bin
-        working-directory: core/bin
-        shell: bash
-        run: ls -la
-
       - name: Ls lib
         working-directory: core/lib
         shell: bash
