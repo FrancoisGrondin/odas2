@@ -23,10 +23,7 @@ if(NOT MSVC AND NOT APPLE AND NOT ${CMAKE_SYSTEM_PROCESSOR} MATCHES "arm64")
 endif()
 
 set(EXECUTABLE_OUTPUT_PATH "${PROJECT_SOURCE_DIR}/bin")
-
-if(NOT MSVC)
-    set(LIBRARY_OUTPUT_PATH "${PROJECT_SOURCE_DIR}/lib")
-endif(NOT MSVC)
+set(LIBRARY_OUTPUT_PATH "${PROJECT_SOURCE_DIR}/lib")
 
 #Add base directory for includes (global)
 include_directories(include/odas2)
