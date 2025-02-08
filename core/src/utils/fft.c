@@ -239,7 +239,7 @@ static void fft_compute_reverse(fft_t * obj) {
 
     // Compute complex conjugate and scale
     for (int index_sample = 0; index_sample < (obj->num_samples/2); index_sample++) {
-        obj->working[index_sample] = cplx_mul(cplx_cst(1.0f/(obj->num_samples/2), 0.0f), cplx_conj(obj->working[index_sample]));
+        obj->working[index_sample] = cplx_mul(cplx_cst(1.0f/((float)obj->num_samples/2.f), 0.0f), cplx_conj(obj->working[index_sample]));
     }
 
 }
@@ -251,7 +251,7 @@ static cplx_t * fft_twiddle(const unsigned int num_samples) {
     // Wn = exp(-j * 2 * pi * n / N)
     unsigned int N = num_samples;
     for (unsigned int n = 0; n < (N/2); n++) {
-        rtn[n] = cplx_cst(cosf(-2.0 * PI_F * n / N), sinf(-2.0f * PI_F * n / N));
+        rtn[n] = cplx_cst(cosf(-2.0f * PI_F * (float)n / (float)N), sinf(-2.0f * PI_F * (float)n / (float)N));
     }
 
     return rtn;
@@ -265,7 +265,7 @@ static cplx_t * fft_coefficients(const unsigned int num_samples) {
     // Wn = exp(-j * 2 * pi * n / N)
     unsigned int N = num_samples;
     for (unsigned int n = 0; n < (N/2); n++) {
-        rtn[n] = cplx_cst(cosf(-2.0 * PI_F * n / N), sinf(-2.0f * PI_F * n / N));
+        rtn[n] = cplx_cst(cosf(-2.0f * PI_F * (float)n / (float)N), sinf(-2.0f * PI_F * (float)n / (float)N));
     }
 
     return rtn;
@@ -276,7 +276,7 @@ static unsigned int * fft_revbits(const unsigned int num_samples) {
 
     unsigned int * rtn = (unsigned int *) malloc(sizeof(unsigned int) * num_samples);
 
-    unsigned int num_bits = ceilf(log2f(num_samples));
+    unsigned int num_bits = (unsigned int)ceilf(log2f((float)num_samples));
 
     for (unsigned int n = 0; n < num_samples; n++) {
 

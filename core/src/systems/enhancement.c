@@ -78,10 +78,10 @@ int enhancement_process(enhancement_t * obj, const freqs_t * freqs, masks_t * ma
 
 static const float beta = 0.25f;
 
-static const float rnn_params_W_ih[3 * NUM_DIMS_HIDDEN * NUM_DIMS_IN] = { +0.0 };
-static const float rnn_params_W_hh[3 * NUM_DIMS_HIDDEN * NUM_DIMS_HIDDEN] = { +0.0 };
-static const float rnn_params_b_ih[3 * NUM_DIMS_HIDDEN] = { +0.0 };
-static const float rnn_params_b_hh[3 * NUM_DIMS_HIDDEN] = { +0.0 };
+static const float rnn_params_W_ih[3 * NUM_DIMS_HIDDEN * NUM_DIMS_IN] = { +0.0f };
+static const float rnn_params_W_hh[3 * NUM_DIMS_HIDDEN * NUM_DIMS_HIDDEN] = { +0.0f };
+static const float rnn_params_b_ih[3 * NUM_DIMS_HIDDEN] = { +0.0f };
+static const float rnn_params_b_hh[3 * NUM_DIMS_HIDDEN] = { +0.0f };
 
 static const ugru_params rnn_params = {
 
@@ -94,8 +94,8 @@ static const ugru_params rnn_params = {
 
 };
 
-static const float fc_params_W[NUM_DIMS_HIDDEN * NUM_DIMS_OUT] = { +0.0 };
-static const float fc_params_b[NUM_DIMS_OUT] = { +0.0 };
+static const float fc_params_W[NUM_DIMS_HIDDEN * NUM_DIMS_OUT] = { +0.0f };
+static const float fc_params_b[NUM_DIMS_OUT] = { +0.0f };
 
 static const linear_params fc_params = {
 

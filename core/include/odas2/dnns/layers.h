@@ -9,11 +9,11 @@ extern "C" {
 
 typedef struct linear_params {
 
-    unsigned int num_dims_in;  // I
-    unsigned int num_dims_out; // O
+    const unsigned int num_dims_in;  // I
+    const unsigned int num_dims_out; // O
 
-    float * W; // O x I
-    float * b; // O x 1
+    const float * W; // O x I
+    const float * b; // O x 1
 
 } linear_params;
 
@@ -25,13 +25,13 @@ typedef struct linear {
 
 typedef struct ugru_params {
 
-    unsigned int num_dims_in;  // I
-    unsigned int num_dims_out; // O
+    const unsigned int num_dims_in;  // I
+    const unsigned int num_dims_out; // O
 
-    float * W_ih; // 3O x I
-    float * W_hh; // 3O x O
-    float * b_ih; // 3O x 1
-    float * b_hh; // 3O x 1
+    const float * W_ih; // 3O x I
+    const float * W_hh; // 3O x O
+    const float * b_ih; // 3O x 1
+    const float * b_hh; // 3O x 1
 
 } ugru_params;
 
@@ -45,13 +45,13 @@ typedef struct ugru {
 
 typedef struct ulstm_params {
 
-    unsigned int num_dims_in;  // I
-    unsigned int num_dims_out; // O
+    const unsigned int num_dims_in;  // I
+    const unsigned int num_dims_out; // O
 
-    float * W_ih; // 4O x I
-    float * W_hh; // 4O x O
-    float * b_ih; // 4O x 1
-    float * b_hh; // 4O x 1
+    const float * W_ih; // 4O x I
+    const float * W_hh; // 4O x O
+    const float * b_ih; // 4O x 1
+    const float * b_hh; // 4O x 1
 
 } ulstm_params;
 

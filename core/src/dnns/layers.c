@@ -45,7 +45,7 @@ int linear_forward(const linear * obj, const tensor * in, tensor * out) {
 
         }
 
-    }   
+    }
 
     return 0;
 
@@ -92,18 +92,18 @@ int ugru_forward(const ugru * obj, const tensor * in, const tensor * hidden_in, 
     // n_t = \tanh(W_{in} x_t + b_{in} + r_t \odot (W_{hn} h_{(t-1)} + b_{hn}))
     // h_t = (1 - z_t) \odot n_t + z_t \odot h_{(t-1)}
 
-    float * Wm_ir = &(obj->params->W_ih[0 * num_dims_in * num_dims_out]);
-    float * Wm_iz = &(obj->params->W_ih[1 * num_dims_in * num_dims_out]);
-    float * Wm_in = &(obj->params->W_ih[2 * num_dims_in * num_dims_out]);
-    float * Wm_hr = &(obj->params->W_hh[0 * num_dims_out * num_dims_out]);
-    float * Wm_hz = &(obj->params->W_hh[1 * num_dims_out * num_dims_out]);
-    float * Wm_hn = &(obj->params->W_hh[2 * num_dims_out * num_dims_out]);
-    float * bv_ir = &(obj->params->b_ih[0 * num_dims_out]);
-    float * bv_iz = &(obj->params->b_ih[1 * num_dims_out]);
-    float * bv_in = &(obj->params->b_ih[2 * num_dims_out]);
-    float * bv_hr = &(obj->params->b_hh[0 * num_dims_out]);
-    float * bv_hz = &(obj->params->b_hh[1 * num_dims_out]);
-    float * bv_hn = &(obj->params->b_hh[2 * num_dims_out]);
+    const float * Wm_ir = &(obj->params->W_ih[0 * num_dims_in * num_dims_out]);
+    const float * Wm_iz = &(obj->params->W_ih[1 * num_dims_in * num_dims_out]);
+    const float * Wm_in = &(obj->params->W_ih[2 * num_dims_in * num_dims_out]);
+    const float * Wm_hr = &(obj->params->W_hh[0 * num_dims_out * num_dims_out]);
+    const float * Wm_hz = &(obj->params->W_hh[1 * num_dims_out * num_dims_out]);
+    const float * Wm_hn = &(obj->params->W_hh[2 * num_dims_out * num_dims_out]);
+    const float * bv_ir = &(obj->params->b_ih[0 * num_dims_out]);
+    const float * bv_iz = &(obj->params->b_ih[1 * num_dims_out]);
+    const float * bv_in = &(obj->params->b_ih[2 * num_dims_out]);
+    const float * bv_hr = &(obj->params->b_hh[0 * num_dims_out]);
+    const float * bv_hz = &(obj->params->b_hh[1 * num_dims_out]);
+    const float * bv_hn = &(obj->params->b_hh[2 * num_dims_out]);
 
     for (unsigned int index_dim_batch = 0; index_dim_batch < num_dims_batch; index_dim_batch++) {
 
@@ -164,7 +164,7 @@ int ugru_forward(const ugru * obj, const tensor * in, const tensor * hidden_in, 
 
         memcpy(&(hidden_out->data[index_dim_batch * num_dims_out]), obj->h, sizeof(float) * num_dims_out);
 
-    }   
+    }
 
     return 0;
 
@@ -188,7 +188,7 @@ void ulstm_destroy(ulstm * obj) {
     free((void *) obj->h);
     free((void *) obj->c);
 
-    free((void *) obj); 
+    free((void *) obj);
 
 }
 
@@ -215,22 +215,22 @@ int ulstm_forward(const ulstm * obj, const tensor * in, const tensor * hidden_in
     // c_t = f_t \odot c_{(t-1)} + i_t \odot g_t
     // h_t = o_t \odot \tanh(c_t)
 
-    float * Wm_ii = &(obj->params->W_ih[0 * num_dims_in * num_dims_out]);
-    float * Wm_if = &(obj->params->W_ih[1 * num_dims_in * num_dims_out]);
-    float * Wm_ig = &(obj->params->W_ih[2 * num_dims_in * num_dims_out]);
-    float * Wm_io = &(obj->params->W_ih[3 * num_dims_in * num_dims_out]);
-    float * Wm_hi = &(obj->params->W_hh[0 * num_dims_out * num_dims_out]);
-    float * Wm_hf = &(obj->params->W_hh[1 * num_dims_out * num_dims_out]);
-    float * Wm_hg = &(obj->params->W_hh[2 * num_dims_out * num_dims_out]);
-    float * Wm_ho = &(obj->params->W_hh[3 * num_dims_out * num_dims_out]);
-    float * bv_ii = &(obj->params->b_ih[0 * num_dims_out]);
-    float * bv_if = &(obj->params->b_ih[1 * num_dims_out]);
-    float * bv_ig = &(obj->params->b_ih[2 * num_dims_out]);
-    float * bv_io = &(obj->params->b_ih[3 * num_dims_out]);
-    float * bv_hi = &(obj->params->b_hh[0 * num_dims_out]);
-    float * bv_hf = &(obj->params->b_hh[1 * num_dims_out]);
-    float * bv_hg = &(obj->params->b_hh[2 * num_dims_out]);
-    float * bv_ho = &(obj->params->b_hh[3 * num_dims_out]);    
+    const float * Wm_ii = &(obj->params->W_ih[0 * num_dims_in * num_dims_out]);
+    const float * Wm_if = &(obj->params->W_ih[1 * num_dims_in * num_dims_out]);
+    const float * Wm_ig = &(obj->params->W_ih[2 * num_dims_in * num_dims_out]);
+    const float * Wm_io = &(obj->params->W_ih[3 * num_dims_in * num_dims_out]);
+    const float * Wm_hi = &(obj->params->W_hh[0 * num_dims_out * num_dims_out]);
+    const float * Wm_hf = &(obj->params->W_hh[1 * num_dims_out * num_dims_out]);
+    const float * Wm_hg = &(obj->params->W_hh[2 * num_dims_out * num_dims_out]);
+    const float * Wm_ho = &(obj->params->W_hh[3 * num_dims_out * num_dims_out]);
+    const float * bv_ii = &(obj->params->b_ih[0 * num_dims_out]);
+    const float * bv_if = &(obj->params->b_ih[1 * num_dims_out]);
+    const float * bv_ig = &(obj->params->b_ih[2 * num_dims_out]);
+    const float * bv_io = &(obj->params->b_ih[3 * num_dims_out]);
+    const float * bv_hi = &(obj->params->b_hh[0 * num_dims_out]);
+    const float * bv_hf = &(obj->params->b_hh[1 * num_dims_out]);
+    const float * bv_hg = &(obj->params->b_hh[2 * num_dims_out]);
+    const float * bv_ho = &(obj->params->b_hh[3 * num_dims_out]);
 
     for (unsigned int index_dim_batch = 0; index_dim_batch < num_dims_batch; index_dim_batch++) {
 
@@ -302,7 +302,7 @@ int ulstm_forward(const ulstm * obj, const tensor * in, const tensor * hidden_in
         memcpy(&(hidden_out->data[index_dim_batch * num_dims_out]), obj->h, sizeof(float) * num_dims_out);
         memcpy(&(cell_out->data[index_dim_batch * num_dims_out]), obj->c, sizeof(float) * num_dims_out);
 
-    }   
+    }
 
     return 0;
 

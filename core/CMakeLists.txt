@@ -17,7 +17,7 @@ if(NOT MSVC)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=native -Wall")
 endif(NOT MSVC)
 
-if(NOT APPLE AND NOT ${CMAKE_SYSTEM_PROCESSOR} MATCHES "arm64")
+if(NOT MSVC AND NOT APPLE AND NOT ${CMAKE_SYSTEM_PROCESSOR} MATCHES "arm64")
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -ffast-math")
 endif()
 
