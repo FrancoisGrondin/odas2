@@ -1,0 +1,84 @@
+on:
+  push:
+    branches:
+      - main
+
+name: Release
+
+jobs:
+  build-test:
+    name: Build and Test
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: true
+      matrix:
+        os: [ubuntu-latest, macos-13, macos-14, windows-2022]
+    steps:
+      - name: Checkout Sources
+        uses: actions/checkout@v4
+
+      - name: Create Build Directory
+        working-directory: core
+        run: cmake -E make_directory build
+
+      - name: Configure CMake
+        working-directory: core/build
+        run: cmake .. -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build
+        working-directory: core/build
+        run: cmake --build .
+
+      - name: Tests
+        if: matrix.os != 'windows-2022'
+        working-directory: core/bin
+        run: ./tests
+
+      - name: Tests
+        if: matrix.os == 'windows-2022'
+        working-directory: core/bin/Debug
+        run: .\tests.exe
+
+  tag-release:
+    name: Create Tag
+    needs: build-test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout Sources
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: recursive
+
+      - name: Compute Version
+        uses: paulhatch/semantic-version@v5.4.0
+        id: semantic_version
+        with:
+          tag_prefix: "v"
+          major_pattern: "(MAJOR)"
+          minor_pattern: "(MINOR)"
+          bump_each_commit: true
+
+      - name: Display Version
+        run: echo ${{ steps.semantic_version.outputs.version }}
+
+      - name: Set Version
+        run: | 
+          sed -i 's/0.0.0/${{ steps.semantic_version.outputs.version }}/g' core/include/version.h
+
+      - name: Tag
+        run:
+          git config user.name "GitHub Actions Bot"
+          git config user.email "github.actions.bot@github.com"
+          git commit -am "Set version ${{ steps.semantic_version.outputs.version }}."
+          git tag v${{ steps.semantic_version.outputs.version }}
+          git push origin tag v${{ steps.semantic_version.outputs.version }}
+
+      - name: Create Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "${{ github.event.head_commit.message }}" >> notes.txt
+          gh release create v${{ steps.semantic_version.outputs.version }} -t odas2_v${{ steps.semantic_version.outputs.version }} -F notes.txt
