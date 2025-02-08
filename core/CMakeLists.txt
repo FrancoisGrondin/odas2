@@ -12,7 +12,13 @@ if(NOT CMAKE_BUILD_TYPE)
     SET(CMAKE_BUILD_TYPE "Release")
 endif(NOT CMAKE_BUILD_TYPE)
 
-option(BUILD_SHARED_LIBS "Build using shared libraries" ON)
+if(WIN32)
+    set(DEFAULT_BUILD_SHARED_LIBS OFF)
+else()
+    set(DEFAULT_BUILD_SHARED_LIBS ON)
+endif()
+
+option(BUILD_SHARED_LIBS "Build using shared libraries" ${DEFAULT_BUILD_SHARED_LIBS})
 
 if(NOT MSVC)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=native -Wall")
