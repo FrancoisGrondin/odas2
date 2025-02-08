@@ -19,7 +19,7 @@
 
 int main(int argc, char * argv[]) {
 
-    //                                                                                
+    //
     //                             Ms (all 1's)
     //                                  |
     //                                  *
@@ -54,7 +54,7 @@ int main(int argc, char * argv[]) {
 
     wavin_t * wavin = wavin_construct("/dev/stdin", num_shifts, num_channels, sample_rate);
 
-    hops_t * hops = hops_construct("xs", num_channels, num_shifts); 
+    hops_t * hops = hops_construct("xs", num_channels, num_shifts);
     freqs_t * freqs = freqs_construct("Xs", num_channels, num_bins);
     masks_t * masks = masks_construct("Ms", num_channels, num_bins);
     covs_t * covs = covs_construct("XXs", num_channels, num_bins);
@@ -62,12 +62,12 @@ int main(int argc, char * argv[]) {
     tdoas_t * tdoas = tdoas_construct("tdoas", num_channels, num_sources);
     doas_t * doas = doas_construct("doas", num_directions);
 
-    stft_t * stft = stft_construct(num_channels, num_samples, num_shifts, num_bins, "hann");    
+    stft_t * stft = stft_construct(num_channels, num_samples, num_shifts, num_bins, "hann");
     scm_t * scm = scm_construct(num_channels, num_bins, alpha);
     phat_t * phat = phat_construct(num_channels, num_bins);
     fcc_t * fcc = fcc_construct(num_sources, num_channels, num_bins);
     gcc_t * gcc = gcc_construct(num_sources, num_channels, num_bins);
-    ssl_t * ssl = ssl_construct(mics, points, sample_rate, sound_speed, num_sources, num_directions);
+    ssl_t * ssl = ssl_construct(mics, points, (float)sample_rate, sound_speed, num_sources, num_directions);
 
     msgout_t * msgout = msgout_construct("/dev/stdout");
 
@@ -75,10 +75,10 @@ int main(int argc, char * argv[]) {
     // Process
     //
 
-    masks_ones(masks); 
+    masks_ones(masks);
 
     while (wavin_read(wavin, hops) == 0) {
-        
+
         stft_process(stft, hops, freqs);
         scm_process(scm, freqs, masks, covs);
         phat_process(phat, covs, covs_phat);
@@ -89,14 +89,14 @@ int main(int argc, char * argv[]) {
         if (strcmp(method, "fcc") == 0) {
             fcc_process(fcc, covs_phat, tdoas);
         }
-        
+
         ssl_process(ssl, tdoas, doas);
 
         msgout_write_doas(msgout, doas);
 
     }
 
-    // 
+    //
     // Free memory
     //
 
@@ -104,7 +104,7 @@ int main(int argc, char * argv[]) {
     points_destroy(points);
 
     wavin_destroy(wavin);
-    
+
     hops_destroy(hops);
     freqs_destroy(freqs);
     masks_destroy(masks);
@@ -112,7 +112,7 @@ int main(int argc, char * argv[]) {
     covs_destroy(covs_phat);
     tdoas_destroy(tdoas);
     doas_destroy(doas);
-    
+
     stft_destroy(stft);
     scm_destroy(scm);
     phat_destroy(phat);

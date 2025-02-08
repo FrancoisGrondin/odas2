@@ -16,7 +16,7 @@ int main(int argc, char * argv[]) {
     //
     //                            Ms (all 1's)
     //                                  |
-    //                                  * 
+    //                                  *
     // +----+   xs   +------+   Xs   +-----+   XXs   +------+   Ws   +-------+   Ys   +-------+   ys   +-----+
     // | In | -----* | STFT | -----* | SCM | ------* | MVDR | -----* | Bfmer | -----* | iSTFT | -----* | Out |
     // +----+        +------+   |    +-----+         +------+        +-------+        +-------+        +-----+
@@ -34,7 +34,7 @@ int main(int argc, char * argv[]) {
     const unsigned int  num_samples     = 512;
     const unsigned int  num_bins        = 257;
     const unsigned int  sample_rate     = 16000;
-    const float         alpha           = 0.001;
+    const float         alpha           = 0.001f;
     const unsigned int  num_sources     = 1;
 
     //
@@ -43,7 +43,7 @@ int main(int argc, char * argv[]) {
 
     wavin_t * wavin = wavin_construct("/dev/stdin", num_shifts, num_channels, sample_rate);
 
-    hops_t * hops_in = hops_construct("xs", num_channels, num_shifts); 
+    hops_t * hops_in = hops_construct("xs", num_channels, num_shifts);
     freqs_t * freqs_in = freqs_construct("Xs", num_channels, num_bins);
     masks_t * masks = masks_construct("Ms", num_channels, num_bins);
     covs_t * covs = covs_construct("XXs", num_channels, num_bins);
@@ -57,16 +57,16 @@ int main(int argc, char * argv[]) {
     beamformer_t * beamformer = beamformer_construct(num_sources, num_channels, num_bins);
     istft_t * istft = istft_construct(num_sources, num_samples, num_shifts, num_bins, "hann");
 
-    wavout_t * wavout = wavout_construct("/dev/stdout", num_shifts, num_sources, sample_rate);	
+    wavout_t * wavout = wavout_construct("/dev/stdout", num_shifts, num_sources, sample_rate);
 
     //
     // Process
     //
 
-    masks_ones(masks); 
+    masks_ones(masks);
 
     while (wavin_read(wavin, hops_in) == 0) {
-        
+
         stft_process(stft, hops_in, freqs_in);
         scm_process(scm, freqs_in, masks, covs);
         mvdr_process(mvdr, covs, weights);

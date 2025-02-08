@@ -1,5 +1,6 @@
-project(odas2)
 cmake_minimum_required(VERSION 3.15...3.27)
+
+project(odas2)
 
 if(COMMAND cmake_policy)
     cmake_policy(SET CMP0003 NEW)
@@ -22,7 +23,10 @@ if(NOT MSVC AND NOT APPLE AND NOT ${CMAKE_SYSTEM_PROCESSOR} MATCHES "arm64")
 endif()
 
 set(EXECUTABLE_OUTPUT_PATH "${PROJECT_SOURCE_DIR}/bin")
-set(LIBRARY_OUTPUT_PATH "${PROJECT_SOURCE_DIR}/lib")
+
+if(NOT MSVC)
+    set(LIBRARY_OUTPUT_PATH "${PROJECT_SOURCE_DIR}/lib")
+endif(NOT MSVC)
 
 #Add base directory for includes (global)
 include_directories(include/odas2)

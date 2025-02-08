@@ -56,7 +56,7 @@ int main(int argc, char * argv[]) {
     hops_t * hops_out = hops_construct("ys", num_sources, num_shifts);
 
     stft_t * stft = stft_construct(num_channels, num_samples, num_shifts, num_bins, "hann");
-    steering_t * steering = steering_construct(mics, sample_rate, sound_speed, num_sources);
+    steering_t * steering = steering_construct(mics, (float)sample_rate, sound_speed, num_sources);
     delaysum_t * delaysum = delaysum_construct(num_sources, num_channels, num_bins);
     beamformer_t * beamformer = beamformer_construct(num_sources, num_channels, num_bins);
     istft_t * istft = istft_construct(num_sources, num_samples, num_shifts, num_bins, "hann");

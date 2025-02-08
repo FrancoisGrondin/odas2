@@ -73,7 +73,7 @@ int main(int argc, char * argv[]) {
     phat_t * phat = phat_construct(num_channels, num_bins);
     fcc_t * fcc = fcc_construct(num_sources, num_channels, num_bins);
     gcc_t * gcc = gcc_construct(num_sources, num_channels, num_bins);
-    ssl_t * ssl = ssl_construct(mics, points, sample_rate, sound_speed, num_sources, num_directions);
+    ssl_t * ssl = ssl_construct(mics, points, (float)sample_rate, sound_speed, num_sources, num_directions);
     sst_t * sst = sst_construct(num_tracks, num_directions, num_pasts);
 
     msgout_t * msgout = msgout_construct("/dev/stdout");

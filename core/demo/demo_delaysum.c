@@ -22,7 +22,7 @@ int main(int argc, char * argv[]) {
     //
     //                            Ms (all 1's)
     //                                  |
-    //                                  * 
+    //                                  *
     // +----+   xs   +------+   Xs   +-----+   XXs   +------+   XXps   +---------+
     // | In | -----* | STFT | -----* | SCM | ------* | PHAT | -------* | GCC/FCC |
     // +----+        +------+   |    +-----+         +------+          +---------+
@@ -45,22 +45,22 @@ int main(int argc, char * argv[]) {
     const unsigned int  num_samples     = 512;
     const unsigned int  num_bins        = 257;
     const unsigned int  sample_rate     = 16000;
-    const float         alpha           = 0.1;
+    const float         alpha           = 0.1f;
     const unsigned int  num_sources     = 1;
     const char          method[]        = "gcc";
-    
+
     //
     // Allocate memory
     //
 
     wavin_t * wavin = wavin_construct("/dev/stdin", num_shifts, num_channels, sample_rate);
 
-    hops_t * hops_in = hops_construct("xs", num_channels, num_shifts); 
+    hops_t * hops_in = hops_construct("xs", num_channels, num_shifts);
     freqs_t * freqs_in = freqs_construct("Xs", num_channels, num_bins);
     masks_t * masks = masks_construct("Ms", num_channels, num_bins);
     covs_t * covs = covs_construct("XXs", num_channels, num_bins);
     covs_t * covs_phat = covs_construct("XXps", num_channels, num_bins);
-    tdoas_t * tdoas = tdoas_construct("tdoas", num_channels, num_sources);    
+    tdoas_t * tdoas = tdoas_construct("tdoas", num_channels, num_sources);
     weights_t * weights = weights_construct("Ws", num_sources, num_channels, num_bins);
     freqs_t * freqs_out = freqs_construct("Ys", num_sources, num_bins);
     hops_t * hops_out = hops_construct("ys", num_sources, num_shifts);
@@ -69,21 +69,21 @@ int main(int argc, char * argv[]) {
     scm_t * scm = scm_construct(num_channels, num_bins, alpha);
     phat_t * phat = phat_construct(num_channels, num_bins);
     fcc_t * fcc = fcc_construct(num_sources, num_channels, num_bins);
-    gcc_t * gcc = gcc_construct(num_sources, num_channels, num_bins);    
+    gcc_t * gcc = gcc_construct(num_sources, num_channels, num_bins);
     delaysum_t * delaysum = delaysum_construct(num_sources, num_channels, num_bins);
     beamformer_t * beamformer = beamformer_construct(num_sources, num_channels, num_bins);
     istft_t * istft = istft_construct(num_sources, num_samples, num_shifts, num_bins, "hann");
 
-    wavout_t * wavout = wavout_construct("/dev/stdout", num_shifts, num_sources, sample_rate);	
+    wavout_t * wavout = wavout_construct("/dev/stdout", num_shifts, num_sources, sample_rate);
 
     //
     // Process
     //
 
-    masks_ones(masks); 
+    masks_ones(masks);
 
     while (wavin_read(wavin, hops_in) == 0) {
-        
+
         stft_process(stft, hops_in, freqs_in);
         scm_process(scm, freqs_in, masks, covs);
         phat_process(phat, covs, covs_phat);

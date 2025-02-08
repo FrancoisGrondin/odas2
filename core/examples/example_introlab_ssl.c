@@ -64,7 +64,7 @@ int main(int argc, char * argv[]) {
     scm_t * scm = scm_construct(num_channels, num_bins, alpha);
     phat_t * phat = phat_construct(num_channels, num_bins);
     gcc_t * gcc = gcc_construct(num_sources, num_channels, num_bins);
-    ssl_t * ssl = ssl_construct(mics, points, sample_rate, sound_speed, num_sources, num_directions);
+    ssl_t * ssl = ssl_construct(mics, points, (float)sample_rate, sound_speed, num_sources, num_directions);
 
     msgout_t * msgout = msgout_construct("/dev/stdout");
 

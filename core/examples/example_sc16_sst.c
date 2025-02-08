@@ -21,7 +21,7 @@
 
 int main(int argc, char * argv[]) {
 
-    //                                                                                
+    //
     //                             Ms (all 1's)                                                                      dsf (default values)
     //                                  |                                                                                     |
     //                                  *                                                                                     *
@@ -68,12 +68,12 @@ int main(int argc, char * argv[]) {
     dsf_t * dsf = dsf_construct("dsf");
     doas_t * doas_tracked = doas_construct("tracked", num_tracks);
 
-    stft_t * stft = stft_construct(num_channels, num_samples, num_shifts, num_bins, "hann");    
+    stft_t * stft = stft_construct(num_channels, num_samples, num_shifts, num_bins, "hann");
     scm_t * scm = scm_construct(num_channels, num_bins, alpha);
     phat_t * phat = phat_construct(num_channels, num_bins);
     fcc_t * fcc = fcc_construct(num_sources, num_channels, num_bins);
     gcc_t * gcc = gcc_construct(num_sources, num_channels, num_bins);
-    ssl_t * ssl = ssl_construct(mics, points, sample_rate, sound_speed, num_sources, num_directions);
+    ssl_t * ssl = ssl_construct(mics, points, (float)sample_rate, sound_speed, num_sources, num_directions);
     sst_t * sst = sst_construct(num_tracks, num_directions, num_pasts);
 
     msgout_t * msgout = msgout_construct("/dev/stdout");
@@ -82,10 +82,10 @@ int main(int argc, char * argv[]) {
     // Process
     //
 
-    masks_ones(masks); 
+    masks_ones(masks);
 
     while (wavin_read(wavin, hops) == 0) {
-        
+
         stft_process(stft, hops, freqs);
         scm_process(scm, freqs, masks, covs);
         phat_process(phat, covs, covs_phat);
@@ -96,7 +96,7 @@ int main(int argc, char * argv[]) {
         if (strcmp(method, "fcc") == 0) {
             fcc_process(fcc, covs_phat, tdoas);
         }
-        
+
         ssl_process(ssl, tdoas, doas_potential);
         sst_process(sst, dsf, doas_potential, doas_tracked);
 
@@ -105,7 +105,7 @@ int main(int argc, char * argv[]) {
 
     }
 
-    // 
+    //
     // Free memory
     //
 
@@ -113,7 +113,7 @@ int main(int argc, char * argv[]) {
     points_destroy(points);
 
     wavin_destroy(wavin);
-    
+
     hops_destroy(hops);
     freqs_destroy(freqs);
     masks_destroy(masks);
@@ -123,7 +123,7 @@ int main(int argc, char * argv[]) {
     doas_destroy(doas_potential);
     dsf_destroy(dsf);
     doas_destroy(doas_tracked);
-    
+
     stft_destroy(stft);
     scm_destroy(scm);
     phat_destroy(phat);
