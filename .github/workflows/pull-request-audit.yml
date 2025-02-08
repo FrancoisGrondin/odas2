@@ -30,22 +30,7 @@ jobs:
       - name: Build
         working-directory: core/build
         shell: bash
-        run: cmake --build . --target odas2
-
-      - name: Ls build
-        working-directory: core/build
-        shell: bash
-        run: ls -la
-
-      - name: Ls lib
-        working-directory: core/lib
-        shell: bash
-        run: ls -la
-
-      - name: Ls lib/Debug
-        working-directory: core/lib/Debug
-        shell: bash
-        run: ls -la
+        run: cmake --build .
 
       - name: Tests
         working-directory: core/bin
