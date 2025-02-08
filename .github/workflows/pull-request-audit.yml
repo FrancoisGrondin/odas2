@@ -30,7 +30,7 @@ jobs:
       - name: Build
         working-directory: core/build
         shell: bash
-        run: cmake --build . --target odas2 -DCMAKE_BUILD_TYPE=Release
+        run: cmake --build . --target odas2
 
       - name: Ls build
         working-directory: core/build
