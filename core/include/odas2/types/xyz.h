@@ -50,9 +50,9 @@ inline xyz_t xyz_unit(const xyz_t op) {
     // y' = y / (x^2 + y^2 + z^2)^0.5
     // z' = z / (x^2 + y^2 + z^2)^0.5
     // Added epsilon to avoid division by 0
-    rtn.x = op.x / (mag + 1e-20);
-    rtn.y = op.y / (mag + 1e-20);
-    rtn.z = op.z / (mag + 1e-20);
+    rtn.x = op.x / (mag + 1e-20f);
+    rtn.y = op.y / (mag + 1e-20f);
+    rtn.z = op.z / (mag + 1e-20f);
 
     return rtn;
 

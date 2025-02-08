@@ -1,6 +1,7 @@
 #include <odas2/signals/tdoas.h>
 #include <odas2/signals/weights.h>
 #include <odas2/systems/delaysum.h>
+#include <odas2/utils/pi.h>
 
 #include <math.h>
 #include <stdlib.h>

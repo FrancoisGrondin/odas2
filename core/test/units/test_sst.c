@@ -18,20 +18,20 @@ int test_sst(void) {
 
         dir_t target[4];
 
-        target[0] = (dir_t) { .type = POTENTIAL, .coord = (xyz_t) { .x = +0.707, .y = +0.707, .z = +0.000 }, .energy = 0.50, .tracking_id = 0 };
-        target[1] = (dir_t) { .type = POTENTIAL, .coord = (xyz_t) { .x = +0.000, .y = +1.000, .z = +0.000 }, .energy = 0.10, .tracking_id = 0 };
-        target[2] = (dir_t) { .type = POTENTIAL, .coord = (xyz_t) { .x = -0.707, .y = -0.707, .z = +0.000 }, .energy = 0.10, .tracking_id = 0 };
-        target[3] = (dir_t) { .type = POTENTIAL, .coord = (xyz_t) { .x = -1.000, .y = +0.000, .z = +0.000 }, .energy = 0.05, .tracking_id = 0 };
+        target[0] = (dir_t) { .type = POTENTIAL, .coord = (xyz_t) { .x = +0.707f, .y = +0.707f, .z = +0.000f }, .energy = 0.50f, .tracking_id = 0 };
+        target[1] = (dir_t) { .type = POTENTIAL, .coord = (xyz_t) { .x = +0.000f, .y = +1.000f, .z = +0.000f }, .energy = 0.10f, .tracking_id = 0 };
+        target[2] = (dir_t) { .type = POTENTIAL, .coord = (xyz_t) { .x = -0.707f, .y = -0.707f, .z = +0.000f }, .energy = 0.10f, .tracking_id = 0 };
+        target[3] = (dir_t) { .type = POTENTIAL, .coord = (xyz_t) { .x = -1.000f, .y = +0.000f, .z = +0.000f }, .energy = 0.05f, .tracking_id = 0 };
 
         dir_t noise[7];
 
-        noise[0] = (dir_t) { .type = POTENTIAL, .coord = (xyz_t) { .x = +0.001, .y = -0.002, .z = +0.001 }, .energy = +0.01, .tracking_id = 0 };
-        noise[1] = (dir_t) { .type = POTENTIAL, .coord = (xyz_t) { .x = -0.002, .y = +0.001, .z = -0.003 }, .energy = -0.01, .tracking_id = 0 };
-        noise[2] = (dir_t) { .type = POTENTIAL, .coord = (xyz_t) { .x = +0.015, .y = -0.012, .z = +0.004 }, .energy = +0.02, .tracking_id = 0 };
-        noise[3] = (dir_t) { .type = POTENTIAL, .coord = (xyz_t) { .x = -0.012, .y = +0.007, .z = +0.013 }, .energy = +0.01, .tracking_id = 0 };
-        noise[4] = (dir_t) { .type = POTENTIAL, .coord = (xyz_t) { .x = +0.001, .y = -0.012, .z = +0.011 }, .energy = +0.03, .tracking_id = 0 };
-        noise[5] = (dir_t) { .type = POTENTIAL, .coord = (xyz_t) { .x = +0.020, .y = +0.021, .z = +0.008 }, .energy = -0.03, .tracking_id = 0 };
-        noise[6] = (dir_t) { .type = POTENTIAL, .coord = (xyz_t) { .x = +0.005, .y = -0.005, .z = +0.001 }, .energy = -0.02, .tracking_id = 0 };
+        noise[0] = (dir_t) { .type = POTENTIAL, .coord = (xyz_t) { .x = +0.001f, .y = -0.002f, .z = +0.001f }, .energy = +0.01f, .tracking_id = 0 };
+        noise[1] = (dir_t) { .type = POTENTIAL, .coord = (xyz_t) { .x = -0.002f, .y = +0.001f, .z = -0.003f }, .energy = -0.01f, .tracking_id = 0 };
+        noise[2] = (dir_t) { .type = POTENTIAL, .coord = (xyz_t) { .x = +0.015f, .y = -0.012f, .z = +0.004f }, .energy = +0.02f, .tracking_id = 0 };
+        noise[3] = (dir_t) { .type = POTENTIAL, .coord = (xyz_t) { .x = -0.012f, .y = +0.007f, .z = +0.013f }, .energy = +0.01f, .tracking_id = 0 };
+        noise[4] = (dir_t) { .type = POTENTIAL, .coord = (xyz_t) { .x = +0.001f, .y = -0.012f, .z = +0.011f }, .energy = +0.03f, .tracking_id = 0 };
+        noise[5] = (dir_t) { .type = POTENTIAL, .coord = (xyz_t) { .x = +0.020f, .y = +0.021f, .z = +0.008f }, .energy = -0.03f, .tracking_id = 0 };
+        noise[6] = (dir_t) { .type = POTENTIAL, .coord = (xyz_t) { .x = +0.005f, .y = -0.005f, .z = +0.001f }, .energy = -0.02f, .tracking_id = 0 };
 
         unsigned int index_noise = 0;
 

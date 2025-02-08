@@ -104,10 +104,10 @@ static mics_t * mics_respeaker_usb_4(void) {
     obj->num_mics = 4;
     obj->mics = (mic_t *) malloc(sizeof(mic_t) * obj->num_mics);
 
-    obj->mics[0] = mic_cst((xyz_t) { .x = -0.032, .y = +0.000, .z = +0.000 }, (xyz_t) { .x = +0.000, .y = +0.000, .z = +1.000 }, "cardioid");
-    obj->mics[1] = mic_cst((xyz_t) { .x = +0.000, .y = -0.032, .z = +0.000 }, (xyz_t) { .x = +0.000, .y = +0.000, .z = +1.000 }, "cardioid");
-    obj->mics[2] = mic_cst((xyz_t) { .x = +0.032, .y = +0.000, .z = +0.000 }, (xyz_t) { .x = +0.000, .y = +0.000, .z = +1.000 }, "cardioid");
-    obj->mics[3] = mic_cst((xyz_t) { .x = +0.000, .y = +0.032, .z = +0.000 }, (xyz_t) { .x = +0.000, .y = +0.000, .z = +1.000 }, "cardioid");
+    obj->mics[0] = mic_cst((xyz_t) { .x = -0.032f, .y = +0.000f, .z = +0.000f }, (xyz_t) { .x = +0.000f, .y = +0.000f, .z = +1.000f }, "cardioid");
+    obj->mics[1] = mic_cst((xyz_t) { .x = +0.000f, .y = -0.032f, .z = +0.000f }, (xyz_t) { .x = +0.000f, .y = +0.000f, .z = +1.000f }, "cardioid");
+    obj->mics[2] = mic_cst((xyz_t) { .x = +0.032f, .y = +0.000f, .z = +0.000f }, (xyz_t) { .x = +0.000f, .y = +0.000f, .z = +1.000f }, "cardioid");
+    obj->mics[3] = mic_cst((xyz_t) { .x = +0.000f, .y = +0.032f, .z = +0.000f }, (xyz_t) { .x = +0.000f, .y = +0.000f, .z = +1.000f }, "cardioid");
 
     return obj;
 
@@ -120,12 +120,12 @@ static mics_t * mics_respeaker_usb_6(void) {
     obj->num_mics = 6;
     obj->mics = (mic_t *) malloc(sizeof(mic_t) * obj->num_mics);
 
-    obj->mics[0] = mic_cst((xyz_t) { .x = -0.0232, .y = +0.0401, .z = +0.000 }, (xyz_t) { .x = +0.000, .y = +0.000, .z = +1.000 }, "cardioid");
-    obj->mics[1] = mic_cst((xyz_t) { .x = -0.0463, .y = -0.0000, .z = +0.000 }, (xyz_t) { .x = +0.000, .y = +0.000, .z = +1.000 }, "cardioid");
-    obj->mics[2] = mic_cst((xyz_t) { .x = -0.0232, .y = -0.0401, .z = +0.000 }, (xyz_t) { .x = +0.000, .y = +0.000, .z = +1.000 }, "cardioid");
-    obj->mics[3] = mic_cst((xyz_t) { .x = +0.0232, .y = -0.0401, .z = +0.000 }, (xyz_t) { .x = +0.000, .y = +0.000, .z = +1.000 }, "cardioid");
-    obj->mics[4] = mic_cst((xyz_t) { .x = +0.0463, .y = +0.0000, .z = +0.000 }, (xyz_t) { .x = +0.000, .y = +0.000, .z = +1.000 }, "cardioid");
-    obj->mics[5] = mic_cst((xyz_t) { .x = +0.0232, .y = +0.0401, .z = +0.000 }, (xyz_t) { .x = +0.000, .y = +0.000, .z = +1.000 }, "cardioid");
+    obj->mics[0] = mic_cst((xyz_t) { .x = -0.0232f, .y = +0.0401f, .z = +0.000f }, (xyz_t) { .x = +0.000f, .y = +0.000f, .z = +1.000f }, "cardioid");
+    obj->mics[1] = mic_cst((xyz_t) { .x = -0.0463f, .y = -0.0000f, .z = +0.000f }, (xyz_t) { .x = +0.000f, .y = +0.000f, .z = +1.000f }, "cardioid");
+    obj->mics[2] = mic_cst((xyz_t) { .x = -0.0232f, .y = -0.0401f, .z = +0.000f }, (xyz_t) { .x = +0.000f, .y = +0.000f, .z = +1.000f }, "cardioid");
+    obj->mics[3] = mic_cst((xyz_t) { .x = +0.0232f, .y = -0.0401f, .z = +0.000f }, (xyz_t) { .x = +0.000f, .y = +0.000f, .z = +1.000f }, "cardioid");
+    obj->mics[4] = mic_cst((xyz_t) { .x = +0.0463f, .y = +0.0000f, .z = +0.000f }, (xyz_t) { .x = +0.000f, .y = +0.000f, .z = +1.000f }, "cardioid");
+    obj->mics[5] = mic_cst((xyz_t) { .x = +0.0232f, .y = +0.0401f, .z = +0.000f }, (xyz_t) { .x = +0.000f, .y = +0.000f, .z = +1.000f }, "cardioid");
 
     return obj;
 
@@ -138,13 +138,13 @@ static mics_t * mics_minidsp_uma(void) {
     obj->num_mics = 7;
     obj->mics = (mic_t *) malloc(sizeof(mic_t) * obj->num_mics);
 
-    obj->mics[0] = mic_cst((xyz_t) { .x = +0.000, .y = +0.000, .z = +0.000 }, (xyz_t) { .x = +0.000, .y = +0.000, .z = +1.000 }, "cardioid");
-    obj->mics[1] = mic_cst((xyz_t) { .x = +0.000, .y = +0.043, .z = +0.000 }, (xyz_t) { .x = +0.000, .y = +0.000, .z = +1.000 }, "cardioid");
-    obj->mics[2] = mic_cst((xyz_t) { .x = +0.037, .y = +0.021, .z = +0.000 }, (xyz_t) { .x = +0.000, .y = +0.000, .z = +1.000 }, "cardioid");
-    obj->mics[3] = mic_cst((xyz_t) { .x = +0.037, .y = -0.021, .z = +0.000 }, (xyz_t) { .x = +0.000, .y = +0.000, .z = +1.000 }, "cardioid");
-    obj->mics[4] = mic_cst((xyz_t) { .x = +0.000, .y = -0.043, .z = +0.000 }, (xyz_t) { .x = +0.000, .y = +0.000, .z = +1.000 }, "cardioid");
-    obj->mics[5] = mic_cst((xyz_t) { .x = -0.037, .y = -0.021, .z = +0.000 }, (xyz_t) { .x = +0.000, .y = +0.000, .z = +1.000 }, "cardioid");
-    obj->mics[6] = mic_cst((xyz_t) { .x = -0.037, .y = +0.021, .z = +0.000 }, (xyz_t) { .x = +0.000, .y = +0.000, .z = +1.000 }, "cardioid");
+    obj->mics[0] = mic_cst((xyz_t) { .x = +0.000f, .y = +0.000f, .z = +0.000f }, (xyz_t) { .x = +0.000f, .y = +0.000f, .z = +1.000f }, "cardioid");
+    obj->mics[1] = mic_cst((xyz_t) { .x = +0.000f, .y = +0.043f, .z = +0.000f }, (xyz_t) { .x = +0.000f, .y = +0.000f, .z = +1.000f }, "cardioid");
+    obj->mics[2] = mic_cst((xyz_t) { .x = +0.037f, .y = +0.021f, .z = +0.000f }, (xyz_t) { .x = +0.000f, .y = +0.000f, .z = +1.000f }, "cardioid");
+    obj->mics[3] = mic_cst((xyz_t) { .x = +0.037f, .y = -0.021f, .z = +0.000f }, (xyz_t) { .x = +0.000f, .y = +0.000f, .z = +1.000f }, "cardioid");
+    obj->mics[4] = mic_cst((xyz_t) { .x = +0.000f, .y = -0.043f, .z = +0.000f }, (xyz_t) { .x = +0.000f, .y = +0.000f, .z = +1.000f }, "cardioid");
+    obj->mics[5] = mic_cst((xyz_t) { .x = -0.037f, .y = -0.021f, .z = +0.000f }, (xyz_t) { .x = +0.000f, .y = +0.000f, .z = +1.000f }, "cardioid");
+    obj->mics[6] = mic_cst((xyz_t) { .x = -0.037f, .y = +0.021f, .z = +0.000f }, (xyz_t) { .x = +0.000f, .y = +0.000f, .z = +1.000f }, "cardioid");
 
     return obj;
 
@@ -157,25 +157,25 @@ static mics_t * mics_sc16_demo_array(void) {
     obj->num_mics = 16;
     obj->mics = (mic_t *) malloc(sizeof(mic_t) * obj->num_mics);
 
-    obj->mics[0] = mic_cst((xyz_t) { .x = +0.088, .y = +0.000, .z = +0.000 }, (xyz_t) { .x = +0.000, .y = +0.000, .z = +1.000 }, "omnidirectional");
-    obj->mics[1] = mic_cst((xyz_t) { .x = +0.076, .y = +0.044, .z = +0.000 }, (xyz_t) { .x = +0.000, .y = +0.000, .z = +1.000 }, "omnidirectional");
-    obj->mics[2] = mic_cst((xyz_t) { .x = +0.044, .y = +0.076, .z = +0.000 }, (xyz_t) { .x = +0.000, .y = +0.000, .z = +1.000 }, "omnidirectional");
-    obj->mics[3] = mic_cst((xyz_t) { .x = +0.000, .y = +0.088, .z = +0.000 }, (xyz_t) { .x = +0.000, .y = +0.000, .z = +1.000 }, "omnidirectional");
+    obj->mics[0] = mic_cst((xyz_t) { .x = +0.088f, .y = +0.000f, .z = +0.000f }, (xyz_t) { .x = +0.000f, .y = +0.000f, .z = +1.000f }, "omnidirectional");
+    obj->mics[1] = mic_cst((xyz_t) { .x = +0.076f, .y = +0.044f, .z = +0.000f }, (xyz_t) { .x = +0.000f, .y = +0.000f, .z = +1.000f }, "omnidirectional");
+    obj->mics[2] = mic_cst((xyz_t) { .x = +0.044f, .y = +0.076f, .z = +0.000f }, (xyz_t) { .x = +0.000f, .y = +0.000f, .z = +1.000f }, "omnidirectional");
+    obj->mics[3] = mic_cst((xyz_t) { .x = +0.000f, .y = +0.088f, .z = +0.000f }, (xyz_t) { .x = +0.000f, .y = +0.000f, .z = +1.000f }, "omnidirectional");
 
-    obj->mics[4] = mic_cst((xyz_t) { .x = +0.000, .y = +0.048, .z = +0.000 }, (xyz_t) { .x = +0.000, .y = +0.000, .z = +1.000 }, "omnidirectional");
-    obj->mics[5] = mic_cst((xyz_t) { .x = -0.044, .y = +0.076, .z = +0.000 }, (xyz_t) { .x = +0.000, .y = +0.000, .z = +1.000 }, "omnidirectional");
-    obj->mics[6] = mic_cst((xyz_t) { .x = -0.076, .y = +0.044, .z = +0.000 }, (xyz_t) { .x = +0.000, .y = +0.000, .z = +1.000 }, "omnidirectional");
-    obj->mics[7] = mic_cst((xyz_t) { .x = -0.088, .y = +0.000, .z = +0.000 }, (xyz_t) { .x = +0.000, .y = +0.000, .z = +1.000 }, "omnidirectional");
+    obj->mics[4] = mic_cst((xyz_t) { .x = +0.000f, .y = +0.048f, .z = +0.000f }, (xyz_t) { .x = +0.000f, .y = +0.000f, .z = +1.000f }, "omnidirectional");
+    obj->mics[5] = mic_cst((xyz_t) { .x = -0.044f, .y = +0.076f, .z = +0.000f }, (xyz_t) { .x = +0.000f, .y = +0.000f, .z = +1.000f }, "omnidirectional");
+    obj->mics[6] = mic_cst((xyz_t) { .x = -0.076f, .y = +0.044f, .z = +0.000f }, (xyz_t) { .x = +0.000f, .y = +0.000f, .z = +1.000f }, "omnidirectional");
+    obj->mics[7] = mic_cst((xyz_t) { .x = -0.088f, .y = +0.000f, .z = +0.000f }, (xyz_t) { .x = +0.000f, .y = +0.000f, .z = +1.000f }, "omnidirectional");
 
-    obj->mics[8] = mic_cst((xyz_t) { .x = -0.048, .y = +0.000, .z = +0.000 }, (xyz_t) { .x = +0.000, .y = +0.000, .z = +1.000 }, "omnidirectional");
-    obj->mics[9] = mic_cst((xyz_t) { .x = -0.076, .y = -0.044, .z = +0.000 }, (xyz_t) { .x = +0.000, .y = +0.000, .z = +1.000 }, "omnidirectional");
-    obj->mics[10] = mic_cst((xyz_t) { .x = -0.044, .y = -0.076, .z = +0.000 }, (xyz_t) { .x = +0.000, .y = +0.000, .z = +1.000 }, "omnidirectional");
-    obj->mics[11] = mic_cst((xyz_t) { .x = +0.000, .y = -0.088, .z = +0.000 }, (xyz_t) { .x = +0.000, .y = +0.000, .z = +1.000 }, "omnidirectional");
+    obj->mics[8] = mic_cst((xyz_t) { .x = -0.048f, .y = +0.000f, .z = +0.000f }, (xyz_t) { .x = +0.000f, .y = +0.000f, .z = +1.000f }, "omnidirectional");
+    obj->mics[9] = mic_cst((xyz_t) { .x = -0.076f, .y = -0.044f, .z = +0.000f }, (xyz_t) { .x = +0.000f, .y = +0.000f, .z = +1.000f }, "omnidirectional");
+    obj->mics[10] = mic_cst((xyz_t) { .x = -0.044f, .y = -0.076f, .z = +0.000f }, (xyz_t) { .x = +0.000f, .y = +0.000f, .z = +1.000f }, "omnidirectional");
+    obj->mics[11] = mic_cst((xyz_t) { .x = +0.000f, .y = -0.088f, .z = +0.000f }, (xyz_t) { .x = +0.000f, .y = +0.000f, .z = +1.000f }, "omnidirectional");
 
-    obj->mics[12] = mic_cst((xyz_t) { .x = +0.000, .y = -0.048, .z = +0.000 }, (xyz_t) { .x = +0.000, .y = +0.000, .z = +1.000 }, "omnidirectional");
-    obj->mics[13] = mic_cst((xyz_t) { .x = +0.044, .y = -0.076, .z = +0.000 }, (xyz_t) { .x = +0.000, .y = +0.000, .z = +1.000 }, "omnidirectional");
-    obj->mics[14] = mic_cst((xyz_t) { .x = +0.076, .y = -0.044, .z = +0.000 }, (xyz_t) { .x = +0.000, .y = +0.000, .z = +1.000 }, "omnidirectional");
-    obj->mics[15] = mic_cst((xyz_t) { .x = +0.048, .y = +0.000, .z = +0.000 }, (xyz_t) { .x = +0.000, .y = +0.000, .z = +1.000 }, "omnidirectional");
+    obj->mics[12] = mic_cst((xyz_t) { .x = +0.000f, .y = -0.048f, .z = +0.000f }, (xyz_t) { .x = +0.000f, .y = +0.000f, .z = +1.000f }, "omnidirectional");
+    obj->mics[13] = mic_cst((xyz_t) { .x = +0.044f, .y = -0.076f, .z = +0.000f }, (xyz_t) { .x = +0.000f, .y = +0.000f, .z = +1.000f }, "omnidirectional");
+    obj->mics[14] = mic_cst((xyz_t) { .x = +0.076f, .y = -0.044f, .z = +0.000f }, (xyz_t) { .x = +0.000f, .y = +0.000f, .z = +1.000f }, "omnidirectional");
+    obj->mics[15] = mic_cst((xyz_t) { .x = +0.048f, .y = +0.000f, .z = +0.000f }, (xyz_t) { .x = +0.000f, .y = +0.000f, .z = +1.000f }, "omnidirectional");
 
     return obj;
 
@@ -188,25 +188,25 @@ static mics_t * mics_sc16f(void) {
     obj->num_mics = 16;
     obj->mics = (mic_t *) malloc(sizeof(mic_t) * obj->num_mics);
 
-    obj->mics[0] = mic_cst((xyz_t) { .x = -0.0675, .y = +0.0675, .z = +0.000 }, (xyz_t) { .x = +0.000, .y = +0.000, .z = +1.000 }, "omnidirectional");
-    obj->mics[1] = mic_cst((xyz_t) { .x = -0.0247, .y = +0.0922, .z = +0.000 }, (xyz_t) { .x = +0.000, .y = +0.000, .z = +1.000 }, "omnidirectional");
-    obj->mics[2] = mic_cst((xyz_t) { .x = +0.0247, .y = +0.0922, .z = +0.000 }, (xyz_t) { .x = +0.000, .y = +0.000, .z = +1.000 }, "omnidirectional");
-    obj->mics[3] = mic_cst((xyz_t) { .x = +0.0675, .y = +0.0675, .z = +0.000 }, (xyz_t) { .x = +0.000, .y = +0.000, .z = +1.000 }, "omnidirectional");
+    obj->mics[0] = mic_cst((xyz_t) { .x = -0.0675f, .y = +0.0675f, .z = +0.000f }, (xyz_t) { .x = +0.000f, .y = +0.000f, .z = +1.000f }, "omnidirectional");
+    obj->mics[1] = mic_cst((xyz_t) { .x = -0.0247f, .y = +0.0922f, .z = +0.000f }, (xyz_t) { .x = +0.000f, .y = +0.000f, .z = +1.000f }, "omnidirectional");
+    obj->mics[2] = mic_cst((xyz_t) { .x = +0.0247f, .y = +0.0922f, .z = +0.000f }, (xyz_t) { .x = +0.000f, .y = +0.000f, .z = +1.000f }, "omnidirectional");
+    obj->mics[3] = mic_cst((xyz_t) { .x = +0.0675f, .y = +0.0675f, .z = +0.000f }, (xyz_t) { .x = +0.000f, .y = +0.000f, .z = +1.000f }, "omnidirectional");
 
-    obj->mics[4] = mic_cst((xyz_t) { .x = +0.0922, .y = +0.0247, .z = +0.000 }, (xyz_t) { .x = +0.000, .y = +0.000, .z = +1.000 }, "omnidirectional");
-    obj->mics[5] = mic_cst((xyz_t) { .x = +0.0922, .y = -0.0247, .z = +0.000 }, (xyz_t) { .x = +0.000, .y = +0.000, .z = +1.000 }, "omnidirectional");
-    obj->mics[6] = mic_cst((xyz_t) { .x = +0.0675, .y = -0.0675, .z = +0.000 }, (xyz_t) { .x = +0.000, .y = +0.000, .z = +1.000 }, "omnidirectional");
-    obj->mics[7] = mic_cst((xyz_t) { .x = +0.0247, .y = -0.0922, .z = +0.000 }, (xyz_t) { .x = +0.000, .y = +0.000, .z = +1.000 }, "omnidirectional");
+    obj->mics[4] = mic_cst((xyz_t) { .x = +0.0922f, .y = +0.0247f, .z = +0.000f }, (xyz_t) { .x = +0.000f, .y = +0.000f, .z = +1.000f }, "omnidirectional");
+    obj->mics[5] = mic_cst((xyz_t) { .x = +0.0922f, .y = -0.0247f, .z = +0.000f }, (xyz_t) { .x = +0.000f, .y = +0.000f, .z = +1.000f }, "omnidirectional");
+    obj->mics[6] = mic_cst((xyz_t) { .x = +0.0675f, .y = -0.0675f, .z = +0.000f }, (xyz_t) { .x = +0.000f, .y = +0.000f, .z = +1.000f }, "omnidirectional");
+    obj->mics[7] = mic_cst((xyz_t) { .x = +0.0247f, .y = -0.0922f, .z = +0.000f }, (xyz_t) { .x = +0.000f, .y = +0.000f, .z = +1.000f }, "omnidirectional");
 
-    obj->mics[8] = mic_cst((xyz_t) { .x = -0.0247, .y = -0.0922, .z = +0.000 }, (xyz_t) { .x = +0.000, .y = +0.000, .z = +1.000 }, "omnidirectional");
-    obj->mics[9] = mic_cst((xyz_t) { .x = -0.0675, .y = -0.0675, .z = +0.000 }, (xyz_t) { .x = +0.000, .y = +0.000, .z = +1.000 }, "omnidirectional");
-    obj->mics[10] = mic_cst((xyz_t) { .x = -0.0922, .y = -0.0247, .z = +0.000 }, (xyz_t) { .x = +0.000, .y = +0.000, .z = +1.000 }, "omnidirectional");
-    obj->mics[11] = mic_cst((xyz_t) { .x = -0.0922, .y = +0.0247, .z = +0.000 }, (xyz_t) { .x = +0.000, .y = +0.000, .z = +1.000 }, "omnidirectional");
+    obj->mics[8] = mic_cst((xyz_t) { .x = -0.0247f, .y = -0.0922f, .z = +0.000f }, (xyz_t) { .x = +0.000f, .y = +0.000f, .z = +1.000f }, "omnidirectional");
+    obj->mics[9] = mic_cst((xyz_t) { .x = -0.0675f, .y = -0.0675f, .z = +0.000f }, (xyz_t) { .x = +0.000f, .y = +0.000f, .z = +1.000f }, "omnidirectional");
+    obj->mics[10] = mic_cst((xyz_t) { .x = -0.0922f, .y = -0.0247f, .z = +0.000f }, (xyz_t) { .x = +0.000f, .y = +0.000f, .z = +1.000f }, "omnidirectional");
+    obj->mics[11] = mic_cst((xyz_t) { .x = -0.0922f, .y = +0.0247f, .z = +0.000f }, (xyz_t) { .x = +0.000f, .y = +0.000f, .z = +1.000f }, "omnidirectional");
 
-    obj->mics[12] = mic_cst((xyz_t) { .x = -0.0400, .y = +0.0000, .z = +0.000 }, (xyz_t) { .x = +0.000, .y = +0.000, .z = +1.000 }, "omnidirectional");
-    obj->mics[13] = mic_cst((xyz_t) { .x = +0.0000, .y = +0.0400, .z = +0.000 }, (xyz_t) { .x = +0.000, .y = +0.000, .z = +1.000 }, "omnidirectional");
-    obj->mics[14] = mic_cst((xyz_t) { .x = +0.0400, .y = +0.0000, .z = +0.000 }, (xyz_t) { .x = +0.000, .y = +0.000, .z = +1.000 }, "omnidirectional");
-    obj->mics[15] = mic_cst((xyz_t) { .x = +0.0000, .y = -0.0400, .z = +0.000 }, (xyz_t) { .x = +0.000, .y = +0.000, .z = +1.000 }, "omnidirectional");
+    obj->mics[12] = mic_cst((xyz_t) { .x = -0.0400f, .y = +0.0000f, .z = +0.000f }, (xyz_t) { .x = +0.000f, .y = +0.000f, .z = +1.000f }, "omnidirectional");
+    obj->mics[13] = mic_cst((xyz_t) { .x = +0.0000f, .y = +0.0400f, .z = +0.000f }, (xyz_t) { .x = +0.000f, .y = +0.000f, .z = +1.000f }, "omnidirectional");
+    obj->mics[14] = mic_cst((xyz_t) { .x = +0.0400f, .y = +0.0000f, .z = +0.000f }, (xyz_t) { .x = +0.000f, .y = +0.000f, .z = +1.000f }, "omnidirectional");
+    obj->mics[15] = mic_cst((xyz_t) { .x = +0.0000f, .y = -0.0400f, .z = +0.000f }, (xyz_t) { .x = +0.000f, .y = +0.000f, .z = +1.000f }, "omnidirectional");
 
     return obj;
 
@@ -219,12 +219,12 @@ static mics_t * mics_vibeus_circular(void) {
     obj->num_mics = 6;
     obj->mics = (mic_t *) malloc(sizeof(mic_t) * obj->num_mics);
 
-    obj->mics[0] = mic_cst((xyz_t) { .x = -0.0450, .y = +0.0000, .z = +0.000 }, (xyz_t) { .x = +0.000, .y = +0.000, .z = +1.000 }, "omnidirectional");
-    obj->mics[1] = mic_cst((xyz_t) { .x = -0.0225, .y = -0.0390, .z = +0.000 }, (xyz_t) { .x = +0.000, .y = +0.000, .z = +1.000 }, "omnidirectional");
-    obj->mics[2] = mic_cst((xyz_t) { .x = +0.0225, .y = +0.0390, .z = +0.000 }, (xyz_t) { .x = +0.000, .y = +0.000, .z = +1.000 }, "omnidirectional");
-    obj->mics[3] = mic_cst((xyz_t) { .x = -0.0225, .y = +0.0390, .z = +0.000 }, (xyz_t) { .x = +0.000, .y = +0.000, .z = +1.000 }, "omnidirectional");
-    obj->mics[4] = mic_cst((xyz_t) { .x = +0.0225, .y = -0.0390, .z = +0.000 }, (xyz_t) { .x = +0.000, .y = +0.000, .z = +1.000 }, "omnidirectional");
-    obj->mics[5] = mic_cst((xyz_t) { .x = +0.0450, .y = +0.0000, .z = +0.000 }, (xyz_t) { .x = +0.000, .y = +0.000, .z = +1.000 }, "omnidirectional");
+    obj->mics[0] = mic_cst((xyz_t) { .x = -0.0450f, .y = +0.0000f, .z = +0.000f }, (xyz_t) { .x = +0.000f, .y = +0.000f, .z = +1.000f }, "omnidirectional");
+    obj->mics[1] = mic_cst((xyz_t) { .x = -0.0225f, .y = -0.0390f, .z = +0.000f }, (xyz_t) { .x = +0.000f, .y = +0.000f, .z = +1.000f }, "omnidirectional");
+    obj->mics[2] = mic_cst((xyz_t) { .x = +0.0225f, .y = +0.0390f, .z = +0.000f }, (xyz_t) { .x = +0.000f, .y = +0.000f, .z = +1.000f }, "omnidirectional");
+    obj->mics[3] = mic_cst((xyz_t) { .x = -0.0225f, .y = +0.0390f, .z = +0.000f }, (xyz_t) { .x = +0.000f, .y = +0.000f, .z = +1.000f }, "omnidirectional");
+    obj->mics[4] = mic_cst((xyz_t) { .x = +0.0225f, .y = -0.0390f, .z = +0.000f }, (xyz_t) { .x = +0.000f, .y = +0.000f, .z = +1.000f }, "omnidirectional");
+    obj->mics[5] = mic_cst((xyz_t) { .x = +0.0450f, .y = +0.0000f, .z = +0.000f }, (xyz_t) { .x = +0.000f, .y = +0.000f, .z = +1.000f }, "omnidirectional");
 
     return obj;
 
@@ -237,9 +237,9 @@ static mics_t * mics_soundskrit_mug(void) {
     obj->num_mics = 3;
     obj->mics = (mic_t *) malloc(sizeof(mic_t) * obj->num_mics);
 
-    obj->mics[0] = mic_cst((xyz_t) { .x = +0.03750, .y = +0.0000, .z = +0.000 }, (xyz_t) { .x = +0.000, .y = +0.000, .z = +1.000 }, "omnidirectional");
-    obj->mics[1] = mic_cst((xyz_t) { .x = -0.01875, .y = +0.0325, .z = +0.000 }, (xyz_t) { .x = +0.000, .y = +0.000, .z = +1.000 }, "omnidirectional");
-    obj->mics[2] = mic_cst((xyz_t) { .x = -0.01875, .y = -0.0325, .z = +0.000 }, (xyz_t) { .x = +0.000, .y = +0.000, .z = +1.000 }, "omnidirectional");
+    obj->mics[0] = mic_cst((xyz_t) { .x = +0.03750f, .y = +0.0000f, .z = +0.000f }, (xyz_t) { .x = +0.000f, .y = +0.000f, .z = +1.000f }, "omnidirectional");
+    obj->mics[1] = mic_cst((xyz_t) { .x = -0.01875f, .y = +0.0325f, .z = +0.000f }, (xyz_t) { .x = +0.000f, .y = +0.000f, .z = +1.000f }, "omnidirectional");
+    obj->mics[2] = mic_cst((xyz_t) { .x = -0.01875f, .y = -0.0325f, .z = +0.000f }, (xyz_t) { .x = +0.000f, .y = +0.000f, .z = +1.000f }, "omnidirectional");
 
     return obj;
 

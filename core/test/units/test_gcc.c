@@ -23,7 +23,7 @@ int test_gcc(void) {
 
         for (unsigned int index_pair = 0; index_pair < num_pairs; index_pair++) {
             for (unsigned int index_bin = 0; index_bin < num_bins; index_bin++) {
-                float omega = 2.0 * M_PI * ((float) index_bin) / ((float) ((num_bins - 1) * 2));
+                float omega = 2.0f * PI_F * ((float) index_bin) / ((float) ((num_bins - 1) * 2));
                 covs->xcorrs[index_pair][index_bin].real = cosf(-1.0f * omega * delays[index_pair]);
                 covs->xcorrs[index_pair][index_bin].imag = sinf(-1.0f * omega * delays[index_pair]);
             }
@@ -42,7 +42,7 @@ int test_gcc(void) {
 
         covs_destroy(covs);
         tdoas_destroy(tdoas);
-        gcc_destroy(gcc);       
+        gcc_destroy(gcc);
 
     }
 
@@ -65,7 +65,7 @@ int test_gcc(void) {
 
         for (unsigned int index_pair = 0; index_pair < num_pairs; index_pair++) {
             for (unsigned int index_bin = 0; index_bin < num_bins_cropped; index_bin++) {
-                float omega = 2.0 * M_PI * ((float) index_bin) / ((float) ((num_bins - 1) * 2));
+                float omega = 2.0f * PI_F * ((float) index_bin) / ((float) ((num_bins - 1) * 2));
                 covs->xcorrs[index_pair][index_bin].real = cosf(-1.0f * omega * delays[index_pair]);
                 covs->xcorrs[index_pair][index_bin].imag = sinf(-1.0f * omega * delays[index_pair]);
             }
@@ -84,9 +84,9 @@ int test_gcc(void) {
 
         covs_destroy(covs);
         tdoas_destroy(tdoas);
-        gcc_destroy(gcc);       
+        gcc_destroy(gcc);
 
-    }    
+    }
 
     {
 
@@ -104,7 +104,7 @@ int test_gcc(void) {
 
         for (unsigned int index_pair = 0; index_pair < num_pairs; index_pair++) {
             for (unsigned int index_bin = 0; index_bin < num_bins; index_bin++) {
-                float omega = 2.0 * M_PI * ((float) index_bin) / ((float) ((num_bins - 1) * 2));
+                float omega = 2.0f * PI_F * ((float) index_bin) / ((float) ((num_bins - 1) * 2));
                 covs->xcorrs[index_pair][index_bin].real = cosf(-1.0f * omega * delays[0][index_pair]) + 0.2f * cosf(-1.0f * omega * delays[1][index_pair]);
                 covs->xcorrs[index_pair][index_bin].imag = sinf(-1.0f * omega * delays[0][index_pair]) + 0.2f * sinf(-1.0f * omega * delays[1][index_pair]);
             }
@@ -123,9 +123,9 @@ int test_gcc(void) {
 
         covs_destroy(covs);
         tdoas_destroy(tdoas);
-        gcc_destroy(gcc);       
+        gcc_destroy(gcc);
 
-    }    
+    }
 
     {
 
@@ -134,7 +134,7 @@ int test_gcc(void) {
         const unsigned int num_channels = 3;
         const unsigned int num_pairs = 3;
         const unsigned int num_bins = 257;
-        const unsigned int num_bins_cropped = 100;        
+        const unsigned int num_bins_cropped = 100;
         const unsigned int num_sources = 2;
         const float delays[2][3] = { { +2.3f, -15.25f, +6.5f }, { +20.7f, +2.25f, -10.5f } };
 
@@ -144,7 +144,7 @@ int test_gcc(void) {
 
         for (unsigned int index_pair = 0; index_pair < num_pairs; index_pair++) {
             for (unsigned int index_bin = 0; index_bin < num_bins_cropped; index_bin++) {
-                float omega = 2.0 * M_PI * ((float) index_bin) / ((float) ((num_bins - 1) * 2));
+                float omega = 2.0f * PI_F * ((float) index_bin) / ((float) ((num_bins - 1) * 2));
                 covs->xcorrs[index_pair][index_bin].real = cosf(-1.0f * omega * delays[0][index_pair]) + 0.2f * cosf(-1.0f * omega * delays[1][index_pair]);
                 covs->xcorrs[index_pair][index_bin].imag = sinf(-1.0f * omega * delays[0][index_pair]) + 0.2f * sinf(-1.0f * omega * delays[1][index_pair]);
             }
@@ -163,9 +163,9 @@ int test_gcc(void) {
 
         covs_destroy(covs);
         tdoas_destroy(tdoas);
-        gcc_destroy(gcc);       
+        gcc_destroy(gcc);
 
-    }    
+    }
 
     return 0;
 

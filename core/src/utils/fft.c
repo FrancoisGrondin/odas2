@@ -1,4 +1,5 @@
 #include <utils/fft.h>
+#include <utils/pi.h>
 
 #include <math.h>
 #include <stdlib.h>
@@ -14,7 +15,7 @@ fft_t * fft_construct(const unsigned int num_samples) {
 
     fft_t * obj = (fft_t *) malloc(sizeof(fft_t));
 
-    if (ceilf(log2f(num_samples)) != floorf(log2f(num_samples))) {
+    if (ceilf(log2f((float)num_samples)) != floorf(log2f((float)num_samples))) {
         return NULL;
     }
 
@@ -250,7 +251,7 @@ static cplx_t * fft_twiddle(const unsigned int num_samples) {
     // Wn = exp(-j * 2 * pi * n / N)
     unsigned int N = num_samples;
     for (unsigned int n = 0; n < (N/2); n++) {
-        rtn[n] = cplx_cst(cosf(-2.0 * M_PI * n / N), sinf(-2.0f * M_PI * n / N));
+        rtn[n] = cplx_cst(cosf(-2.0 * PI_F * n / N), sinf(-2.0f * PI_F * n / N));
     }
 
     return rtn;
@@ -264,7 +265,7 @@ static cplx_t * fft_coefficients(const unsigned int num_samples) {
     // Wn = exp(-j * 2 * pi * n / N)
     unsigned int N = num_samples;
     for (unsigned int n = 0; n < (N/2); n++) {
-        rtn[n] = cplx_cst(cosf(-2.0 * M_PI * n / N), sinf(-2.0f * M_PI * n / N));
+        rtn[n] = cplx_cst(cosf(-2.0 * PI_F * n / N), sinf(-2.0f * PI_F * n / N));
     }
 
     return rtn;

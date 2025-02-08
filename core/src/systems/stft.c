@@ -1,4 +1,5 @@
 #include <systems/stft.h>
+#include <utils/pi.h>
 
 #include <math.h>
 #include <stdlib.h>
@@ -229,7 +230,7 @@ static float * window_hann(const unsigned int num_samples) {
 
     unsigned int N = num_samples - 1;
     for (unsigned int n = 0; n <= N; n++) {
-        window[n] = 0.5f * (1.0f - cosf(2 * M_PI * n / N));
+        window[n] = 0.5f * (1.0f - cosf(2 * PI_F * n / N));
     }
 
     return window;
@@ -242,7 +243,7 @@ static float * window_sine(const unsigned int num_samples) {
 
     unsigned int N = num_samples - 1;
     for (unsigned int n = 0; n <= N; n++) {
-        window[n] = sinf(M_PI * n / N);
+        window[n] = sinf(PI_F * n / N);
     }
 
     return window;

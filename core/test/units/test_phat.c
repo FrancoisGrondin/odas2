@@ -28,20 +28,20 @@ int test_phat(void) {
         float cov_acorr1[4] = { +1.0f, +2.0f, +1.0f, +3.0f };
         float cov_acorr2[4] = { +2.0f, +2.0f, +2.0f, +4.0f };
 
-        cplx_t rtn_cov_xcorr0[4] = { { .real = +0.8944, .imag = +0.4472 },
-                                     { .real = -0.8321, .imag = +0.5547 },
-                                     { .real = +0.4472, .imag = -0.8944 },
-                                     { .real = +0.8944, .imag = -0.4472 } };
+        cplx_t rtn_cov_xcorr0[4] = { { .real = +0.8944f, .imag = +0.4472f },
+                                     { .real = -0.8321f, .imag = +0.5547f },
+                                     { .real = +0.4472f, .imag = -0.8944f },
+                                     { .real = +0.8944f, .imag = -0.4472f } };
 
-        cplx_t rtn_cov_xcorr1[4] = { { .real = +0.3162, .imag = -0.9487 },
-                                     { .real = -0.8944, .imag = +0.4472 },
-                                     { .real = +0.8944, .imag = +0.4472 },
-                                     { .real = -0.7071, .imag = +0.7071 } };
+        cplx_t rtn_cov_xcorr1[4] = { { .real = +0.3162f, .imag = -0.9487f },
+                                     { .real = -0.8944f, .imag = +0.4472f },
+                                     { .real = +0.8944f, .imag = +0.4472f },
+                                     { .real = -0.7071f, .imag = +0.7071f } };
 
-        cplx_t rtn_cov_xcorr2[4] = { { .real = -0.7071, .imag = +0.7071 },
-                                     { .real = +0.0000, .imag = +0.0000 },
-                                     { .real = -0.4472, .imag = +0.8944 },
-                                     { .real = -0.9487, .imag = +0.3162 } };
+        cplx_t rtn_cov_xcorr2[4] = { { .real = -0.7071f, .imag = +0.7071f },
+                                     { .real = +0.0000f, .imag = +0.0000f },
+                                     { .real = -0.4472f, .imag = +0.8944f },
+                                     { .real = -0.9487f, .imag = +0.3162f } };
 
         float rtn_cov_acorr0[4] = { +1.0f, +1.0f, +1.0f, +1.0f };
         float rtn_cov_acorr1[4] = { +1.0f, +1.0f, +1.0f, +1.0f };
@@ -67,7 +67,7 @@ int test_phat(void) {
             }
             if (!(sqrtf(cplx_l2(cplx_sub(covs_out->xcorrs[1][index_bin], rtn_cov_xcorr1[index_bin]))) < eps)) {
                 return -1;
-            }            
+            }
             if (!(sqrtf(cplx_l2(cplx_sub(covs_out->xcorrs[2][index_bin], rtn_cov_xcorr2[index_bin]))) < eps)) {
                 return -1;
             }

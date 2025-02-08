@@ -35,8 +35,8 @@ int test_delaysum(void) {
 
                 for (unsigned int index_bin = 0; index_bin < num_bins; index_bin++) {
 
-                    float target_real = (1.0f / num_channels) * cosf(2.0f * M_PI * index_bin * delay / ((num_bins - 1) * 2));
-                    float target_imag = (1.0f / num_channels) * sinf(2.0f * M_PI * index_bin * delay / ((num_bins - 1) * 2));
+                    float target_real = (1.0f / (float)num_channels) * cosf(2.0f * PI_F * (float)index_bin * delay / ((float)(num_bins - 1) * 2));
+                    float target_imag = (1.0f / (float)num_channels) * sinf(2.0f * PI_F * (float)index_bin * delay / ((float)(num_bins - 1) * 2));
 
                     if (!(fabsf(weights->bins[index_source][index_channel][index_bin].real - target_real) < eps)) {
                         return -1;

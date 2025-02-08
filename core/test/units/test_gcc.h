@@ -1,6 +1,7 @@
 #include <odas2/signals/covs.h>
 #include <odas2/signals/tdoas.h>
 #include <odas2/systems/gcc.h>
+#include <odas2/utils/pi.h>
 
 #include <math.h>
 #include <stdlib.h>

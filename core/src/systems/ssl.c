@@ -1,4 +1,5 @@
 #include <systems/ssl.h>
+#include <utils/pi.h>
 
 #include <math.h>
 #include <stdlib.h>
@@ -80,7 +81,7 @@ ssl_t * ssl_construct(const mics_t * mics, const points_t * points, const float 
                 mic_t mic2 = mics->mics[index_channel2];
 
                 float gain = mic_gain(mic1, point) * mic_gain(mic2, point);
-                float angle = roundf((180.0f / M_PI) * acosf(xyz_dot(xyz_unit(xyz_sub(mic2.position, mic1.position)), point)));
+                float angle = roundf((180.0f / PI_F) * acosf(xyz_dot(xyz_unit(xyz_sub(mic2.position, mic1.position)), point)));
 
                 unsigned char index_table;
 
@@ -181,7 +182,7 @@ int ssl_process(ssl_t * obj, const tdoas_t * tdoas, doas_t * doas) {
 
         for (unsigned int index_pair = 0; index_pair < obj->num_pairs; index_pair++) {
 
-            obj->aoas[index_source][index_pair].degree = (180.0f / M_PI) * acosf((obj->sound_speed/obj->sample_rate) * tdoas->taus[index_source][index_pair].delay / obj->distances[index_pair]);
+            obj->aoas[index_source][index_pair].degree = (180.0f / PI_F) * acosf((obj->sound_speed/obj->sample_rate) * tdoas->taus[index_source][index_pair].delay / obj->distances[index_pair]);
             obj->aoas[index_source][index_pair].amplitude = tdoas->taus[index_source][index_pair].amplitude;
 
         }

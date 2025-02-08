@@ -87,7 +87,7 @@ inline cplx_t cplx_conj(const cplx_t op) {
 inline cplx_t cplx_unit(const cplx_t op) {
 
     cplx_t rtn;
-    const float eps = 1e-20;
+    const float eps = 1e-20f;
 
     // (a + jb) / ((a^2 + b^2)^0.5 + eps) = a / ((a^2 + b^2)^0.5 + eps) + j b / ((a^2 + b^2)^0.5 + eps)
     float magnitude = sqrtf(op.real * op.real + op.imag * op.imag);
