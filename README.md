@@ -1,4 +1,8 @@
+![LOGO](logo.png)
+
 # ODAS
+
+![release_workflow](https://github.com/FrancoisGrondin/odas2/actions/workflows/release.yml/badge.svg)
 
 ## Building on Unix
 
