@@ -1,0 +1,39 @@
+on:
+  pull_request:
+    branches:
+      - main
+
+name: Pull Request Audit
+
+jobs:
+  build-test:
+    name: Build and Test
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-13, macos-14, windows-2022]
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - name: Checkout Sources
+        uses: actions/checkout@v4
+
+      - name: Create Build Directory
+        working-directory: core
+        shell: bash
+        run: cmake -E make_directory build
+
+      - name: Configure CMake
+        working-directory: core/build
+        shell: bash
+        run: cmake ..
+
+      - name: Build
+        working-directory: core/build
+        shell: bash
+        run: cmake --build .
+
+      - name: Tests
+        working-directory: core/bin
+        shell: bash
+        run: ./tests
