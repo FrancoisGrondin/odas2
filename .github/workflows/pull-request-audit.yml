@@ -32,6 +32,16 @@ jobs:
         shell: bash
         run: cmake --build .
 
+      - name: Ls bin
+        working-directory: core/bin
+        shell: bash
+        run: ls -la
+
+      - name: Ls bin debug
+        working-directory: core/bin/Debug
+        shell: bash
+        run: ls -la
+
       - name: Tests
         working-directory: core/bin
         shell: bash
