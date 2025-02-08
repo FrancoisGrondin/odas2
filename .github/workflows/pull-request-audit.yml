@@ -19,30 +19,22 @@ jobs:
 
       - name: Create Build Directory
         working-directory: core
-        shell: bash
         run: cmake -E make_directory build
 
       - name: Configure CMake
         working-directory: core/build
-        shell: bash
         run: cmake .. -DCMAKE_BUILD_TYPE=Release
 
       - name: Build
         working-directory: core/build
-        shell: bash
         run: cmake --build .
 
-      - name: Ls bin
+      - name: Tests
+        if: matrix.os != 'windows-2022'
         working-directory: core/bin
-        shell: bash
-        run: ls -la
-
-      - name: Ls bin debug
-        working-directory: core/bin/Debug
-        shell: bash
-        run: ls -la
+        run: ./tests
 
       - name: Tests
-        working-directory: core/bin
-        shell: bash
-        run: ./tests
+        if: matrix.os == 'windows-2022'
+        working-directory: core/bin/Debug
+        run: tests.exe
