@@ -19,15 +19,33 @@ jobs:
 
       - name: Create Build Directory
         working-directory: core
+        shell: bash
         run: cmake -E make_directory build
 
       - name: Configure CMake
         working-directory: core/build
+        shell: bash
         run: cmake .. -DCMAKE_BUILD_TYPE=Release
 
       - name: Build
         working-directory: core/build
-        run: cmake --build .
+        shell: bash
+        run: cmake --build . --target odas2
+
+      - name: Ls build
+        working-directory: core/build
+        shell: bash
+        run: ls -la
+
+      - name: Ls bin
+        working-directory: core/bin
+        shell: bash
+        run: ls -la
+
+      - name: Ls lib
+        working-directory: core/lib
+        shell: bash
+        run: ls -la
 
       - name: Tests
         working-directory: core/bin
