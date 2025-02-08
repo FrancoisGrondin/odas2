@@ -34,7 +34,12 @@ jobs:
         working-directory: core/bin
         run: ./tests
 
+      - name: dir
+        if: matrix.os == 'windows-2022'
+        working-directory: core/bin/Debug
+        run: dir
+
       - name: Tests
         if: matrix.os == 'windows-2022'
         working-directory: core/bin/Debug
-        run: tests.exe
+        run: .\tests.exe
