@@ -15,10 +15,22 @@ gcc_t * gcc_construct(const unsigned int num_sources, const unsigned int num_cha
     obj->num_samples = (num_bins - 1) * 2;
     obj->interpolation_factor = 2;
 
-    obj->fft = fft_construct(obj->num_samples * obj->interpolation_factor);
+    uint16_t thread_count = get_thread_count();
 
-    obj->XX = (cplx_t *) calloc(sizeof(cplx_t), (obj->num_bins - 1) * obj->interpolation_factor + 1);
-    obj->xx = (float *) calloc(sizeof(float), obj->num_samples * obj->interpolation_factor);
+    obj->ffts = (fft_t **) malloc(sizeof(fft_t) * thread_count);
+    for (unsigned int index_thread = 0; index_thread < thread_count; index_thread++) {
+        obj->ffts[index_thread] = fft_construct(obj->num_samples * obj->interpolation_factor);
+    }
+
+    obj->XXs = (cplx_t **) malloc(sizeof(cplx_t*) * thread_count);
+    for (unsigned int index_thread = 0; index_thread < thread_count; index_thread++) {
+        obj->XXs[index_thread] = (cplx_t *) calloc(sizeof(cplx_t), (obj->num_bins - 1) * obj->interpolation_factor + 1);
+    }
+
+    obj->xxs = (float **) malloc(sizeof(float*) * thread_count);
+    for (unsigned int index_thread = 0; index_thread < thread_count; index_thread++) {
+        obj->xxs[index_thread] = (float *) calloc(sizeof(float), obj->num_samples * obj->interpolation_factor);
+    }
 
     return obj;
 
@@ -26,10 +38,17 @@ gcc_t * gcc_construct(const unsigned int num_sources, const unsigned int num_cha
 
 void gcc_destroy(gcc_t * obj) {
 
-    free(obj->xx);
-    free(obj->XX);
+    uint16_t thread_count = get_thread_count();
 
-    fft_destroy(obj->fft);
+    for (unsigned int index_thread = 0; index_thread < thread_count; index_thread++) {
+        fft_destroy(obj->ffts[index_thread]);
+        free(obj->XXs[index_thread]);
+        free(obj->xxs[index_thread]);
+    }
+
+    free(obj->ffts);
+    free(obj->XXs);
+    free(obj->xxs);
 
     free(obj);
 
@@ -64,7 +83,10 @@ int gcc_process(gcc_t * obj, const covs_t * covs, tdoas_t * tdoas) {
     //
     // Compute GCC for each pair
     //
+    #pragma omp parallel for
     for (unsigned int index_pair = 0; index_pair < obj->num_pairs; index_pair++) {
+
+        uint16_t index_thread = omp_get_thread_num();
 
         //
         // Set all values to 0. For instance, with F = 257 and k = 2:
@@ -72,7 +94,7 @@ int gcc_process(gcc_t * obj, const covs_t * covs, tdoas_t * tdoas) {
         // [  0  |  0  |  0  |  0  | ... |  0  ]
         //   (0)   (1)   (2)   (3)   ...  (512)
         //
-        memset(obj->XX, 0x00, sizeof(cplx_t) * ((obj->num_bins - 1) * obj->interpolation_factor + 1));
+        memset(obj->XXs[index_thread], 0x00, sizeof(cplx_t) * ((obj->num_bins - 1) * obj->interpolation_factor + 1));
 
         //
         // Then load the coefficients:
@@ -80,7 +102,7 @@ int gcc_process(gcc_t * obj, const covs_t * covs, tdoas_t * tdoas) {
         // [  X  |  X  |  X  |  X  | ... |  X  |  0  | ... |  0  ]
         //   (0)   (1)   (2)   (3)   ...  (256) (257)  ...  (512)
         //
-        memcpy(obj->XX, covs->xcorrs[index_pair], sizeof(cplx_t) * obj->num_bins);
+        memcpy(obj->XXs[index_thread], covs->xcorrs[index_pair], sizeof(cplx_t) * obj->num_bins);
 
         //
         // Perform iFFT
@@ -88,7 +110,7 @@ int gcc_process(gcc_t * obj, const covs_t * covs, tdoas_t * tdoas) {
         // [  x  |  x  |  x  | ... |  x  ]
         //   (0)   (1)   (2)        (1023)
         //
-        fft_irfft(obj->fft, obj->XX, obj->xx);
+        fft_irfft(obj->ffts[index_thread], obj->XXs[index_thread], obj->xxs[index_thread]);
 
         //
         // Scan for multiple peaks in this cross-correlation result
@@ -103,8 +125,8 @@ int gcc_process(gcc_t * obj, const covs_t * covs, tdoas_t * tdoas) {
             unsigned int max_index = 0;
 
             for (unsigned int index_sample = 0; index_sample < num_samples_interp; index_sample++) {
-                if (obj->xx[index_sample] > max_value) {
-                    max_value = obj->xx[index_sample];
+                if (obj->xxs[index_thread][index_sample] > max_value) {
+                    max_value = obj->xxs[index_thread][index_sample];
                     max_index = index_sample;
                 }
             }
@@ -143,9 +165,9 @@ int gcc_process(gcc_t * obj, const covs_t * covs, tdoas_t * tdoas) {
             // by substituting values of a, b, and c using variables delta_tau, y_prev, y_max and y_next.
             // Note the scaling by (1/scale) to make sure the maximum value is 1.0.
             //
-            float y_prev = obj->xx[max_index_left];
-            float y_max = obj->xx[max_index];
-            float y_next = obj->xx[max_index_right];
+            float y_prev = obj->xxs[index_thread][max_index_left];
+            float y_max = obj->xxs[index_thread][max_index];
+            float y_next = obj->xxs[index_thread][max_index_right];
 
             // Avoid division by zero
             float denominator = y_prev - 2.0f * y_max + y_next;
@@ -171,9 +193,9 @@ int gcc_process(gcc_t * obj, const covs_t * covs, tdoas_t * tdoas) {
                     float y = INFINITY;
                     for (unsigned int shift_left = 1; shift_left < (num_samples_interp / 2 - 1); shift_left++) {
                         unsigned int index_left = (unsigned int) (((signed int) max_index - (signed int) shift_left) % num_samples_interp);
-                        if (obj->xx[index_left] < y) {
-                            y = obj->xx[index_left];
-                            obj->xx[index_left] = 0.0f;
+                        if (obj->xxs[index_thread][index_left] < y) {
+                            y = obj->xxs[index_thread][index_left];
+                            obj->xxs[index_thread][index_left] = 0.0f;
                         }
                         else {
                             break;
@@ -185,9 +207,9 @@ int gcc_process(gcc_t * obj, const covs_t * covs, tdoas_t * tdoas) {
                     float y = INFINITY;
                     for (unsigned int shift_right = 1; shift_right < (num_samples_interp / 2 - 1); shift_right++) {
                         unsigned int index_right = (unsigned int) (((signed int) max_index + (signed int) shift_right) % num_samples_interp);
-                        if (obj->xx[index_right] < y) {
-                            y = obj->xx[index_right];
-                            obj->xx[index_right] = 0.0f;
+                        if (obj->xxs[index_thread][index_right] < y) {
+                            y = obj->xxs[index_thread][index_right];
+                            obj->xxs[index_thread][index_right] = 0.0f;
                         }
                         else {
                             break;
@@ -195,7 +217,7 @@ int gcc_process(gcc_t * obj, const covs_t * covs, tdoas_t * tdoas) {
                     }
                 }
 
-                obj->xx[max_index] = 0.0f;
+                obj->xxs[index_thread][max_index] = 0.0f;
 
             }
 

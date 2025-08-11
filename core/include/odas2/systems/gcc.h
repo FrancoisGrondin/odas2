@@ -2,6 +2,7 @@
 #define __GCC_H
 
 #include "../utils/fft.h"
+#include "../utils/openmp.h"
 #include "../signals/covs.h"
 #include "../signals/tdoas.h"
 
@@ -18,10 +19,10 @@ typedef struct gcc_t {
     unsigned int num_samples;
     unsigned int interpolation_factor;
 
-    fft_t * fft;
+    fft_t ** ffts;
 
-    cplx_t * XX;
-    float * xx;
+    cplx_t ** XXs;
+    float ** xxs;
 
 } gcc_t;
 

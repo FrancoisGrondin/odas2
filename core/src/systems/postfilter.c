@@ -23,13 +23,14 @@ void postfilter_destroy(postfilter_t * obj) {
 
 int postfilter_process(postfilter_t * obj, const freqs_t * freqs_in, const masks_t * masks_in, freqs_t * freqs_out) {
 
+	#pragma omp parallel for
 	for (unsigned int index_channel = 0; index_channel < obj->num_channels; index_channel++) {
 
 		for (unsigned int index_bin = 0; index_bin < obj->num_bins; index_bin++) {
 
 			cplx_t x = freqs_in->bins[index_channel][index_bin];
 			float m = masks_in->gains[index_channel][index_bin];
-			
+
 			cplx_t y = cplx_mul(cplx_cst(m, 0.0f), x);
 
 			freqs_out->bins[index_channel][index_bin] = y;

@@ -24,12 +24,14 @@ void phat_destroy(phat_t * obj) {
 
 int phat_process(phat_t * obj, const covs_t * covs_in, covs_t * covs_out) {
 
+    #pragma omp parallel for
     for (unsigned int index_pair = 0; index_pair < obj->num_pairs; index_pair++) {
         for (unsigned int index_bin = 0; index_bin < obj->num_bins; index_bin++) {
             covs_out->xcorrs[index_pair][index_bin] = cplx_unit(covs_in->xcorrs[index_pair][index_bin]);
         }
     }
 
+    #pragma omp parallel for
     for (unsigned int index_channel = 0; index_channel < obj->num_channels; index_channel++) {
         for (unsigned int index_bin = 0; index_bin < obj->num_bins; index_bin++) {
             covs_out->acorrs[index_channel][index_bin] = 1.0f;

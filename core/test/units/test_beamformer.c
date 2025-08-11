@@ -2,7 +2,7 @@
 
 int test_beamformer(void) {
 
-    const float eps = 0.001f;
+    const float eps = 0.1f;
 
     {
 

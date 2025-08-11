@@ -1,5 +1,6 @@
 #include <systems/stft.h>
 #include <utils/pi.h>
+#include <utils/openmp.h>
 
 #include <math.h>
 #include <stdlib.h>
@@ -31,7 +32,12 @@ stft_t * stft_construct(const unsigned int num_channels, const unsigned int num_
         obj->frames[index_channel] = (float *) calloc(sizeof(float), num_samples);
     }
 
-    obj->fft = fft_construct(num_samples);
+    uint16_t thread_count = get_thread_count();
+
+    obj->ffts = malloc(sizeof(fft_t *) * thread_count);
+    for (unsigned int index_thread = 0; index_thread < thread_count; index_thread++) {
+        obj->ffts[index_thread] = fft_construct(num_samples);
+    }
 
     obj->frame_real = (float *) calloc(sizeof(float), num_samples);
     obj->frame_cplx = (cplx_t *) calloc(sizeof(cplx_t), num_bins);
@@ -45,7 +51,10 @@ void stft_destroy(stft_t * obj) {
     free(obj->frame_real);
     free(obj->frame_cplx);
 
-    fft_destroy(obj->fft);
+    for (unsigned int index_thread = 0; index_thread < get_thread_count(); index_thread++) {
+        fft_destroy(obj->ffts[index_thread]);
+    }
+    free(obj->ffts);
 
     for (unsigned int index_channel = 0; index_channel < obj->num_channels; index_channel++) {
         free(obj->frames[index_channel]);
@@ -99,7 +108,7 @@ int stft_process(stft_t * obj, const hops_t * hops, freqs_t * freqs) {
         // Frame:  [ a*3 | b*4 | c*5 | d*6 | e*7 | f*8 | g*A | h*B ]
         // Result: [  X  |  X  |  X  |  X  |  X  ]
         //
-        fft_rfft(obj->fft, obj->frame_real, obj->frame_cplx);
+        fft_rfft(obj->ffts[omp_get_thread_num()], obj->frame_real, obj->frame_cplx);
 
         //
         // Copy result to signal
@@ -135,7 +144,10 @@ istft_t * istft_construct(const unsigned int num_channels, const unsigned int nu
         obj->frames[index_channel] = (float *) calloc(sizeof(float), num_samples);
     }
 
-    obj->fft = fft_construct(num_samples);
+    obj->ffts = (fft_t **) malloc(sizeof(fft_t *) * get_thread_count());
+    for (unsigned int index_thread = 0; index_thread < get_thread_count(); index_thread++) {
+        obj->ffts[index_thread] = fft_construct(num_samples);
+    }
 
     obj->frame_real = (float *) calloc(sizeof(float), num_samples);
     obj->frame_cplx = (cplx_t *) calloc(sizeof(cplx_t), num_bins);
@@ -149,7 +161,10 @@ void istft_destroy(istft_t * obj) {
     free(obj->frame_real);
     free(obj->frame_cplx);
 
-    fft_destroy(obj->fft);
+    for (unsigned int index_thread = 0; index_thread < get_thread_count(); index_thread++) {
+        fft_destroy(obj->ffts[index_thread]);
+    }
+    free(obj->ffts);
 
     for (unsigned int index_channel = 0; index_channel < obj->num_channels; index_channel++) {
         free(obj->frames[index_channel]);
@@ -181,7 +196,7 @@ int istft_process(istft_t * obj, const freqs_t * freqs, hops_t * hops) {
         // Freq:   [  X  |  X  |  X  |  X  |  X  ]
         // Result: [  1  |  2  |  3  |  4  |  5  |  6  |  7  |  8  ]
         //
-        fft_irfft(obj->fft, obj->frame_cplx, obj->frame_real);
+        fft_irfft(obj->ffts[omp_get_thread_num()], obj->frame_cplx, obj->frame_real);
 
         //
         // Window and overlap-add this frame to prev frames

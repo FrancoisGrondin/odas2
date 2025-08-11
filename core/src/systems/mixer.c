@@ -86,6 +86,7 @@ void mixer_destroy(mixer_t * obj) {
 
 int mixer_process(mixer_t * obj, const hops_t * hops_in, hops_t * hops_out) {
 
+    #pragma omp parallel for
     for (unsigned int index_channel = 0; index_channel < obj->num_channels; index_channel++) {
 
         memcpy(hops_out->samples[index_channel],

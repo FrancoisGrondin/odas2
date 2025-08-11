@@ -55,7 +55,7 @@ int scm_process(scm_t * obj, const freqs_t * freqs, const masks_t * masks, covs_
 
                 cplx_t xcorr = obj->xcorrs[index_pair][index_bin];
                 cplx_t xspec = cplx_mul(freqs->bins[index_channel1][index_bin], cplx_conj(freqs->bins[index_channel2][index_bin]));
-                
+
                 float gain = masks->gains[index_channel1][index_bin] * masks->gains[index_channel2][index_bin];
                 float alpha = obj->alpha * gain;
 
@@ -66,7 +66,7 @@ int scm_process(scm_t * obj, const freqs_t * freqs, const masks_t * masks, covs_
 
             memcpy(covs->xcorrs[index_pair], obj->xcorrs[index_pair], sizeof(cplx_t) * obj->num_bins);
 
-        index_pair++;
+            index_pair++;
 
         }
 
@@ -162,7 +162,7 @@ void iscm_destroy(iscm_t * obj) {
 int iscm_process(iscm_t * obj, const freqs_t * freqs, const masks_t * masks, covs_t * covs) {
 
     //
-    // For each frequency bin, we want to compute the following equation (based on 
+    // For each frequency bin, we want to compute the following equation (based on
     // the Woodburry identify):
     //
     // beta * phiInv - gamma * (phiInv @ X) @ (phiInv @ X)^H
@@ -170,7 +170,7 @@ int iscm_process(iscm_t * obj, const freqs_t * freqs, const masks_t * masks, cov
     // where beta and gamma are scalars:
     //
     // beta = 1 / (1 - alpha)
-    // 
+    //
     // gamma = beta^2 * [1 / (1/alpha + X^H @ phiInv @ X)]
     //
 
@@ -203,7 +203,7 @@ int iscm_process(iscm_t * obj, const freqs_t * freqs, const masks_t * masks, cov
         }
 
         cmat_printf(obj->X);
-                
+
         // X^H (1xM)
         cmat_htranspose(obj->XH, obj->X);
         //cmat_printf(obj->XH);
@@ -211,7 +211,7 @@ int iscm_process(iscm_t * obj, const freqs_t * freqs, const masks_t * masks, cov
         // phiInv_X (Mx1)
         cmat_mul(obj->phiInv_X, obj->phiInv, obj->X);
         //cmat_printf(obj->phiInv_X);
-        
+
         // phiInv_X_XH_phiInvH (MxM)
         hmat_rank1(obj->phiInv_X_XH_phiInvH, obj->phiInv_X);
         //hmat_printf(obj->phiInv_X_XH_phiInvH);
@@ -262,4 +262,3 @@ int iscm_process(iscm_t * obj, const freqs_t * freqs, const masks_t * masks, cov
     return 0;
 
 }
-

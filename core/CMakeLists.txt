@@ -18,7 +18,13 @@ else()
     set(DEFAULT_BUILD_SHARED_LIBS ON)
 endif()
 
+option(OPENMP_ENABLED "Enable OpenMP support" ON)
 option(BUILD_SHARED_LIBS "Build using shared libraries" ${DEFAULT_BUILD_SHARED_LIBS})
+
+if (OPENMP_ENABLED)
+    find_package(OpenMP REQUIRED)
+    add_compile_definitions(OPENMP_ENABLED)
+endif()
 
 if(NOT MSVC)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=native -Wall")
@@ -82,6 +88,10 @@ add_library(odas2
 
 if(NOT MSVC)
     target_link_libraries(odas2 m)
+endif()
+
+if (OPENMP_ENABLED)
+  target_link_libraries(odas2 OpenMP::OpenMP_C)
 endif()
 
 add_executable(tests
