@@ -36,9 +36,9 @@ int delaysum_process(delaysum_t * obj, const tdoas_t * tdoas, weights_t * coeffs
     float gain = 1.0f / obj->num_channels;
     unsigned int frame_size = (obj->num_bins - 1) * 2;
 
+    #pragma omp parallel for collapse(2)
     for (unsigned int index_source = 0; index_source < obj->num_sources; index_source++) {
 
-        #pragma omp parallel for
         for (unsigned int index_channel = 0; index_channel < obj->num_channels; index_channel++) {
 
             float delay = tdoas->taus[index_source][index_channel].delay - tdoas->taus[index_source][0].delay;

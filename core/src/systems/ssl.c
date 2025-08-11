@@ -160,225 +160,233 @@ void ssl_destroy(ssl_t * obj) {
 
 int ssl_process(ssl_t * obj, const tdoas_t * tdoas, doas_t * doas) {
 
-    //
-    // Convert TDoAs to AoAs
-    //
-    // Each TDoA is given in samples. This will be normalized to an angle in degree
-    // between 0 and 180. The equation is:
-    //
-    // tau = (fS/c) * d * cos(theta), where    fS is the sample rate (samples/sec)
-    //                                          c is the speed of sound (m/sec)
-    //                                          d is the distance between mics (m)
-    //                                      theta is the angle
-    //
-    // The angle then corresponds to:
-    //
-    // theta = acos((c/fS) * tau / d), in radians (need x 180/pi to convert in degrees)
-    //
-    // The amplitude associated to each TDoA is the same for each AoA.
-    //
-
-    for (unsigned int index_source = 0; index_source < obj->num_sources; index_source++) {
-
-        for (unsigned int index_pair = 0; index_pair < obj->num_pairs; index_pair++) {
-
-            obj->aoas[index_source][index_pair].degree = (180.0f / PI_F) * acosf((obj->sound_speed/obj->sample_rate) * tdoas->taus[index_source][index_pair].delay / obj->distances[index_pair]);
-            obj->aoas[index_source][index_pair].amplitude = tdoas->taus[index_source][index_pair].amplitude;
-
-        }
-
-    }
-
-    //
-    // Scan for each direction
-    //
-    // The energy of each point is computed. When the maximum value is found, the AoAs that
-    // contributed to this maximum value are removed, and a new scan is performed. This goes
-    // on until the desired number of directions is found.
-    //
-
-    for (unsigned int index_direction = 0; index_direction < obj->num_directions; index_direction++) {
-
+    #pragma omp parallel
+    {
         //
-        // Create the synthesized signals
+        // Convert TDoAs to AoAs
         //
-        // For each AoA, a gaussian is scaled and added to the synthesized signal.
-        // For instance, if we have two AoA, one at 43 degrees with amplitude of 0.5, and
-        // the second one at 110 degrees with amplitude of 0.2, we have the following:
+        // Each TDoA is given in samples. This will be normalized to an angle in degree
+        // between 0 and 180. The equation is:
         //
-        //                  kernel
-        //                <------->
-        // |----- ... -----xxxxxxx----- ... ---------------------------- ... -----| x 0.5
-        //                    ^
-        //                  ( 43)
-        //                                      +
-        //                                              kernel
-        //                                            <------->
-        // |----- ... ----------------- ... -----------xxxxxxx---------- ... -----| x 0.2
-        //                                                ^
-        //                                              (110)
+        // tau = (fS/c) * d * cos(theta), where    fS is the sample rate (samples/sec)
+        //                                          c is the speed of sound (m/sec)
+        //                                          d is the distance between mics (m)
+        //                                      theta is the angle
         //
-        //                                      =
+        // The angle then corresponds to:
         //
-        // |----- ... -----xxxxxxx----- ... -----------xxxxxxx---------- ... -----|
+        // theta = acos((c/fS) * tau / d), in radians (need x 180/pi to convert in degrees)
         //
-        // The kernel provides some tolerance for mismatch between the measured AoA and the
-        // reference AoA for the matrix geometry. This mismatch can be due to numerous things,
-        // including:
-        //
-        //  - Different speed of sound (speed varies with temperature and humidity)
-        //  - Error in the measured positions of each microphone
-        //  - Error in the estimated TDoAs using GCC-PHAT/FCC-PHAT
-        //  - Reverberation
-        //  - ...
+        // The amplitude associated to each TDoA is the same for each AoA.
         //
 
-        for (unsigned int index_pair = 0; index_pair < obj->num_pairs; index_pair++) {
-
-            //
-            // The synthesized signals hold 182 elements. Elements 1 to 181 represent
-            // the energy using the kernels and the AoAs. The element 0 is special, it
-            // has a value of 0.0f, and is used to allow the projection to grab a value of
-            // 0 when a pair of microphone needs to be ignored. This special case could be
-            // implemented using a condition, but this would break vectorization during the
-            // search, so we prefer to do it this way instead.
-            //
-
-            memset(&(obj->synthesis[index_pair][0]), 0x00, sizeof(float) * 182);
-
-            for (unsigned int index_source = 0; index_source < obj->num_sources; index_source++) {
-
-                aoa_t aoa = obj->aoas[index_source][index_pair];
-                unsigned char index_table = ((unsigned char) roundf(aoa.degree)) + 1;
-
-                obj->synthesis[index_pair][index_table] += aoa.amplitude * obj->kernel[0];
-
-                for (unsigned char index_kernel = 1; index_kernel < obj->kernel_size; index_kernel++) {
-
-                    signed int index_left = ((signed int) index_table) - ((signed int) index_kernel);
-                    signed int index_right = ((signed int) index_table) + ((signed int) index_kernel);
-
-                    if (index_left > 0) {
-                        obj->synthesis[index_pair][index_left] += aoa.amplitude * obj->kernel[index_kernel];
-                    }
-                    if (index_right <= 181) {
-                        obj->synthesis[index_pair][index_right] += aoa.amplitude * obj->kernel[index_kernel];
-                    }
-
-                }
-
-            }
-
-        }
-
-        //
-        // Create the projection (energy for each point)
-        //
-
-        for (unsigned int index_point = 0; index_point < obj->num_points; index_point++) {
-
-            //
-            // Each point is associated to a set of indexes. For instance, for a given
-            // point when we have 6 pairs of microphones, we could have something like this:
-            //
-            // [ 112 |  0  |  4  | 178 | 181 | 100 ]
-            //
-            // This implies that we add the following values:
-            //
-            // 1) The sample of the synthesized signal for angle at 111 degrees for pair 1
-            // 2) A value of 0 for pair 2 (recall 0 stands for a pair that is ignored)
-            // 3) The sample of the synthesized signal for angle at 3 degrees for pair 3
-            // 4) The sample of the synthesized signal for angle at 177 degrees for pair 4
-            // 5) The sample of the synthesized signal for angle at 180 degrees for pair 5
-            // 6) The sample of the synthesized signal for angle at 99 degrees for pair 6
-            //
-            // In this case, the normalisation should be equal to 0.2 (because there are
-            // 5 active elements).
-            //
-
-            float energy = 0.0f;
+        #pragma omp for collapse(2)
+        for (unsigned int index_source = 0; index_source < obj->num_sources; index_source++) {
 
             for (unsigned int index_pair = 0; index_pair < obj->num_pairs; index_pair++) {
 
-                energy += obj->synthesis[index_pair][obj->table[index_point * obj->num_pairs + index_pair]];
-            }
-
-            obj->projections[index_point] = energy * obj->norms[index_point];
-
-        }
-
-        //
-        // Find the maximum value, and keep the corresponding index
-        //
-
-        unsigned int max_index = 0;
-
-        for (unsigned int index_point = 0; index_point < obj->num_points; index_point++) {
-
-            if (obj->projections[index_point] > obj->projections[max_index]) {
-
-                max_index = index_point;
+                obj->aoas[index_source][index_pair].degree = (180.0f / PI_F) * acosf((obj->sound_speed/obj->sample_rate) * tdoas->taus[index_source][index_pair].delay / obj->distances[index_pair]);
+                obj->aoas[index_source][index_pair].amplitude = tdoas->taus[index_source][index_pair].amplitude;
 
             }
 
         }
 
         //
-        // Copy the potential source: the point that corresponds to this value is copied as the
-        // potential source, and the energy corresponds to the maximum value. Energy is saved
-        // as it can later provide useful insights to determine if a source is a true source
-        // or a false alarm. Id is set to 0 since it is a potential source.
+        // Scan for each direction
+        //
+        // The energy of each point is computed. When the maximum value is found, the AoAs that
+        // contributed to this maximum value are removed, and a new scan is performed. This goes
+        // on until the desired number of directions is found.
         //
 
-        doas->dirs[index_direction] = (dir_t) { .type = POTENTIAL, .coord = obj->points->points[max_index], .energy = obj->projections[max_index] };
+        for (unsigned int index_direction = 0; index_direction < obj->num_directions; index_direction++) {
 
-        //
-        // Remove this source for next scan
-        //
-        // The goal here is to find the AoAs that contributed to the maximum value.
-        // When an angle is within the kernel interval, its corresponding amplitude is reduced by
-        // the energy level. The amplitude cannot be negative, and is set to 0 if this is
-        // the case.
-        //
-        // For instance, if there are 6 pairs and we found at source which AoAs correspond to:
-        //
-        // [ 112 |  0  |  4  | 178 | 181 | 100 ] with a energy level of 0.4,
-        //
-        // and the measured AoAs are the following:
-        //
-        // Source 1: AoA:       [ 110 |  9  |  2  | 140 | 181 | 103 ]
-        //           Amplitude:   0.3   0.2   0.2   0.5   0.3   0.4
-        //
-        // Source 2: AoA:       [ 140 | 100 | 100 | 180 | 101 | 133 ]
-        //           Amplitude:   0.2   0.3   0.4   0.5   0.3   0.2
-        //
-        // This becomes (with a kernel of size 5):
-        //
-        // Source 1: AoA:       [ 110 |  9  |  2  | 140 | 181 | 103 ]
-        //           Amplitude:   0.0   0.2   0.0   0.5   0.0   0.0
-        //
-        // Source 2: AoA:       [ 140 | 100 | 100 | 180 | 101 | 133 ]
-        //           Amplitude:   0.2   0.3   0.4   0.1   0.3   0.2
-        //
+            //
+            // Create the synthesized signals
+            //
+            // For each AoA, a gaussian is scaled and added to the synthesized signal.
+            // For instance, if we have two AoA, one at 43 degrees with amplitude of 0.5, and
+            // the second one at 110 degrees with amplitude of 0.2, we have the following:
+            //
+            //                  kernel
+            //                <------->
+            // |----- ... -----xxxxxxx----- ... ---------------------------- ... -----| x 0.5
+            //                    ^
+            //                  ( 43)
+            //                                      +
+            //                                              kernel
+            //                                            <------->
+            // |----- ... ----------------- ... -----------xxxxxxx---------- ... -----| x 0.2
+            //                                                ^
+            //                                              (110)
+            //
+            //                                      =
+            //
+            // |----- ... -----xxxxxxx----- ... -----------xxxxxxx---------- ... -----|
+            //
+            // The kernel provides some tolerance for mismatch between the measured AoA and the
+            // reference AoA for the matrix geometry. This mismatch can be due to numerous things,
+            // including:
+            //
+            //  - Different speed of sound (speed varies with temperature and humidity)
+            //  - Error in the measured positions of each microphone
+            //  - Error in the estimated TDoAs using GCC-PHAT/FCC-PHAT
+            //  - Reverberation
+            //  - ...
+            //
 
-        for (unsigned int index_pair = 0; index_pair < obj->num_pairs; index_pair++) {
+            #pragma omp for
+            for (unsigned int index_pair = 0; index_pair < obj->num_pairs; index_pair++) {
 
-            if (obj->table[max_index * obj->num_pairs + index_pair] != 0) {
+                //
+                // The synthesized signals hold 182 elements. Elements 1 to 181 represent
+                // the energy using the kernels and the AoAs. The element 0 is special, it
+                // has a value of 0.0f, and is used to allow the projection to grab a value of
+                // 0 when a pair of microphone needs to be ignored. This special case could be
+                // implemented using a condition, but this would break vectorization during the
+                // search, so we prefer to do it this way instead.
+                //
 
-                float degree = (float) (obj->table[max_index * obj->num_pairs + index_pair] - 1);
+                memset(&(obj->synthesis[index_pair][0]), 0x00, sizeof(float) * 182);
 
                 for (unsigned int index_source = 0; index_source < obj->num_sources; index_source++) {
 
                     aoa_t aoa = obj->aoas[index_source][index_pair];
+                    unsigned char index_table = ((unsigned char) roundf(aoa.degree)) + 1;
 
-                    if (fabsf(aoa.degree - degree) < obj->kernel_size) {
+                    obj->synthesis[index_pair][index_table] += aoa.amplitude * obj->kernel[0];
 
-                        float amplitude = aoa.amplitude - obj->projections[max_index];
-                        if (amplitude < 0.0f) {
-                            amplitude = 0.0f;
+                    for (unsigned char index_kernel = 1; index_kernel < obj->kernel_size; index_kernel++) {
+
+                        signed int index_left = ((signed int) index_table) - ((signed int) index_kernel);
+                        signed int index_right = ((signed int) index_table) + ((signed int) index_kernel);
+
+                        if (index_left > 0) {
+                            obj->synthesis[index_pair][index_left] += aoa.amplitude * obj->kernel[index_kernel];
+                        }
+                        if (index_right <= 181) {
+                            obj->synthesis[index_pair][index_right] += aoa.amplitude * obj->kernel[index_kernel];
                         }
 
-                        obj->aoas[index_source][index_pair].amplitude = amplitude;
+                    }
+
+                }
+
+            }
+
+            //
+            // Create the projection (energy for each point)
+            //
+
+            #pragma omp for
+            for (unsigned int index_point = 0; index_point < obj->num_points; index_point++) {
+
+                //
+                // Each point is associated to a set of indexes. For instance, for a given
+                // point when we have 6 pairs of microphones, we could have something like this:
+                //
+                // [ 112 |  0  |  4  | 178 | 181 | 100 ]
+                //
+                // This implies that we add the following values:
+                //
+                // 1) The sample of the synthesized signal for angle at 111 degrees for pair 1
+                // 2) A value of 0 for pair 2 (recall 0 stands for a pair that is ignored)
+                // 3) The sample of the synthesized signal for angle at 3 degrees for pair 3
+                // 4) The sample of the synthesized signal for angle at 177 degrees for pair 4
+                // 5) The sample of the synthesized signal for angle at 180 degrees for pair 5
+                // 6) The sample of the synthesized signal for angle at 99 degrees for pair 6
+                //
+                // In this case, the normalisation should be equal to 0.2 (because there are
+                // 5 active elements).
+                //
+
+                float energy = 0.0f;
+
+                for (unsigned int index_pair = 0; index_pair < obj->num_pairs; index_pair++) {
+
+                    energy += obj->synthesis[index_pair][obj->table[index_point * obj->num_pairs + index_pair]];
+                }
+
+                obj->projections[index_point] = energy * obj->norms[index_point];
+
+            }
+
+            //
+            // Find the maximum value, and keep the corresponding index
+            //
+
+            unsigned int max_index = 0;
+
+            for (unsigned int index_point = 0; index_point < obj->num_points; index_point++) {
+
+                if (obj->projections[index_point] > obj->projections[max_index]) {
+
+                    max_index = index_point;
+
+                }
+
+            }
+
+            //
+            // Copy the potential source: the point that corresponds to this value is copied as the
+            // potential source, and the energy corresponds to the maximum value. Energy is saved
+            // as it can later provide useful insights to determine if a source is a true source
+            // or a false alarm. Id is set to 0 since it is a potential source.
+            //
+
+            doas->dirs[index_direction] = (dir_t) { .type = POTENTIAL, .coord = obj->points->points[max_index], .energy = obj->projections[max_index] };
+
+            //
+            // Remove this source for next scan
+            //
+            // The goal here is to find the AoAs that contributed to the maximum value.
+            // When an angle is within the kernel interval, its corresponding amplitude is reduced by
+            // the energy level. The amplitude cannot be negative, and is set to 0 if this is
+            // the case.
+            //
+            // For instance, if there are 6 pairs and we found at source which AoAs correspond to:
+            //
+            // [ 112 |  0  |  4  | 178 | 181 | 100 ] with a energy level of 0.4,
+            //
+            // and the measured AoAs are the following:
+            //
+            // Source 1: AoA:       [ 110 |  9  |  2  | 140 | 181 | 103 ]
+            //           Amplitude:   0.3   0.2   0.2   0.5   0.3   0.4
+            //
+            // Source 2: AoA:       [ 140 | 100 | 100 | 180 | 101 | 133 ]
+            //           Amplitude:   0.2   0.3   0.4   0.5   0.3   0.2
+            //
+            // This becomes (with a kernel of size 5):
+            //
+            // Source 1: AoA:       [ 110 |  9  |  2  | 140 | 181 | 103 ]
+            //           Amplitude:   0.0   0.2   0.0   0.5   0.0   0.0
+            //
+            // Source 2: AoA:       [ 140 | 100 | 100 | 180 | 101 | 133 ]
+            //           Amplitude:   0.2   0.3   0.4   0.1   0.3   0.2
+            //
+
+            #pragma omp for
+            for (unsigned int index_pair = 0; index_pair < obj->num_pairs; index_pair++) {
+
+                if (obj->table[max_index * obj->num_pairs + index_pair] != 0) {
+
+                    float degree = (float) (obj->table[max_index * obj->num_pairs + index_pair] - 1);
+
+                    for (unsigned int index_source = 0; index_source < obj->num_sources; index_source++) {
+
+                        aoa_t aoa = obj->aoas[index_source][index_pair];
+
+                        if (fabsf(aoa.degree - degree) < obj->kernel_size) {
+
+                            float amplitude = aoa.amplitude - obj->projections[max_index];
+                            if (amplitude < 0.0f) {
+                                amplitude = 0.0f;
+                            }
+
+                            obj->aoas[index_source][index_pair].amplitude = amplitude;
+
+                        }
 
                     }
 
@@ -387,7 +395,6 @@ int ssl_process(ssl_t * obj, const tdoas_t * tdoas, doas_t * doas) {
             }
 
         }
-
     }
 
     return 0;

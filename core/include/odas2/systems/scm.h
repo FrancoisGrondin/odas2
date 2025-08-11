@@ -20,6 +20,8 @@ typedef struct scm_t {
     cplx_t ** xcorrs;
     float ** acorrs;
 
+    unsigned int ** map_index_pair;
+
 } scm_t;
 
 typedef struct iscm_t {

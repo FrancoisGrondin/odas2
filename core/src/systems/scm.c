@@ -23,6 +23,18 @@ scm_t * scm_construct(const unsigned int num_channels, const unsigned int num_bi
         obj->acorrs[index_channel] = (float *) calloc(sizeof(float), num_bins);
     }
 
+    int16_t index_pair = 0;
+    obj->map_index_pair = (unsigned int**)malloc(sizeof(unsigned int*) * num_channels);
+    for (unsigned int index_channel1 = 0; index_channel1 < obj->num_channels; index_channel1++)
+    {
+        obj->map_index_pair[index_channel1] = (unsigned int*)malloc(sizeof(unsigned int) * num_channels);
+        for (unsigned int index_channel2 = (index_channel1 + 1); index_channel2 < obj->num_channels; index_channel2++)
+        {
+            obj->map_index_pair[index_channel1][index_channel2] = index_pair;
+            index_pair++;
+        }
+    }
+
     return obj;
 
 }
@@ -45,11 +57,13 @@ void scm_destroy(scm_t * obj) {
 
 int scm_process(scm_t * obj, const freqs_t * freqs, const masks_t * masks, covs_t * covs) {
 
-    unsigned int index_pair = 0;
+
 
     for (unsigned int index_channel1 = 0; index_channel1 < obj->num_channels; index_channel1++) {
 
         for (unsigned int index_channel2 = (index_channel1 + 1); index_channel2 < obj->num_channels; index_channel2++) {
+
+            unsigned int index_pair = obj->map_index_pair[index_channel1][index_channel2];
 
             for (unsigned int index_bin = 0; index_bin < obj->num_bins; index_bin++) {
 
@@ -65,8 +79,6 @@ int scm_process(scm_t * obj, const freqs_t * freqs, const masks_t * masks, covs_
             }
 
             memcpy(covs->xcorrs[index_pair], obj->xcorrs[index_pair], sizeof(cplx_t) * obj->num_bins);
-
-            index_pair++;
 
         }
 
