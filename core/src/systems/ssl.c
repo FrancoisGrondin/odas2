@@ -318,6 +318,7 @@ int ssl_process(ssl_t * obj, const tdoas_t * tdoas, doas_t * doas) {
 
             unsigned int max_index = 0;
 
+            #pragma omp simd
             for (unsigned int index_point = 0; index_point < obj->num_points; index_point++) {
 
                 if (obj->projections[index_point] > obj->projections[max_index]) {

@@ -43,6 +43,7 @@ int delaysum_process(delaysum_t * obj, const tdoas_t * tdoas, weights_t * coeffs
 
             float delay = tdoas->taus[index_source][index_channel].delay - tdoas->taus[index_source][0].delay;
 
+            #pragma omp simd
             for (unsigned int index_bin = 0; index_bin < obj->num_bins; index_bin++) {
                 coeffs->bins[index_source][index_channel][index_bin].real = gain * cosf(2.0f * PI_F * index_bin * delay / frame_size);
                 coeffs->bins[index_source][index_channel][index_bin].imag = gain * sinf(2.0f * PI_F * index_bin * delay / frame_size);

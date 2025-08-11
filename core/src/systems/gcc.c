@@ -124,6 +124,7 @@ int gcc_process(gcc_t * obj, const covs_t * covs, tdoas_t * tdoas) {
             float max_value = 0.0f;
             unsigned int max_index = 0;
 
+            #pragma omp simd
             for (unsigned int index_sample = 0; index_sample < num_samples_interp; index_sample++) {
                 if (obj->xxs[index_thread][index_sample] > max_value) {
                     max_value = obj->xxs[index_thread][index_sample];

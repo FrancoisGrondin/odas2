@@ -51,6 +51,11 @@ void scm_destroy(scm_t * obj) {
     }
     free(obj->acorrs);
 
+    for (unsigned int index_channel1 = 0; index_channel1 < obj->num_channels; index_channel1++) {
+        free(obj->map_index_pair[index_channel1]);
+    }
+    free(obj->map_index_pair);
+
     free(obj);
 
 }
@@ -58,13 +63,14 @@ void scm_destroy(scm_t * obj) {
 int scm_process(scm_t * obj, const freqs_t * freqs, const masks_t * masks, covs_t * covs) {
 
 
-
+    #pragma omp parallel for collapse(2)
     for (unsigned int index_channel1 = 0; index_channel1 < obj->num_channels; index_channel1++) {
 
         for (unsigned int index_channel2 = (index_channel1 + 1); index_channel2 < obj->num_channels; index_channel2++) {
 
             unsigned int index_pair = obj->map_index_pair[index_channel1][index_channel2];
 
+            #pragma omp simd
             for (unsigned int index_bin = 0; index_bin < obj->num_bins; index_bin++) {
 
                 cplx_t xcorr = obj->xcorrs[index_pair][index_bin];
@@ -84,8 +90,10 @@ int scm_process(scm_t * obj, const freqs_t * freqs, const masks_t * masks, covs_
 
     }
 
+    #pragma omp parallel for
     for (unsigned int index_channel = 0; index_channel < obj->num_channels; index_channel++) {
 
+        #pragma omp simd
         for (unsigned int index_bin = 0; index_bin < obj->num_bins; index_bin++) {
 
             float acorr = obj->acorrs[index_channel][index_bin];

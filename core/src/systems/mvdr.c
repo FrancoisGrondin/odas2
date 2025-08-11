@@ -68,6 +68,7 @@ int mvdr_process(mvdr_t * obj, const covs_t * covs, weights_t * weights) {
     for (unsigned int index_bin = 0; index_bin < obj->num_bins; index_bin++) {
 
         float trace = 0.0f;
+        #pragma omp simd
         for (unsigned int index_channel = 0; index_channel < obj->num_channels; index_channel++) {
             trace += covs->acorrs[index_channel][index_bin];
         }
@@ -79,7 +80,7 @@ int mvdr_process(mvdr_t * obj, const covs_t * covs, weights_t * weights) {
 
         }
 
-
+        #pragma omp simd
         for (unsigned int index_channel = 1; index_channel < obj->num_channels; index_channel++) {
 
             unsigned int index_pair = index_channel - 1;
