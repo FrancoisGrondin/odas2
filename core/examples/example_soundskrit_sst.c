@@ -50,13 +50,15 @@ int main(int argc, char * argv[]) {
     const char          method[]            = "gcc";
     const char          micarray[]          = "soundskrit_mug";
     const char          geometry[]          = "circle";
+    const unsigned int  num_points          = 360;
+
 
     //
     // Allocate memory
     //
 
     mics_t * mics = mics_construct(micarray);
-    points_t * points = points_construct(geometry);
+    points_t * points = points_construct(geometry, num_points);
 
     wavin_t * wavin = wavin_construct("/dev/stdin", num_shifts, num_channels_raw, sample_rate);
 

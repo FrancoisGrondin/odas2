@@ -14,7 +14,7 @@ typedef struct points_t {
 
 } points_t;
 
-points_t * points_construct(const char * geometry);
+points_t * points_construct(const char * geometry, const unsigned int num_points);
 
 void points_destroy(points_t * obj);
 
