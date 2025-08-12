@@ -4,13 +4,14 @@
  * @brief   Contains structure and basic functions for a tdoas signal.
  *
  * This file contains the functions to construct, destroy and print
- * the content of a tdoas signal. This signal holds the delays and in 
+ * the content of a tdoas signal. This signal holds the delays and in
  * the amplitudes with float precision.
  */
 
 #ifndef __TDOAS_H
 #define __TDOAS_H
 
+#include "signal.h"
 #include <stdio.h>
 
 #ifdef __cplusplus
@@ -19,7 +20,7 @@ extern "C" {
 
 /**
  * @brief   Tau component.
- * 
+ *
  * This structure hold the content of a delay, which corresponds to a
  * delay (in fractional number of samples) and an amplitude.
  */
@@ -36,12 +37,12 @@ typedef struct tau_t {
  * This structure holds the content of a tdoas signal. The signal first
  * contains a label which is a string that can be used to provide a unique
  * id to this type of signal. This comes handy when results are exported
- * to a json file. The signal contains \p num_sources sources, \p num_channels 
+ * to a json file. The signal contains \p num_sources sources, \p num_channels
  * channels, each of which contains a number of pairs denoted by \p num_pairs.
  */
 typedef struct tdoas_t {
 
-    char label[64];
+    char label[SIGNAL_LABEL_SIZE];
 
     unsigned int num_sources;   /**< Signal label. Limited to 64 characters, including null character. */
     unsigned int num_channels;  /**< Number of channels. */

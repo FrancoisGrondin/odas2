@@ -9,6 +9,7 @@
 #include <odas2/systems/steering.h>
 #include <odas2/systems/stft.h>
 #include <odas2/utils/mics.h>
+#include <odas2/utils/error.h>
 
 int main(int argc, char * argv[]) {
 
@@ -29,39 +30,54 @@ int main(int argc, char * argv[]) {
     // Parameters
     //
 
-    const unsigned int  num_channels    = 4;
-    const unsigned int  num_shifts      = 128;
-    const unsigned int  num_samples     = 512;
-    const unsigned int  num_bins        = 257;
-    const unsigned int  sample_rate     = 16000;
-    const unsigned int  num_sources     = 1;
-    const float         sound_speed     = 343.0f;
-    const char          micarray[]      = "respeaker_usb_4";
-    const xyz_t         targets[]       = { { .x = -0.704f, .y = -0.704f, .z = -0.088f } };
+    const unsigned int    num_channels    = 4;
+    const unsigned int    num_shifts      = 128;
+    const unsigned int    num_samples     = 512;
+    const unsigned int    num_bins        = 257;
+    const unsigned int    sample_rate     = 16000;
+    const unsigned int    num_sources     = 1;
+    const float           sound_speed     = 343.0f;
+    const mics_hardware_t micarray        = MICS_HARDWARE_RESPEAKER_USB_4;
+    const xyz_t           targets[]       = { { .x = -0.704f, .y = -0.704f, .z = -0.088f } };
 
     //
     // Allocate memory
     //
 
     mics_t * mics = mics_construct(micarray);
+    ODAS2_CHECK_PTR(mics);
 
     wavin_t * wavin = wavin_construct("/dev/stdin", num_shifts, num_channels, sample_rate);
+    ODAS2_CHECK_PTR(wavin);
     doas_t * doas = doas_construct("doas", num_sources);
+    ODAS2_CHECK_PTR(doas);
 
     hops_t * hops_in = hops_construct("xs", num_channels, num_shifts);
+    ODAS2_CHECK_PTR(hops_in);
     freqs_t * freqs_in = freqs_construct("Xs", num_channels, num_bins);
+    ODAS2_CHECK_PTR(freqs_in);
     tdoas_t * tdoas = tdoas_construct("tdoas", num_channels, num_sources);
+    ODAS2_CHECK_PTR(tdoas);
     weights_t * weights = weights_construct("Ws", num_sources, num_channels, num_bins);
+    ODAS2_CHECK_PTR(weights);
     freqs_t * freqs_out = freqs_construct("Ys", num_sources, num_bins);
+    ODAS2_CHECK_PTR(freqs_out);
     hops_t * hops_out = hops_construct("ys", num_sources, num_shifts);
+    ODAS2_CHECK_PTR(hops_out);
 
-    stft_t * stft = stft_construct(num_channels, num_samples, num_shifts, num_bins, "hann");
+    stft_t * stft = stft_construct(num_channels, num_samples, num_shifts, STFT_WINDOW_HANN);
+    ODAS2_CHECK_PTR(stft);
     steering_t * steering = steering_construct(mics, (float)sample_rate, sound_speed, num_sources);
+    ODAS2_CHECK_PTR(steering);
     delaysum_t * delaysum = delaysum_construct(num_sources, num_channels, num_bins);
+    ODAS2_CHECK_PTR(delaysum);
     beamformer_t * beamformer = beamformer_construct(num_sources, num_channels, num_bins);
-    istft_t * istft = istft_construct(num_sources, num_samples, num_shifts, num_bins, "hann");
+    ODAS2_CHECK_PTR(beamformer);
+    istft_t * istft = istft_construct(num_sources, num_samples, num_shifts, STFT_WINDOW_HANN);
+    ODAS2_CHECK_PTR(istft);
 
     wavout_t * wavout = wavout_construct("/dev/stdout", num_shifts, num_sources, sample_rate);
+    ODAS2_CHECK_PTR(wavout);
 
     //
     // Process
@@ -71,12 +87,12 @@ int main(int argc, char * argv[]) {
 
         doas_target(doas, targets);
 
-        stft_process(stft, hops_in, freqs_in);
-        steering_process(steering, doas, tdoas);
-        delaysum_process(delaysum, tdoas, weights);
-        beamformer_process(beamformer, freqs_in, weights, freqs_out);
-        istft_process(istft, freqs_out, hops_out);
-        wavout_write(wavout, hops_out);
+        ODAS2_CHECK_CODE(stft_process(stft, hops_in, freqs_in));
+        ODAS2_CHECK_CODE(steering_process(steering, doas, tdoas));
+        ODAS2_CHECK_CODE(delaysum_process(delaysum, tdoas, weights));
+        ODAS2_CHECK_CODE(beamformer_process(beamformer, freqs_in, weights, freqs_out));
+        ODAS2_CHECK_CODE(istft_process(istft, freqs_out, hops_out));
+        ODAS2_CHECK_CODE(wavout_write(wavout, hops_out));
 
     }
 

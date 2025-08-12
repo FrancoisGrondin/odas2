@@ -1,4 +1,5 @@
 #include <systems/enhancement.h>
+#include <utils/error.h>
 
 #include <math.h>
 #include <stdlib.h>
@@ -13,15 +14,15 @@ static const linear_params fc_params;
 
 enhancement_t * enhancement_construct(const unsigned int num_channels, const unsigned int num_bins) {
 
+    if ((num_bins != num_dims_in) && (num_bins != num_dims_out)) {
+        odas2_set_error_number(ODAS2_ERROR_ENHANCEMENT_INVALID_NUM_BINS);
+        return NULL;
+    }
+
     enhancement_t * obj = (enhancement_t *) malloc(sizeof(enhancement_t));
 
     obj->num_channels = num_channels;
     obj->num_bins = num_bins;
-
-    if ((num_bins != num_dims_in) && (num_bins != num_dims_out)) {
-        printf("Invalid number of bins for available neural network.\n");
-        exit(EXIT_FAILURE);
-    }
 
     obj->beta = beta;
     obj->rnn = ugru_construct(&rnn_params);

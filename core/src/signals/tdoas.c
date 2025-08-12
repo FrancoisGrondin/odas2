@@ -1,4 +1,5 @@
 #include <signals/tdoas.h>
+#include <utils/error.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -6,9 +7,22 @@
 
 tdoas_t * tdoas_construct(const char * label, const unsigned int num_channels, const unsigned int num_sources) {
 
+    if (label == NULL || strlen(label) >= SIGNAL_LABEL_SIZE) {
+        odas2_set_error_number(ODAS2_ERROR_TDOAS_CONSTRUCT_LABEL);
+        return NULL;
+    }
+    if (num_channels < 2) {
+        odas2_set_error_number(ODAS2_ERROR_TDOAS_CONSTRUCT_NUM_CHANNELS);
+        return NULL;
+    }
+    if (num_sources < 1) {
+        odas2_set_error_number(ODAS2_ERROR_TDOAS_CONSTRUCT_NUM_SOURCES);
+        return NULL;
+    }
+
     tdoas_t * obj = (tdoas_t *) malloc(sizeof(tdoas_t));
 
-    memset(obj->label, 0x00, 64);
+    memset(obj->label, 0x00, SIGNAL_LABEL_SIZE);
     strcpy(obj->label, label);
 
     obj->num_sources = num_sources;

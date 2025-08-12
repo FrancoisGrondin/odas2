@@ -1,6 +1,7 @@
 #include <systems/stft.h>
 #include <utils/pi.h>
 #include <utils/openmp.h>
+#include <utils/error.h>
 
 #include <math.h>
 #include <stdlib.h>
@@ -9,22 +10,40 @@
 static float * window_hann(const unsigned int num_samples);
 static float * window_sine(const unsigned int num_samples);
 
-stft_t * stft_construct(const unsigned int num_channels, const unsigned int num_samples, const unsigned int num_shifts, const unsigned int num_bins, const char * window) {
+stft_t * stft_construct(const unsigned int num_channels, const unsigned int num_samples, const unsigned int num_shifts, const stft_window_t window) {
+
+    if (num_channels < 1) {
+        odas2_set_error_number(ODAS2_ERROR_STFT_CONSTRUCT_NUM_CHANNELS);
+        return NULL;
+    }
+    if (num_samples < 2 || (num_samples & (num_samples - 1)) != 0) {
+        odas2_set_error_number(ODAS2_ERROR_STFT_CONSTRUCT_NUM_SAMPLES);
+        return NULL;
+    }
+    if (num_shifts < 1 || num_shifts > num_samples / 2) {
+        odas2_set_error_number(ODAS2_ERROR_STFT_CONSTRUCT_NUM_SHIFTS);
+        return NULL;
+    }
 
     stft_t * obj = (stft_t *) malloc(sizeof(stft_t));
 
     obj->num_channels = num_channels;
     obj->num_samples = num_samples;
     obj->num_shifts = num_shifts;
-    obj->num_bins = num_bins;
+    obj->num_bins = (num_samples / 2) + 1;
 
     obj->window = NULL;
 
-    if (strcmp(window, "hann") == 0) {
+    if (window == STFT_WINDOW_HANN) {
         obj->window = window_hann(num_samples);
     }
-    if (strcmp(window, "sine") == 0) {
+    else if (window == STFT_WINDOW_SINE) {
         obj->window = window_sine(num_samples);
+    }
+    else {
+        odas2_set_error_number(ODAS2_ERROR_STFT_CONSTRUCT_INVALID_WINDOW);
+        free(obj);
+        return NULL;
     }
 
     obj->frames = (float **) malloc(sizeof(float *) * num_channels);
@@ -40,7 +59,7 @@ stft_t * stft_construct(const unsigned int num_channels, const unsigned int num_
     }
 
     obj->frame_real = (float *) calloc(sizeof(float), num_samples);
-    obj->frame_cplx = (cplx_t *) calloc(sizeof(cplx_t), num_bins);
+    obj->frame_cplx = (cplx_t *) calloc(sizeof(cplx_t), obj->num_bins);
 
     return obj;
 
@@ -68,6 +87,23 @@ void stft_destroy(stft_t * obj) {
 }
 
 int stft_process(stft_t * obj, const hops_t * hops, freqs_t * freqs) {
+
+    if (obj->num_channels != hops->num_channels) {
+        odas2_set_error_number(ODAS2_ERROR_STFT_PROCESS_HOPS_NUM_CHANNELS);
+        return -1;
+    }
+    if (obj->num_channels != freqs->num_channels) {
+        odas2_set_error_number(ODAS2_ERROR_STFT_PROCESS_FREQS_NUM_CHANNELS);
+        return -1;
+    }
+    if (obj->num_shifts != hops->num_shifts) {
+        odas2_set_error_number(ODAS2_ERROR_STFT_PROCESS_HOPS_NUM_SHIFTS);
+        return -1;
+    }
+    if (obj->num_bins != freqs->num_bins) {
+        odas2_set_error_number(ODAS2_ERROR_STFT_PROCESS_FREQS_NUM_BINS);
+        return -1;
+    }
 
     // Process each channel individually
     for (unsigned int index_channel = 0; index_channel < obj->num_channels; index_channel++) {
@@ -121,22 +157,40 @@ int stft_process(stft_t * obj, const hops_t * hops, freqs_t * freqs) {
 
 }
 
-istft_t * istft_construct(const unsigned int num_channels, const unsigned int num_samples, const unsigned int num_shifts, const unsigned int num_bins, const char * window) {
+istft_t * istft_construct(const unsigned int num_channels, const unsigned int num_samples, const unsigned int num_shifts, const stft_window_t window) {
+
+    if (num_channels < 1) {
+        odas2_set_error_number(ODAS2_ERROR_ISTFT_CONSTRUCT_NUM_CHANNELS);
+        return NULL;
+    }
+    if (num_samples < 2 || (num_samples & (num_samples - 1)) != 0) {
+        odas2_set_error_number(ODAS2_ERROR_ISTFT_CONSTRUCT_NUM_SAMPLES);
+        return NULL;
+    }
+    if (num_shifts < 1 || num_shifts > num_samples / 2) {
+        odas2_set_error_number(ODAS2_ERROR_ISTFT_CONSTRUCT_NUM_SHIFTS);
+        return NULL;
+    }
 
     istft_t * obj = (istft_t *) malloc(sizeof(istft_t));
 
     obj->num_channels = num_channels;
     obj->num_samples = num_samples;
     obj->num_shifts = num_shifts;
-    obj->num_bins = num_bins;
+    obj->num_bins = (num_samples / 2) + 1;
 
     obj->window = NULL;
 
-    if (strcmp(window, "hann") == 0) {
+    if (window == STFT_WINDOW_HANN) {
         obj->window = window_hann(num_samples);
     }
-    if (strcmp(window, "sine") == 0) {
+    else if (window == STFT_WINDOW_SINE) {
         obj->window = window_sine(num_samples);
+    }
+    else {
+        odas2_set_error_number(ODAS2_ERROR_ISTFT_CONSTRUCT_INVALID_WINDOW);
+        free(obj);
+        return NULL;
     }
 
     obj->frames = (float **) malloc(sizeof(float *) * num_channels);
@@ -150,7 +204,7 @@ istft_t * istft_construct(const unsigned int num_channels, const unsigned int nu
     }
 
     obj->frame_real = (float *) calloc(sizeof(float), num_samples);
-    obj->frame_cplx = (cplx_t *) calloc(sizeof(cplx_t), num_bins);
+    obj->frame_cplx = (cplx_t *) calloc(sizeof(cplx_t), obj->num_bins);
 
     return obj;
 
@@ -178,6 +232,23 @@ void istft_destroy(istft_t * obj) {
 }
 
 int istft_process(istft_t * obj, const freqs_t * freqs, hops_t * hops) {
+
+    if (obj->num_channels != hops->num_channels) {
+        odas2_set_error_number(ODAS2_ERROR_ISTFT_PROCESS_HOPS_NUM_CHANNELS);
+        return -1;
+    }
+    if (obj->num_channels != freqs->num_channels) {
+        odas2_set_error_number(ODAS2_ERROR_ISTFT_PROCESS_FREQS_NUM_CHANNELS);
+        return -1;
+    }
+    if (obj->num_shifts != hops->num_shifts) {
+        odas2_set_error_number(ODAS2_ERROR_ISTFT_PROCESS_HOPS_NUM_SHIFTS);
+        return -1;
+    }
+    if (obj->num_bins != freqs->num_bins) {
+        odas2_set_error_number(ODAS2_ERROR_ISTFT_PROCESS_FREQS_NUM_BINS);
+        return -1;
+    }
 
     for (unsigned int index_channel = 0; index_channel < obj->num_channels; index_channel++) {
 

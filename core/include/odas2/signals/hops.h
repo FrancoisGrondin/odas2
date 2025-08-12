@@ -11,6 +11,7 @@
 #ifndef __HOPS_H
 #define __HOPS_H
 
+#include "signal.h"
 #include <stdio.h>
 
 #ifdef __cplusplus
@@ -28,7 +29,7 @@ extern "C" {
  */
 typedef struct hops_t {
 
-    char label[64];             /**< Signal label. Limited to 64 characters, including null character. */
+    char label[SIGNAL_LABEL_SIZE];             /**< Signal label. Limited to 64 characters, including null character. */
 
     unsigned int num_channels;  /**< Number of channels. */
     unsigned int num_shifts;    /**< Number of samples per channel. */

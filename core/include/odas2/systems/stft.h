@@ -9,6 +9,11 @@
 extern "C" {
 #endif
 
+typedef enum stft_window_t {
+    STFT_WINDOW_HANN,
+    STFT_WINDOW_SINE
+} stft_window_t;
+
 typedef struct stft_t {
 
     unsigned int num_channels;
@@ -43,13 +48,13 @@ typedef struct istft_t {
 
 } istft_t;
 
-stft_t * stft_construct(const unsigned int num_channels, const unsigned int num_samples, const unsigned int num_shifts, const unsigned int num_bins, const char * window);
+stft_t * stft_construct(const unsigned int num_channels, const unsigned int num_samples, const unsigned int num_shifts, const stft_window_t window);
 
 void stft_destroy(stft_t * obj);
 
 int stft_process(stft_t * obj, const hops_t * hops, freqs_t * freqs);
 
-istft_t * istft_construct(const unsigned int num_channels, const unsigned int num_samples, const unsigned int num_shifts, const unsigned int num_bins, const char * window);
+istft_t * istft_construct(const unsigned int num_channels, const unsigned int num_samples, const unsigned int num_shifts, const stft_window_t window);
 
 void istft_destroy(istft_t * obj);
 

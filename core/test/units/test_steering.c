@@ -17,7 +17,7 @@ int test_steering(void) {
         const float tdoas_1[6] = { +1.4927f, +0.0000f, -1.4927f, -1.4927f, -2.9854f, -1.4927f };
         const float tdoas_2[6] = { +0.0000f, +2.1107f, +2.1107f, +2.1107f, +2.1107f, +0.0000f };
 
-        mics_t * mics = mics_construct("respeaker_usb_4");
+        mics_t * mics = mics_construct(MICS_HARDWARE_RESPEAKER_USB_4);
         doas_t * doas = doas_construct("doas", num_directions);
         tdoas_t * tdoas = tdoas_construct("tdoas", num_channels, num_sources);
         steering_t * steering = steering_construct(mics, sample_rate, sound_speed, num_sources);

@@ -1,4 +1,5 @@
 #include <signals/weights.h>
+#include <utils/error.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -6,9 +7,26 @@
 
 weights_t * weights_construct(const char * label, const unsigned int num_sources, const unsigned int num_channels, const unsigned int num_bins) {
 
+	if (label == NULL || strlen(label) >= SIGNAL_LABEL_SIZE) {
+		odas2_set_error_number(ODAS2_ERROR_WEIGHTS_CONSTRUCT_LABEL);
+		return NULL;
+	}
+	if (num_sources < 1) {
+		odas2_set_error_number(ODAS2_ERROR_WEIGHTS_CONSTRUCT_NUM_SOURCES);
+		return NULL;
+	}
+	if (num_channels < 1) {
+		odas2_set_error_number(ODAS2_ERROR_WEIGHTS_CONSTRUCT_NUM_CHANNELS);
+		return NULL;
+	}
+	if (num_bins < 1) {
+		odas2_set_error_number(ODAS2_ERROR_WEIGHTS_CONSTRUCT_NUM_BINS);
+		return NULL;
+	}
+
 	weights_t * obj = (weights_t *) malloc(sizeof(weights_t));
 
-	memset(obj->label, 0x00, 64);
+	memset(obj->label, 0x00, SIGNAL_LABEL_SIZE);
 	strcpy(obj->label, label);
 
 	obj->num_sources = num_sources;

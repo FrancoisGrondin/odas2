@@ -39,9 +39,12 @@ typedef struct wavin_t {
     unsigned int num_channels;
     unsigned int num_shifts;
     unsigned int sample_rate;
+    unsigned short bits_per_sample;
 
     FILE * file_pointer;
     short * buffer;
+
+    void (*read_samples)(struct wavin_t* obj, hops_t* hops);
 
 } wavin_t;
 

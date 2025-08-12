@@ -1,10 +1,24 @@
 #include <systems/sst.h>
+#include <utils/error.h>
 
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
 
 sst_t * sst_construct(const unsigned int num_tracks, const unsigned int num_directions, const unsigned int num_pasts) {
+
+    if (num_tracks < 1) {
+        odas2_set_error_number(ODAS2_ERROR_SST_CONSTRUCT_NUM_TRACKS);
+        return NULL;
+    }
+    if (num_directions < 1) {
+        odas2_set_error_number(ODAS2_ERROR_SST_CONSTRUCT_NUM_DIRECTIONS);
+        return NULL;
+    }
+    if (num_pasts < 1) {
+        odas2_set_error_number(ODAS2_ERROR_SST_CONSTRUCT_NUM_PASTS);
+        return NULL;
+    }
 
     sst_t * obj = (sst_t *) malloc(sizeof(sst_t));
 
@@ -31,6 +45,14 @@ void sst_destroy(sst_t * obj) {
 }
 
 int sst_process(sst_t * obj, const dsf_t * dsf, const doas_t * in, doas_t * out) {
+    if (obj->num_directions != in->num_directions) {
+        odas2_set_error_number(ODAS2_ERROR_SST_PROCESS_NUM_DIRECTIONS);
+        return -1;
+    }
+    if (obj->num_tracks < out->num_directions) {
+        odas2_set_error_number(ODAS2_ERROR_SST_PROCESS_NUM_TRACKS);
+        return -1;
+    }
 
     //
     // Loop for each potential source, and decide if associated

@@ -1,4 +1,5 @@
 #include <signals/masks.h>
+#include <utils/error.h>
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -6,9 +7,22 @@
 
 masks_t * masks_construct(const char * label, const unsigned int num_channels, const unsigned int num_bins) {
 
+    if (label == NULL || strlen(label) >= SIGNAL_LABEL_SIZE) {
+        odas2_set_error_number(ODAS2_ERROR_MASKS_CONSTRUCT_LABEL);
+        return NULL;
+    }
+    if (num_channels < 1) {
+        odas2_set_error_number(ODAS2_ERROR_MASKS_CONSTRUCT_NUM_CHANNELS);
+        return NULL;
+    }
+    if (num_bins < 1) {
+        odas2_set_error_number(ODAS2_ERROR_MASKS_CONSTRUCT_NUM_BINS);
+        return NULL;
+    }
+
     masks_t * obj = (masks_t *) malloc(sizeof(masks_t));
 
-    memset(obj->label, 0x00, 64);
+    memset(obj->label, 0x00, SIGNAL_LABEL_SIZE);
     strcpy(obj->label, label);
 
     obj->num_channels = num_channels;

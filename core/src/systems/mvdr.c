@@ -1,10 +1,20 @@
 #include <systems/mvdr.h>
+#include <utils/error.h>
 
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
 
 mvdr_t * mvdr_construct(const unsigned int num_channels, const unsigned int num_bins) {
+
+    if (num_channels < 2) {
+        odas2_set_error_number(ODAS2_ERROR_MVDR_CONSTRUCT_NUM_CHANNELS);
+        return NULL;
+    }
+    if (num_bins < 1) {
+        odas2_set_error_number(ODAS2_ERROR_MVDR_CONSTRUCT_NUM_BINS);
+        return NULL;
+    }
 
     mvdr_t * obj = (mvdr_t *) malloc(sizeof(mvdr_t));
 
@@ -22,6 +32,28 @@ void mvdr_destroy(mvdr_t * obj) {
 }
 
 int mvdr_process(mvdr_t * obj, const covs_t * covs, weights_t * weights) {
+
+    if (weights->num_sources != 1) {
+        odas2_set_error_number(ODAS2_ERROR_MVDR_PROCESS_WEIGHTS_NUM_SOURCES);
+        return -1;
+    }
+    if (obj->num_channels != covs->num_channels) {
+        odas2_set_error_number(ODAS2_ERROR_MVDR_PROCESS_COVS_NUM_CHANNELS);
+        return -1;
+    }
+    if (obj->num_channels != weights->num_channels) {
+        odas2_set_error_number(ODAS2_ERROR_MVDR_PROCESS_WEIGHTS_NUM_CHANNELS);
+        return -1;
+    }
+    if (obj->num_bins != covs->num_bins) {
+        odas2_set_error_number(ODAS2_ERROR_MVDR_PROCESS_COVS_NUM_BINS);
+        return -1;
+    }
+    if (obj->num_bins != weights->num_bins) {
+        odas2_set_error_number(ODAS2_ERROR_MVDR_PROCESS_WEIGHTS_NUM_BINS);
+        return -1;
+    }
+
 
     const float eps = 1e-20;
 

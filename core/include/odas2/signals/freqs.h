@@ -11,6 +11,7 @@
 #ifndef __FREQS_H
 #define __FREQS_H
 
+#include "signal.h"
 #include "../types/cplx.h"
 #include <stdio.h>
 
@@ -29,7 +30,7 @@ extern "C" {
  */
 typedef struct freqs_t {
 
-    char label[64];             /**< Signal label. Limited to 64 characters, including null character. */
+    char label[SIGNAL_LABEL_SIZE];             /**< Signal label. Limited to 64 characters, including null character. */
 
     unsigned int num_channels;  /**< Number of channels. */
     unsigned int num_bins;      /**< Number of bins per channel. */

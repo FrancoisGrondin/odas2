@@ -1,5 +1,15 @@
 {
     "files.associations": {
-        "gcc.h": "c"
+        "gcc.h": "c",
+        "wav.h": "c",
+        "error.h": "c",
+        "cplx.h": "c",
+        "signal.h": "c",
+        "doas.h": "c",
+        "tdoas.h": "c",
+        "weights.h": "c",
+        "stft.h": "c",
+        "mics.h": "c",
+        "points.h": "c"
     }
 }

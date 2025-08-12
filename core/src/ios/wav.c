@@ -1,4 +1,5 @@
 #include <ios/wav.h>
+#include <utils/error.h>
 
 wavhdr_t wavhdr_cst(const unsigned int num_channels, const unsigned int sample_rate, const unsigned int bits_per_sample) {
 
@@ -41,7 +42,7 @@ wavhdr_t wavhdr_cst(const unsigned int num_channels, const unsigned int sample_r
     hdr.subchunk2_id[2] = 't';
     hdr.subchunk2_id[3] = 'a';
     // Equals num_samples * num_channels * bits_per_sample / 8
-    hdr.subchunk2_size = 0xFFFFFFFF;    
+    hdr.subchunk2_size = 0xFFFFFFFF;
 
     return hdr;
 
@@ -88,25 +89,67 @@ void wavhdr_printf(const wavhdr_t hdr) {
 
 }
 
+void wavin_read_samples_pcm_16(wavin_t* obj, hops_t* hops)
+{
+    int16_t* buffer = (int16_t*)obj->buffer;
+
+    // Then load each sample in the buffer (samples are interleaved, and are
+    // signed 16-bit) Then are divided by 32768 to be normalized between -1 and 1
+    for (unsigned int index_shift = 0; index_shift < obj->num_shifts; index_shift++) {
+        for (unsigned int index_channel = 0; index_channel < obj->num_channels; index_channel++) {
+            hops->samples[index_channel][index_shift] = ((float)buffer[index_shift * obj->num_channels + index_channel]) / 32768.0f;
+        }
+    }
+}
+
+void wavin_read_samples_pcm_32(wavin_t* obj, hops_t* hops)
+{
+    int32_t* buffer = (int32_t*)obj->buffer;
+
+    // Then load each sample in the buffer (samples are interleaved, and are
+    // signed 32-bit) Then are divided by 2147483648 to be normalized between -1
+    // and 1
+    for (unsigned int index_shift = 0; index_shift < obj->num_shifts; index_shift++) {
+        for (unsigned int index_channel = 0; index_channel < obj->num_channels; index_channel++) {
+            hops->samples[index_channel][index_shift] = ((float)buffer[index_shift * obj->num_channels + index_channel]) / 2147483648.0f;
+        }
+    }
+}
+
 wavin_t * wavin_construct(const char * file_name, const unsigned int num_shifts, const unsigned int num_channels, const unsigned int sample_rate) {
 
     wavin_t * obj = (wavin_t *) malloc(sizeof(wavin_t));
 
     obj->file_pointer = fopen(file_name, "rb");
+    if (obj->file_pointer == NULL) {
+        odas2_set_error_number(ODAS2_ERROR_WAVIN_CONSTRUCT_FILE_NOT_EXIST);
+        free((void*)obj);
+        return NULL;
+    }
 
     wavhdr_t hdr;
     size_t rtn = fread(&hdr, sizeof(wavhdr_t), 1, obj->file_pointer);
-
     if (rtn != 1) {
-        printf("Cannot open file\n");
-        exit(EXIT_FAILURE);
+        odas2_set_error_number(ODAS2_ERROR_WAVIN_CONSTRUCT_INVALID_WAV_FILE);
+        fclose(obj->file_pointer);
+        free((void*)obj);
+        return NULL;
     }
 
-    if (wavhdr_cmp(hdr, wavhdr_cst(num_channels, sample_rate, 16)) == -1) {
-        printf("Wave file does not match format requirements\n");
-        exit(EXIT_FAILURE);
+    if (wavhdr_cmp(hdr, wavhdr_cst(num_channels, sample_rate, 16)) == 0) {
+        obj->read_samples = wavin_read_samples_pcm_16;
+    }
+    else if (wavhdr_cmp(hdr, wavhdr_cst(num_channels, sample_rate, 32)) == 0) {
+        obj->read_samples = wavin_read_samples_pcm_32;
+    }
+    else {
+        odas2_set_error_number(ODAS2_ERROR_WAVIN_CONSTRUCT_INVALID_WAV_HEADER);
+        fclose(obj->file_pointer);
+        free((void*)obj);
+        return NULL;
     }
 
+    obj->bits_per_sample = hdr.bits_per_sample;
     obj->num_channels = num_channels;
     obj->num_shifts = num_shifts;
     obj->sample_rate = sample_rate;
@@ -127,18 +170,13 @@ void wavin_destroy(wavin_t * obj) {
 
 int wavin_read(wavin_t * obj, hops_t * hops) {
 
-    size_t rtn = fread(obj->buffer, sizeof(short), obj->num_channels * obj->num_shifts, obj->file_pointer);
+    size_t rtn = fread(obj->buffer, obj->bits_per_sample / 8, obj->num_channels * obj->num_shifts, obj->file_pointer);
 
     if (rtn != obj->num_channels * obj->num_shifts) {
         return -1;
     }
 
-    for (unsigned int index_channel = 0; index_channel < obj->num_channels; index_channel++) {
-        for (unsigned int index_shift = 0; index_shift < obj->num_shifts; index_shift++) {
-            hops->samples[index_channel][index_shift] = ((float) obj->buffer[index_shift * obj->num_channels + index_channel]) / 32768.0f;
-        }
-    }
-
+    obj->read_samples(obj, hops);
 
     return 0;
 
@@ -149,13 +187,20 @@ wavout_t * wavout_construct(const char * file_name, const unsigned int num_shift
     wavout_t * obj = (wavout_t *) malloc(sizeof(wavout_t));
 
     obj->file_pointer = fopen(file_name, "wb");
+    if (obj->file_pointer == NULL) {
+        odas2_set_error_number(ODAS2_ERROR_WAVOUT_CONSTRUCT_FILE_CREATION);
+        free((void*)obj);
+        return NULL;
+    }
 
     wavhdr_t hdr = wavhdr_cst(num_channels, sample_rate, 16);
     size_t rtn = fwrite(&hdr, sizeof(wavhdr_t), 1, obj->file_pointer);
 
     if (rtn != 1) {
-        printf("Cannot write to wave file\n");
-        exit(EXIT_FAILURE);
+        odas2_set_error_number(ODAS2_ERROR_WAVOUT_CONSTRUCT_HEADER_WRITE);
+        fclose(obj->file_pointer);
+        free((void*)obj);
+        return NULL;
     }
 
     obj->num_channels = num_channels;
@@ -187,6 +232,7 @@ int wavout_write(wavout_t * obj, const hops_t * hops) {
     size_t rtn = fwrite(obj->buffer, sizeof(short), obj->num_channels * obj->num_shifts, obj->file_pointer);
 
     if (rtn != (obj->num_channels * obj->num_shifts)) {
+        odas2_set_error_number(ODAS2_ERROR_WAVOUT_WRITE_SAMPLES);
         return -1;
     }
 

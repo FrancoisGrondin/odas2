@@ -7,6 +7,13 @@
 extern "C" {
 #endif
 
+typedef enum points_geometry_t {
+    POINTS_GEOMETRY_SPHERE,
+    POINTS_GEOMETRY_HALFSPHERE,
+    POINTS_GEOMETRY_CIRCLE,
+    POINTS_GEOMETRY_ARC
+} points_geometry_t;
+
 typedef struct points_t {
 
     unsigned int num_points;
@@ -14,7 +21,7 @@ typedef struct points_t {
 
 } points_t;
 
-points_t * points_construct(const char * geometry, const unsigned int num_points);
+points_t * points_construct(const points_geometry_t geometry, const unsigned int num_points);
 
 void points_destroy(points_t * obj);
 

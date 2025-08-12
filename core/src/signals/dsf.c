@@ -1,13 +1,19 @@
 #include <signals/dsf.h>
+#include <utils/error.h>
 
 #include <stdlib.h>
 #include <string.h>
 
 dsf_t * dsf_construct(const char * label) {
 
+	if (label == NULL || strlen(label) >= SIGNAL_LABEL_SIZE) {
+		odas2_set_error_number(ODAS2_ERROR_DSF_CONSTRUCT_LABEL);
+		return NULL;
+	}
+
 	dsf_t * obj = (dsf_t *) malloc(sizeof(dsf_t));
 
-    memset(obj->label, 0x00, 64);
+    memset(obj->label, 0x00, SIGNAL_LABEL_SIZE);
     strcpy(obj->label, label);
 
 	obj->sigmoid_mean = 0.3f;
@@ -19,7 +25,7 @@ dsf_t * dsf_construct(const char * label) {
 	obj->new_threshold = 0.4f;
 	obj->delete_threshold = 0.2f;
 	obj->delete_decay = 0.98f;
-	
+
 	return obj;
 
 }

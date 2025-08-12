@@ -1,4 +1,5 @@
 #include <systems/mixer.h>
+#include <utils/error.h>
 
 #include <stdlib.h>
 #include <string.h>
@@ -40,6 +41,11 @@ mixer_t * mixer_construct(const char * channels) {
             obj->num_channels++;
             ptr = strtok(NULL, delim);
         }
+    }
+    if (obj->num_channels == 0) {
+        odas2_set_error_number(ODAS2_ERROR_MIXER_CONSTRUCT_NUM_CHANNELS);
+        free(str);
+        return NULL; // No channels specified
     }
 
     //
@@ -85,6 +91,14 @@ void mixer_destroy(mixer_t * obj) {
 }
 
 int mixer_process(mixer_t * obj, const hops_t * hops_in, hops_t * hops_out) {
+    if (obj->max_map_index >= hops_in->num_channels) {
+        odas2_set_error_number(ODAS2_ERROR_MIXER_PROCESS_MAX_MAP_INDEX);
+        return -1;
+    }
+    if (obj->num_channels != hops_out->num_channels) {
+        odas2_set_error_number(ODAS2_ERROR_MIXER_PROCESS_NUM_CHANNELS);
+        return -1;
+    }
 
     #pragma omp parallel for
     for (unsigned int index_channel = 0; index_channel < obj->num_channels; index_channel++) {

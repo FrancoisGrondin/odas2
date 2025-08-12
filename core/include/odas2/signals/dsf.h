@@ -1,6 +1,7 @@
 #ifndef __DSF_H
 #define __DSF_H
 
+#include "signal.h"
 #include <stdio.h>
 
 #ifdef __cplusplus
@@ -9,7 +10,7 @@ extern "C" {
 
 typedef struct dsf_t {
 
-	char label[64];
+	char label[SIGNAL_LABEL_SIZE];
 
 	float sigmoid_mean;
 	float sigmoid_slope;

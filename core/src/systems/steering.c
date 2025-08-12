@@ -1,4 +1,5 @@
 #include <systems/steering.h>
+#include <utils/error.h>
 
 #include <math.h>
 #include <stdlib.h>
@@ -6,6 +7,22 @@
 #include <stdio.h>
 
 steering_t * steering_construct(const mics_t * mics, const float sample_rate, const float sound_speed, const unsigned int num_sources) {
+    if (mics->num_mics < 2) {
+        odas2_set_error_number(ODAS2_ERROR_STEERING_CONSTRUCT_NUM_MICS);
+        return NULL;
+    }
+    if (sample_rate <= 0.0f) {
+        odas2_set_error_number(ODAS2_ERROR_STEERING_CONSTRUCT_SAMPLE_RATE);
+        return NULL;
+    }
+    if (sound_speed <= 0.0f) {
+        odas2_set_error_number(ODAS2_ERROR_STEERING_CONSTRUCT_SOUND_SPEED);
+        return NULL;
+    }
+    if (num_sources < 1) {
+        odas2_set_error_number(ODAS2_ERROR_STEERING_CONSTRUCT_NUM_SOURCES);
+        return NULL;
+    }
 
     steering_t * obj = (steering_t *) malloc(sizeof(steering_t));
 
@@ -29,6 +46,18 @@ void steering_destroy(steering_t * obj) {
 }
 
 int steering_process(const steering_t * obj, const doas_t * doas, tdoas_t * tdoas)  {
+    if (obj->num_sources != doas->num_directions) {
+        odas2_set_error_number(ODAS2_ERROR_STEERING_PROCESS_DOAS_NUM_DIRECTIONS);
+        return -1;
+    }
+    if (obj->num_sources != tdoas->num_sources) {
+        odas2_set_error_number(ODAS2_ERROR_STEERING_PROCESS_TDOAS_NUM_SOURCES);
+        return -1;
+    }
+    if (obj->num_channels != tdoas->num_channels) {
+        odas2_set_error_number(ODAS2_ERROR_STEERING_PROCESS_TDOAS_NUM_CHANNELS);
+        return -1;
+    }
 
     unsigned int index_pair = 0;
 

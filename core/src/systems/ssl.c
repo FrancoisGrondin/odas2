@@ -1,5 +1,6 @@
 #include <systems/ssl.h>
 #include <utils/pi.h>
+#include <utils/error.h>
 
 #include <math.h>
 #include <stdlib.h>
@@ -9,6 +10,30 @@
 static const float kernel_window[16] = { 1.00f, 1.00f, 0.99f, 0.99f, 0.98f, 0.97f, 0.96f, 0.85f, 0.70f, 0.53f, 0.37f, 0.24f, 0.14f, 0.08f, 0.04f, 0.02f };
 
 ssl_t * ssl_construct(const mics_t * mics, const points_t * points, const float sample_rate, const float sound_speed, const unsigned int num_sources, const unsigned int num_directions) {
+    if (mics->num_mics < 2) {
+        odas2_set_error_number(ODAS2_ERROR_SSL_CONSTRUCT_NUM_MICS);
+        return NULL;
+    }
+    if (points->num_points < 1) {
+        odas2_set_error_number(ODAS2_ERROR_SSL_CONSTRUCT_NUM_POINTS);
+        return NULL;
+    }
+    if (sample_rate <= 0.0f) {
+        odas2_set_error_number(ODAS2_ERROR_SSL_CONSTRUCT_SAMPLE_RATE);
+        return NULL;
+    }
+    if (sound_speed <= 0.0f) {
+        odas2_set_error_number(ODAS2_ERROR_SSL_CONSTRUCT_SOUND_SPEED);
+        return NULL;
+    }
+    if (num_sources < 1) {
+        odas2_set_error_number(ODAS2_ERROR_SSL_CONSTRUCT_NUM_SOURCES);
+        return NULL;
+    }
+    if (num_directions < 1) {
+        odas2_set_error_number(ODAS2_ERROR_SSL_CONSTRUCT_NUM_DIRECTIONS);
+        return NULL;
+    }
 
 	ssl_t * obj = (ssl_t *) malloc(sizeof(ssl_t));
 
@@ -159,6 +184,18 @@ void ssl_destroy(ssl_t * obj) {
 }
 
 int ssl_process(ssl_t * obj, const tdoas_t * tdoas, doas_t * doas) {
+    if (obj->num_sources != tdoas->num_sources) {
+        odas2_set_error_number(ODAS2_ERROR_SSL_PROCESS_TDOAS_NUM_SOURCES);
+        return -1;
+    }
+    if (obj->num_channels != tdoas->num_channels) {
+        odas2_set_error_number(ODAS2_ERROR_SSL_PROCESS_TDOAS_NUM_CHANNELS);
+        return -1;
+    }
+    if (obj->num_directions != doas->num_directions) {
+        odas2_set_error_number(ODAS2_ERROR_SSL_PROCESS_DOAS_NUM_DIRECTIONS);
+        return -1;
+    }
 
     #pragma omp parallel
     {

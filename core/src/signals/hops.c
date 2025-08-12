@@ -1,4 +1,5 @@
 #include <signals/hops.h>
+#include <utils/error.h>
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -6,9 +7,22 @@
 
 hops_t * hops_construct(const char * label, const unsigned int num_channels, const unsigned int num_shifts) {
 
+    if (label == NULL || strlen(label) >= SIGNAL_LABEL_SIZE) {
+        odas2_set_error_number(ODAS2_ERROR_HOPS_CONSTRUCT_LABEL);
+        return NULL;
+    }
+    if (num_channels < 1) {
+        odas2_set_error_number(ODAS2_ERROR_HOPS_CONSTRUCT_NUM_CHANNELS);
+        return NULL;
+    }
+    if (num_shifts < 1) {
+        odas2_set_error_number(ODAS2_ERROR_HOPS_CONSTRUCT_NUM_SHIFTS);
+        return NULL;
+    }
+
     hops_t * obj = (hops_t *) malloc(sizeof(hops_t));
 
-    memset(obj->label, 0x00, 64);
+    memset(obj->label, 0x00, SIGNAL_LABEL_SIZE);
     strcpy(obj->label, label);
 
     obj->num_channels = num_channels;

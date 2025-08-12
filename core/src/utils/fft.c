@@ -1,5 +1,6 @@
 #include <utils/fft.h>
 #include <utils/pi.h>
+#include <utils/error.h>
 
 #include <math.h>
 #include <stdlib.h>
@@ -12,12 +13,12 @@ static cplx_t * fft_coefficients(const unsigned int num_samples);
 static unsigned int * fft_revbits(const unsigned int num_samples);
 
 fft_t * fft_construct(const unsigned int num_samples) {
-
-    fft_t * obj = (fft_t *) malloc(sizeof(fft_t));
-
-    if (ceilf(log2f((float)num_samples)) != floorf(log2f((float)num_samples))) {
+    if (num_samples < 2 || (num_samples & (num_samples - 1)) != 0) {
+        odas2_set_error_number(ODAS2_ERROR_FFT_CONSTRUCT_INVALID_NUM_SAMPLES);
         return NULL;
     }
+
+    fft_t * obj = (fft_t *) malloc(sizeof(fft_t));
 
     obj->num_samples = num_samples;
     obj->num_levels = (unsigned int) (floorf(log2f(num_samples/2)));

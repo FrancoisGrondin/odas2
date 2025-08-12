@@ -1,10 +1,23 @@
 #include <systems/gcc.h>
+#include <utils/error.h>
 
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
 
 gcc_t * gcc_construct(const unsigned int num_sources, const unsigned int num_channels, const unsigned int num_bins) {
+    if (num_sources < 1) {
+        odas2_set_error_number(ODAS2_ERROR_GCC_CONSTRUCT_NUM_SOURCES);
+        return NULL;
+    }
+    if (num_channels < 2) {
+        odas2_set_error_number(ODAS2_ERROR_GCC_CONSTRUCT_NUM_CHANNELS);
+        return NULL;
+    }
+    if (num_bins < 1) {
+        odas2_set_error_number(ODAS2_ERROR_GCC_CONSTRUCT_NUM_BINS);
+        return NULL;
+    }
 
     gcc_t * obj = (gcc_t *) malloc(sizeof(gcc_t));
 
@@ -55,6 +68,22 @@ void gcc_destroy(gcc_t * obj) {
 }
 
 int gcc_process(gcc_t * obj, const covs_t * covs, tdoas_t * tdoas) {
+    if (obj->num_sources != tdoas->num_sources) {
+        odas2_set_error_number(ODAS2_ERROR_GCC_PROCESS_TDOAS_NUM_SOURCES);
+        return -1;
+    }
+    if (obj->num_channels != covs->num_channels) {
+        odas2_set_error_number(ODAS2_ERROR_GCC_PROCESS_COVS_NUM_CHANNELS);
+        return -1;
+    }
+    if (obj->num_channels != tdoas->num_channels) {
+        odas2_set_error_number(ODAS2_ERROR_GCC_PROCESS_TDOAS_NUM_CHANNELS);
+        return -1;
+    }
+    if (obj->num_bins != covs->num_bins) {
+        odas2_set_error_number(ODAS2_ERROR_GCC_PROCESS_COVS_NUM_BINS);
+        return -1;
+    }
 
     //
     // The number of samples for the iFFT corresponds to kN, where N is the

@@ -12,6 +12,7 @@
 #ifndef __COVS_H
 #define __COVS_H
 
+#include "signal.h"
 #include "../types/cplx.h"
 #include <stdio.h>
 
@@ -35,7 +36,7 @@ extern "C" {
  */
 typedef struct covs_t {
 
-    char label[64];             /**< Signal label. Limited to 64 characters, including null character. */
+    char label[SIGNAL_LABEL_SIZE];             /**< Signal label. Limited to 64 characters, including null character. */
 
     unsigned int num_channels;  /**< Number of channels. */
     unsigned int num_pairs;     /**< Number of pairs (number of channels * (number of channels - 1) / 2). */

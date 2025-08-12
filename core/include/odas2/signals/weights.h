@@ -1,6 +1,7 @@
 #ifndef __WEIGHTS_H
 #define __WEIGHTS_H
 
+#include "signal.h"
 #include "../types/cplx.h"
 #include <stdio.h>
 
@@ -10,7 +11,7 @@ extern "C" {
 
 typedef struct weights_t {
 
-    char label[64];
+    char label[SIGNAL_LABEL_SIZE];
 
     unsigned int num_sources;
     unsigned int num_channels;

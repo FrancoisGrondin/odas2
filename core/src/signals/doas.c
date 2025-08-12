@@ -1,4 +1,5 @@
 #include <signals/doas.h>
+#include <utils/error.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -6,9 +7,18 @@
 
 doas_t * doas_construct(const char * label, const unsigned int num_directions) {
 
+    if (label == NULL || strlen(label) >= SIGNAL_LABEL_SIZE) {
+        odas2_set_error_number(ODAS2_ERROR_DOAS_CONSTRUCT_LABEL);
+        return NULL;
+    }
+    if (num_directions < 1) {
+        odas2_set_error_number(ODAS2_ERROR_DOAS_CONSTRUCT_NUM_DIRECTIONS);
+        return NULL;
+    }
+
     doas_t * obj = (doas_t *) malloc(sizeof(doas_t));
 
-    memset(obj->label, 0x00, 64);
+    memset(obj->label, 0x00, SIGNAL_LABEL_SIZE);
     strcpy(obj->label, label);
 
     obj->num_directions = num_directions;
@@ -32,13 +42,13 @@ void doas_target(doas_t * obj, const xyz_t * directions) {
         obj->dirs[index_direction].coord = xyz_unit(directions[index_direction]);
         obj->dirs[index_direction].energy = 1.0f;
     }
-    
+
 }
 
 void doas_fprintf(const doas_t * obj, FILE * fp) {
 
     for (unsigned int index_direction = 0; index_direction < obj->num_directions; index_direction++) {
-        fprintf(fp, "(%+1.3f, %+1.3f, %+1.3f) > %+1.3f\n", 
+        fprintf(fp, "(%+1.3f, %+1.3f, %+1.3f) > %+1.3f\n",
             obj->dirs[index_direction].coord.x,
             obj->dirs[index_direction].coord.y,
             obj->dirs[index_direction].coord.z,

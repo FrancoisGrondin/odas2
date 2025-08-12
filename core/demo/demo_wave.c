@@ -1,6 +1,7 @@
 #include <odas2/ios/msg.h>
 #include <odas2/ios/wav.h>
 #include <odas2/signals/hops.h>
+#include <odas2/utils/error.h>
 
 int main(int argc, char * argv[]) {
 
@@ -23,19 +24,22 @@ int main(int argc, char * argv[]) {
     //
 
     wavin_t * wavin = wavin_construct("/dev/stdin", num_shifts, num_channels, sample_rate);
+    ODAS2_CHECK_PTR(wavin);
 
     hops_t * hops = hops_construct("xs", num_channels, num_shifts);
+    ODAS2_CHECK_PTR(hops);
 
     msgout_t * msgout = msgout_construct("/dev/stdout");
+    ODAS2_CHECK_PTR(msgout);
 
     //
     // Process
     //
 
     while (wavin_read(wavin, hops) == 0) {
-        msgout_write_hops(msgout, hops);
+        ODAS2_CHECK_CODE(msgout_write_hops(msgout, hops));
     }
-    
+
     //
     // Free memory
     //

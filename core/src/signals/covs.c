@@ -1,4 +1,5 @@
 #include <signals/covs.h>
+#include <utils/error.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -6,9 +7,22 @@
 
 covs_t * covs_construct(const char * label, const unsigned int num_channels, const unsigned int num_bins) {
 
+    if (label == NULL || strlen(label) >= SIGNAL_LABEL_SIZE) {
+        odas2_set_error_number(ODAS2_ERROR_COVS_CONSTRUCT_LABEL);
+        return NULL;
+    }
+    if (num_channels < 2) {
+        odas2_set_error_number(ODAS2_ERROR_COVS_CONSTRUCT_NUM_CHANNELS);
+        return NULL;
+    }
+    if (num_bins < 1) {
+        odas2_set_error_number(ODAS2_ERROR_COVS_CONSTRUCT_NUM_BINS);
+        return NULL;
+    }
+
     covs_t * obj = (covs_t *) malloc(sizeof(covs_t));
 
-    memset(obj->label, 0x00, 64);
+    memset(obj->label, 0x00, SIGNAL_LABEL_SIZE);
     strcpy(obj->label, label);
 
     obj->num_channels = num_channels;

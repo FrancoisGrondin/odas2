@@ -1,10 +1,24 @@
 #include <systems/scm.h>
+#include <utils/error.h>
 
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
 
 scm_t * scm_construct(const unsigned int num_channels, const unsigned int num_bins, const float alpha) {
+
+    if (num_channels < 2) {
+        odas2_set_error_number(ODAS2_ERROR_SCM_CONSTRUCT_NUM_CHANNELS);
+        return NULL;
+    }
+    if (num_bins < 1) {
+        odas2_set_error_number(ODAS2_ERROR_SCM_CONSTRUCT_NUM_BINS);
+        return NULL;
+    }
+    if (alpha < 0.0f || alpha > 1.0f) {
+        odas2_set_error_number(ODAS2_ERROR_SCM_CONSTRUCT_ALPHA);
+        return NULL;
+    }
 
     scm_t * obj = (scm_t *) malloc(sizeof(scm_t));
 
@@ -62,6 +76,30 @@ void scm_destroy(scm_t * obj) {
 
 int scm_process(scm_t * obj, const freqs_t * freqs, const masks_t * masks, covs_t * covs) {
 
+    if (obj->num_channels != freqs->num_channels) {
+        odas2_set_error_number(ODAS2_ERROR_SCM_PROCESS_FREQS_NUM_CHANNELS);
+        return -1;
+    }
+    if (obj->num_channels != masks->num_channels) {
+        odas2_set_error_number(ODAS2_ERROR_SCM_PROCESS_MASKS_NUM_CHANNELS);
+        return -1;
+    }
+    if (obj->num_channels != covs->num_channels) {
+        odas2_set_error_number(ODAS2_ERROR_SCM_PROCESS_COVS_NUM_CHANNELS);
+        return -1;
+    }
+    if (obj->num_bins != freqs->num_bins) {
+        odas2_set_error_number(ODAS2_ERROR_SCM_PROCESS_FREQS_NUM_BINS);
+        return -1;
+    }
+    if (obj->num_bins != masks->num_bins) {
+        odas2_set_error_number(ODAS2_ERROR_SCM_PROCESS_MASKS_NUM_BINS);
+        return -1;
+    }
+    if (obj->num_bins != covs->num_bins) {
+        odas2_set_error_number(ODAS2_ERROR_SCM_PROCESS_COVS_NUM_BINS);
+        return -1;
+    }
 
     #pragma omp parallel for collapse(2)
     for (unsigned int index_channel1 = 0; index_channel1 < obj->num_channels; index_channel1++) {

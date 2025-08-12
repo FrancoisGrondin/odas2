@@ -10,7 +10,7 @@ int test_stft(void) {
         const unsigned int num_samples = 16;
         const unsigned int num_shifts = 4;
         const unsigned int num_bins = 9;
-        const char * window = "hann";
+        const stft_window_t window = STFT_WINDOW_HANN;
 
         const float hop_ch1_frame1[4] = { +1.0f, -2.0f, +2.0f, +1.0f };
         const float hop_ch1_frame2[4] = { -1.0f, -3.0f, +0.0f, -3.0f };
@@ -34,14 +34,14 @@ int test_stft(void) {
                                             { .real = +0.188f, .imag = -0.712f },
                                             { .real = +0.763f, .imag = +0.000f } };
 
-        const cplx_t freq_ch1_frame2[9] = { { .real = +0.391f, .imag = +0.000f }, 
-                                            { .real = -0.780f, .imag = +0.075f }, 
-                                            { .real = +0.016f, .imag = -0.962f }, 
-                                            { .real = +1.733f, .imag = -0.287f }, 
-                                            { .real = -0.856f, .imag = +2.858f }, 
-                                            { .real = -1.589f, .imag = -3.099f }, 
-                                            { .real = +2.653f, .imag = +2.038f }, 
-                                            { .real = -3.320f, .imag = -1.356f }, 
+        const cplx_t freq_ch1_frame2[9] = { { .real = +0.391f, .imag = +0.000f },
+                                            { .real = -0.780f, .imag = +0.075f },
+                                            { .real = +0.016f, .imag = -0.962f },
+                                            { .real = +1.733f, .imag = -0.287f },
+                                            { .real = -0.856f, .imag = +2.858f },
+                                            { .real = -1.589f, .imag = -3.099f },
+                                            { .real = +2.653f, .imag = +2.038f },
+                                            { .real = -3.320f, .imag = -1.356f },
                                             { .real = +3.897f, .imag = +0.000f } };
 
         const cplx_t freq_ch1_frame3[9] = { { .real = -2.940f, .imag = +0.000f },
@@ -74,14 +74,14 @@ int test_stft(void) {
                                             { .real = -6.550f, .imag = +0.437f },
                                             { .real = 10.408f, .imag = +0.000f } };
 
-        const cplx_t freq_ch2_frame1[9] = { { .real = +1.187f, .imag = +0.000f }, 
+        const cplx_t freq_ch2_frame1[9] = { { .real = +1.187f, .imag = +0.000f },
                                             { .real = +0.190f, .imag = +1.150f },
-                                            { .real = -1.042f, .imag = +0.351f }, 
-                                            { .real = -0.459f, .imag = -0.881f }, 
-                                            { .real = +0.691f, .imag = -0.496f }, 
-                                            { .real = +0.459f, .imag = +0.501f }, 
+                                            { .real = -1.042f, .imag = +0.351f },
+                                            { .real = -0.459f, .imag = -0.881f },
+                                            { .real = +0.691f, .imag = -0.496f },
+                                            { .real = +0.459f, .imag = +0.501f },
                                             { .real = -0.340f, .imag = +0.351f },
-                                            { .real = -0.190f, .imag = -0.232f }, 
+                                            { .real = -0.190f, .imag = -0.232f },
                                             { .real = +0.195f, .imag = +0.000f } };
 
         const cplx_t freq_ch2_frame2[9] = { { .real = +2.981f, .imag = +0.000f },
@@ -126,7 +126,7 @@ int test_stft(void) {
 
 
         hops_t * hops = hops_construct("xs", num_channels, num_shifts);
-        stft_t * stft = stft_construct(num_channels, num_samples, num_shifts, num_bins, window);
+        stft_t * stft = stft_construct(num_channels, num_samples, num_shifts, window);
         freqs_t * freqs = freqs_construct("Xs", num_channels, num_bins);
 
         memcpy(hops->samples[0], hop_ch1_frame1, sizeof(hop_ch1_frame1));
@@ -140,7 +140,7 @@ int test_stft(void) {
             }
             if (!(sqrtf(cplx_l2(cplx_sub(freqs->bins[1][index_bin], freq_ch2_frame1[index_bin]))) < eps)) {
                 return -2;
-            }            
+            }
         }
 
         memcpy(hops->samples[0], hop_ch1_frame2, sizeof(hop_ch1_frame2));
@@ -154,7 +154,7 @@ int test_stft(void) {
             }
             if (!(sqrtf(cplx_l2(cplx_sub(freqs->bins[1][index_bin], freq_ch2_frame2[index_bin]))) < eps)) {
                 return -4;
-            }            
+            }
         }
 
         memcpy(hops->samples[0], hop_ch1_frame3, sizeof(hop_ch1_frame3));
@@ -168,7 +168,7 @@ int test_stft(void) {
             }
             if (!(sqrtf(cplx_l2(cplx_sub(freqs->bins[1][index_bin], freq_ch2_frame3[index_bin]))) < eps)) {
                 return -6;
-            }            
+            }
         }
 
         memcpy(hops->samples[0], hop_ch1_frame4, sizeof(hop_ch1_frame4));
@@ -182,7 +182,7 @@ int test_stft(void) {
             }
             if (!(sqrtf(cplx_l2(cplx_sub(freqs->bins[1][index_bin], freq_ch2_frame4[index_bin]))) < eps)) {
                 return -8;
-            }            
+            }
         }
 
         memcpy(hops->samples[0], hop_ch1_frame5, sizeof(hop_ch1_frame5));
@@ -196,8 +196,8 @@ int test_stft(void) {
             }
             if (!(sqrtf(cplx_l2(cplx_sub(freqs->bins[1][index_bin], freq_ch2_frame5[index_bin]))) < eps)) {
                 return -10;
-            }            
-        }           
+            }
+        }
 
         hops_destroy(hops);
         stft_destroy(stft);
@@ -211,7 +211,7 @@ int test_stft(void) {
         const unsigned int num_samples = 16;
         const unsigned int num_shifts = 4;
         const unsigned int num_bins = 9;
-        const char * window = "hann";
+        const stft_window_t window = STFT_WINDOW_HANN;
 
         const cplx_t freq_ch1_frame1[9] = { { .real = +2.0f, .imag = +0.0f },
                                             { .real = -1.0f, .imag = +1.0f },
@@ -261,7 +261,7 @@ int test_stft(void) {
                                             { .real = +0.0f, .imag = +1.0f },
                                             { .real = -1.0f, .imag = -2.0f },
                                             { .real = -2.0f, .imag = +3.0f },
-                                            { .real = -3.0f, .imag = +0.0f } };                                            
+                                            { .real = -3.0f, .imag = +0.0f } };
 
         const cplx_t freq_ch2_frame1[9] = { { .real = +1.0f, .imag = +0.0f },
                                             { .real = -2.0f, .imag = +1.0f },
@@ -291,7 +291,7 @@ int test_stft(void) {
                                             { .real = +2.0f, .imag = +0.0f },
                                             { .real = +2.0f, .imag = +2.0f },
                                             { .real = -1.0f, .imag = -3.0f },
-                                            { .real = +1.0f, .imag = +0.0f } };          
+                                            { .real = +1.0f, .imag = +0.0f } };
 
         const cplx_t freq_ch2_frame4[9] = { { .real = +0.0f, .imag = +0.0f },
                                             { .real = -1.0f, .imag = +1.0f },
@@ -311,7 +311,7 @@ int test_stft(void) {
                                             { .real = -3.0f, .imag = +1.0f },
                                             { .real = +3.0f, .imag = +2.0f },
                                             { .real = -2.0f, .imag = +1.0f },
-                                            { .real = +3.0f, .imag = +0.0f } };                                               
+                                            { .real = +3.0f, .imag = +0.0f } };
 
         const float hop_ch1_frame1[4] = { +0.000f, +0.002f, -0.007f, +0.197f };
         const float hop_ch1_frame2[4] = { -0.725f, -0.392f, +1.090f, -0.380f };
@@ -325,7 +325,7 @@ int test_stft(void) {
         const float hop_ch2_frame5[4] = { +0.118f, -1.192f, -0.055f, -1.476f };
 
         freqs_t * freqs = freqs_construct("Xs", num_channels, num_bins);
-        istft_t * istft = istft_construct(num_channels, num_samples, num_shifts, num_bins, window);
+        istft_t * istft = istft_construct(num_channels, num_samples, num_shifts, window);
         hops_t * hops = hops_construct("xs", num_channels, num_shifts);
 
         memcpy(freqs->bins[0], freq_ch1_frame1, sizeof(freq_ch1_frame1));
@@ -358,7 +358,7 @@ int test_stft(void) {
             if (!(fabsf(hops->samples[1][index_shift] - hop_ch2_frame2[index_shift]) < eps)) {
                 return -14;
             }
-        }        
+        }
 
         memcpy(freqs->bins[0], freq_ch1_frame3, sizeof(freq_ch1_frame3));
         memcpy(freqs->bins[1], freq_ch2_frame3, sizeof(freq_ch2_frame3));
@@ -374,7 +374,7 @@ int test_stft(void) {
             if (!(fabsf(hops->samples[1][index_shift] - hop_ch2_frame3[index_shift]) < eps)) {
                 return -16;
             }
-        }        
+        }
 
         memcpy(freqs->bins[0], freq_ch1_frame4, sizeof(freq_ch1_frame4));
         memcpy(freqs->bins[1], freq_ch2_frame4, sizeof(freq_ch2_frame4));
@@ -406,9 +406,9 @@ int test_stft(void) {
             if (!(fabsf(hops->samples[1][index_shift] - hop_ch2_frame5[index_shift]) < eps)) {
                 return -20;
             }
-        }     
+        }
 
-        freqs_destroy(freqs);        
+        freqs_destroy(freqs);
         istft_destroy(istft);
         hops_destroy(hops);
 

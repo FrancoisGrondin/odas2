@@ -12,6 +12,7 @@
 #ifndef __MASKS_H
 #define __MASKS_H
 
+#include "signal.h"
 #include <stdio.h>
 
 #ifdef __cplusplus
@@ -29,7 +30,7 @@ extern "C" {
  */
 typedef struct masks_t {
 
-    char label[64];             /**< Signal label. Limited to 64 characters, including null character. */
+    char label[SIGNAL_LABEL_SIZE];             /**< Signal label. Limited to 64 characters, including null character. */
 
     unsigned int num_channels;  /**< Number of channels. */
     unsigned int num_bins;      /**< Number of bins per channel. */

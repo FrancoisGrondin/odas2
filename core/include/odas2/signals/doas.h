@@ -1,6 +1,7 @@
 #ifndef __DOAS_H
 #define __DOAS_H
 
+#include "signal.h"
 #include "../types/xyz.h"
 #include <stdio.h>
 
@@ -28,7 +29,7 @@ typedef struct dir_t {
 
 typedef struct doas_t {
 
-    char label[64];
+    char label[SIGNAL_LABEL_SIZE];
 
     unsigned int num_directions;
     dir_t * dirs;
