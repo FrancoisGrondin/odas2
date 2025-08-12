@@ -41,6 +41,7 @@ set(EXECUTABLE_OUTPUT_PATH "${PROJECT_SOURCE_DIR}/bin")
 set(LIBRARY_OUTPUT_PATH "${PROJECT_SOURCE_DIR}/lib")
 
 set(CMAKE_C_STANDARD 11)
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 #Add base directory for includes (global)
 include_directories(include/odas2)
