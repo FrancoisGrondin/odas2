@@ -14,7 +14,9 @@ gcc_t * gcc_construct(const unsigned int num_sources, const unsigned int num_cha
         odas2_set_error_number(ODAS2_ERROR_GCC_CONSTRUCT_NUM_CHANNELS);
         return NULL;
     }
-    if (num_bins < 1) {
+
+    unsigned int num_samples = (num_bins - 1) * 2;
+    if (num_samples < 2 || (num_samples & (num_samples - 1)) != 0) {
         odas2_set_error_number(ODAS2_ERROR_GCC_CONSTRUCT_NUM_BINS);
         return NULL;
     }
@@ -25,7 +27,7 @@ gcc_t * gcc_construct(const unsigned int num_sources, const unsigned int num_cha
     obj->num_channels = num_channels;
     obj->num_pairs = num_channels * (num_channels - 1) / 2;
     obj->num_bins = num_bins;
-    obj->num_samples = (num_bins - 1) * 2;
+    obj->num_samples = num_samples;
     obj->interpolation_factor = 2;
 
     uint16_t thread_count = get_thread_count();

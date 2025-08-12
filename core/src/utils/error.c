@@ -1,7 +1,8 @@
 #include <odas2/utils/error.h>
 #include <odas2/signals/signal.h>
 
-#define STRINGIFY(x) #x
+#define XSTR(a) STR(a)
+#define STR(a) #a
 
 _Thread_local static odas2_error_t current_error = ODAS2_ERROR_NONE;
 
@@ -39,50 +40,50 @@ const char* odas2_error_message() {
             return "wavout_write: cannot write samples to WAV file.";
 
         case ODAS2_ERROR_COVS_CONSTRUCT_LABEL:
-            return "covs_construct: label must be a string with less than " STRINGIFY(SIGNAL_LABEL_SIZE) " characters.";
+            return "covs_construct: label must be a string with less than " XSTR(SIGNAL_LABEL_SIZE) " characters.";
         case ODAS2_ERROR_COVS_CONSTRUCT_NUM_CHANNELS:
             return "covs_construct: number of channels must be at least 2.";
         case ODAS2_ERROR_COVS_CONSTRUCT_NUM_BINS:
             return "covs_construct: number of bins must be at least 1.";
 
         case ODAS2_ERROR_DOAS_CONSTRUCT_LABEL:
-            return "doas_construct: label must be a string with less than " STRINGIFY(SIGNAL_LABEL_SIZE) " characters.";
+            return "doas_construct: label must be a string with less than " XSTR(SIGNAL_LABEL_SIZE) " characters.";
         case ODAS2_ERROR_DOAS_CONSTRUCT_NUM_DIRECTIONS:
             return "doas_construct: number of directions must be at least 1.";
 
         case ODAS2_ERROR_DSF_CONSTRUCT_LABEL:
-            return "dsf_construct: label must be a string with less than " STRINGIFY(SIGNAL_LABEL_SIZE) " characters.";
+            return "dsf_construct: label must be a string with less than " XSTR(SIGNAL_LABEL_SIZE) " characters.";
 
         case ODAS2_ERROR_FREQS_CONSTRUCT_LABEL:
-            return "freqs_construct: label must be a string with less than " STRINGIFY(SIGNAL_LABEL_SIZE) " characters.";
+            return "freqs_construct: label must be a string with less than " XSTR(SIGNAL_LABEL_SIZE) " characters.";
         case ODAS2_ERROR_FREQS_CONSTRUCT_NUM_CHANNELS:
             return "freqs_construct: number of channels must be at least 1.";
         case ODAS2_ERROR_FREQS_CONSTRUCT_NUM_BINS:
             return "freqs_construct: number of bins must be at least 1.";
 
         case ODAS2_ERROR_HOPS_CONSTRUCT_LABEL:
-            return "hops_construct: label must be a string with less than " STRINGIFY(SIGNAL_LABEL_SIZE) " characters.";
+            return "hops_construct: label must be a string with less than " XSTR(SIGNAL_LABEL_SIZE) " characters.";
         case ODAS2_ERROR_HOPS_CONSTRUCT_NUM_CHANNELS:
             return "hops_construct: number of channels must be at least 1.";
         case ODAS2_ERROR_HOPS_CONSTRUCT_NUM_SHIFTS:
             return "hops_construct: number of shifts must be at least 1.";
 
         case ODAS2_ERROR_MASKS_CONSTRUCT_LABEL:
-            return "masks_construct: label must be a string with less than " STRINGIFY(SIGNAL_LABEL_SIZE) " characters.";
+            return "masks_construct: label must be a string with less than " XSTR(SIGNAL_LABEL_SIZE) " characters.";
         case ODAS2_ERROR_MASKS_CONSTRUCT_NUM_CHANNELS:
             return "masks_construct: number of channels must be at least 1.";
         case ODAS2_ERROR_MASKS_CONSTRUCT_NUM_BINS:
             return "masks_construct: number of bins must be at least 1.";
 
         case ODAS2_ERROR_TDOAS_CONSTRUCT_LABEL:
-            return "tdoas_construct: label must be a string with less than " STRINGIFY(SIGNAL_LABEL_SIZE) " characters.";
+            return "tdoas_construct: label must be a string with less than " XSTR(SIGNAL_LABEL_SIZE) " characters.";
         case ODAS2_ERROR_TDOAS_CONSTRUCT_NUM_CHANNELS:
             return "tdoas_construct: number of channels must be at least 2.";
         case ODAS2_ERROR_TDOAS_CONSTRUCT_NUM_SOURCES:
             return "tdoas_construct: number of sources must be at least 1.";
 
         case ODAS2_ERROR_WEIGHTS_CONSTRUCT_LABEL:
-            return "weights_construct: label must be a string with less than " STRINGIFY(SIGNAL_LABEL_SIZE) " characters.";
+            return "weights_construct: label must be a string with less than " XSTR(SIGNAL_LABEL_SIZE) " characters.";
         case ODAS2_ERROR_WEIGHTS_CONSTRUCT_NUM_SOURCES:
             return "weights_construct: number of sources must be at least 1.";
         case ODAS2_ERROR_WEIGHTS_CONSTRUCT_NUM_CHANNELS:
@@ -145,7 +146,7 @@ const char* odas2_error_message() {
         case ODAS2_ERROR_GCC_CONSTRUCT_NUM_CHANNELS:
             return "gcc_construct: number of channels must be at least 2.";
         case ODAS2_ERROR_GCC_CONSTRUCT_NUM_BINS:
-            return "gcc_construct: number of bins must be at least 1.";
+            return "gcc_construct: number of bins converted to number of samples must be at least 2 and a power of 2.";
         case ODAS2_ERROR_GCC_PROCESS_TDOAS_NUM_SOURCES:
             return "gcc_process: number of sources in TDOAs must match the number of sources in the GCC.";
         case ODAS2_ERROR_GCC_PROCESS_TDOAS_NUM_CHANNELS:
@@ -171,7 +172,7 @@ const char* odas2_error_message() {
         case ODAS2_ERROR_MVDR_PROCESS_COVS_NUM_BINS:
             return "mvdr_process: number of bins in covs must match the number of bins in the MVDR.";
         case ODAS2_ERROR_MVDR_PROCESS_WEIGHTS_NUM_SOURCES:
-            return "mvdr_process: number of sources in weights must match the number of sources in the MVDR.";
+            return "mvdr_process: number of sources in weights must match the number of sources in the MVDR (1).";
         case ODAS2_ERROR_MVDR_PROCESS_WEIGHTS_NUM_CHANNELS:
             return "mvdr_process: number of channels in weights must match the number of channels in the MVDR.";
         case ODAS2_ERROR_MVDR_PROCESS_WEIGHTS_NUM_BINS:
@@ -182,13 +183,13 @@ const char* odas2_error_message() {
         case ODAS2_ERROR_PHAT_CONSTRUCT_NUM_BINS:
             return "phat_construct: number of bins must be at least 1.";
         case ODAS2_ERROR_PHAT_PROCESS_COVS_IN_NUM_CHANNELS:
-            return "phat_process: number of channels in input covs must match the number of channels in the PHAT.";
+            return "phat_process: number of channels in input covs must match the number of channels in the phat.";
         case ODAS2_ERROR_PHAT_PROCESS_COVS_IN_NUM_BINS:
-            return "phat_process: number of bins in input covs must match the number of bins in the PHAT.";
+            return "phat_process: number of bins in input covs must match the number of bins in the phat.";
         case ODAS2_ERROR_PHAT_PROCESS_COVS_OUT_NUM_CHANNELS:
-            return "phat_process: number of channels in output covs must match the number of channels in the PHAT.";
+            return "phat_process: number of channels in output covs must match the number of channels in the phat.";
         case ODAS2_ERROR_PHAT_PROCESS_COVS_OUT_NUM_BINS:
-            return "phat_process: number of bins in output covs must match the number of bins in the PHAT.";
+            return "phat_process: number of bins in output covs must match the number of bins in the phat.";
 
         case ODAS2_ERROR_POSTFILTER_CONSTRUCT_NUM_CHANNELS:
             return "postfilter_construct: number of channels must be at least 1.";

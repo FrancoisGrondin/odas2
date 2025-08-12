@@ -21,9 +21,12 @@ endif()
 option(OPENMP_ENABLED "Enable OpenMP support" ON)
 option(BUILD_SHARED_LIBS "Build using shared libraries" ${DEFAULT_BUILD_SHARED_LIBS})
 
-if (OPENMP_ENABLED)
+if (OPENMP_ENABLED AND NOT MSVC)
     find_package(OpenMP REQUIRED)
     add_compile_definitions(OPENMP_ENABLED)
+elseif(OPENMP_ENABLED AND MSVC)
+    message(WARNING "OpenMP is not supported on MSVC.")
+    set(OPENMP_ENABLED OFF)
 endif()
 
 if(NOT MSVC)
@@ -36,6 +39,8 @@ endif()
 
 set(EXECUTABLE_OUTPUT_PATH "${PROJECT_SOURCE_DIR}/bin")
 set(LIBRARY_OUTPUT_PATH "${PROJECT_SOURCE_DIR}/lib")
+
+set(CMAKE_C_STANDARD 11)
 
 #Add base directory for includes (global)
 include_directories(include/odas2)

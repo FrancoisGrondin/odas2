@@ -37,7 +37,7 @@ scm_t * scm_construct(const unsigned int num_channels, const unsigned int num_bi
         obj->acorrs[index_channel] = (float *) calloc(sizeof(float), num_bins);
     }
 
-    int16_t index_pair = 0;
+    unsigned int index_pair = 0;
     obj->map_index_pair = (unsigned int**)malloc(sizeof(unsigned int*) * num_channels);
     for (unsigned int index_channel1 = 0; index_channel1 < obj->num_channels; index_channel1++)
     {

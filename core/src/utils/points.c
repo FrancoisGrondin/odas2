@@ -1,5 +1,6 @@
 #include <utils/points.h>
 #include <utils/error.h>
+#include <utils/pi.h>
 
 #include <math.h>
 #include <stdlib.h>
@@ -13,7 +14,7 @@ static xyz_t * generate_sphere(const unsigned int num_points) {
 
     for (unsigned int index_point = 0; index_point < num_points; index_point++) {
 
-        float theta = 2 * M_PI * (float)index_point / golden_ratio;
+        float theta = 2.f * PI_F * (float)index_point / golden_ratio;
         float phi = acosf(1.0f - 2.0f*((float)index_point + 0.5f)/((float)num_points));
 
         points[index_point].x = cosf(theta) * sinf(phi);
@@ -34,7 +35,7 @@ static xyz_t * generate_halfsphere(const unsigned int num_points) {
 
     for (unsigned int index_point = 0; index_point < num_points; index_point++) {
 
-        float theta = 2 * M_PI * (float)(index_point) / golden_ratio;
+        float theta = 2.f * PI_F * (float)(index_point) / golden_ratio;
         float phi = acosf(1.0f - 2.0f*((float)index_point + 0.5f)/((float)(num_points*2)));
 
         points[index_point].x = cosf(theta) * sinf(phi);
@@ -53,7 +54,7 @@ static xyz_t * generate_circle(const unsigned int num_points) {
 
     for (unsigned int index_point = 0; index_point < num_points; index_point++) {
 
-        float theta = 2 * M_PI * ((float) index_point) / ((float) num_points);
+        float theta = 2.f * PI_F * ((float) index_point) / ((float) num_points);
 
         points[index_point].x = cosf(theta);
         points[index_point].y = sinf(theta);
@@ -71,7 +72,7 @@ static xyz_t * generate_arc(const unsigned int num_points) {
 
     for (unsigned int index_point = 0; index_point < num_points; index_point++) {
 
-        float theta = 2 * M_PI * ((float) index_point) / ((float) (num_points-1));
+        float theta = 2.f * PI_F * ((float) index_point) / ((float) (num_points-1));
 
         points[index_point].x = cosf(theta);
         points[index_point].y = sinf(theta);
