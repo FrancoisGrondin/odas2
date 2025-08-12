@@ -48,13 +48,15 @@ int main(int argc, char * argv[]) {
     const char          method[]            = "gcc";
     const char          micarray[]          = "sc16_demo_array";
     const char          geometry[]          = "halfsphere";
+    const unsigned int  num_points          = 1000;
+
 
     //
     // Allocate memory
     //
 
     mics_t * mics = mics_construct(micarray);
-    points_t * points = points_construct(geometry);
+    points_t * points = points_construct(geometry, num_points);
 
     wavin_t * wavin = wavin_construct("/dev/stdin", num_shifts, num_channels, sample_rate);
 

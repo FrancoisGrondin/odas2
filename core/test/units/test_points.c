@@ -6,9 +6,9 @@ int test_points(void) {
 
 	{
 
-		points_t * points = points_construct("sphere");
+		points_t * points = points_construct("sphere", 2000);
 
-		if (!(points->num_points == 2562)) {
+		if (!(points->num_points == 2000)) {
 			return -1;
 		}
 
@@ -18,7 +18,7 @@ int test_points(void) {
 
 	{
 
-		points_t * points = points_construct("sphere");
+		points_t * points = points_construct("sphere", 2000);
 
 		for (unsigned int index_point = 0; index_point < points->num_points; index_point++) {
 			if (!(fabsf(xyz_mag(points->points[index_point]) - 1.0f) < eps)) {
@@ -32,9 +32,9 @@ int test_points(void) {
 
 	{
 
-		points_t * points = points_construct("halfsphere");
+		points_t * points = points_construct("halfsphere", 1000);
 
-		if (!(points->num_points == 1321)) {
+		if (!(points->num_points == 1000)) {
 			return -3;
 		}
 
@@ -44,7 +44,7 @@ int test_points(void) {
 
 	{
 
-		points_t * points = points_construct("halfsphere");
+		points_t * points = points_construct("halfsphere", 1000);
 
 		for (unsigned int index_point = 0; index_point < points->num_points; index_point++) {
 			if (!(fabsf(xyz_mag(points->points[index_point]) - 1.0f) < eps)) {
@@ -58,7 +58,7 @@ int test_points(void) {
 
 	{
 
-		points_t * points = points_construct("halfsphere");
+		points_t * points = points_construct("halfsphere", 1000);
 
 		for (unsigned int index_point = 0; index_point < points->num_points; index_point++) {
 			if (!(points->points[index_point].z >= 0.0f)) {
@@ -72,7 +72,7 @@ int test_points(void) {
 
 	{
 
-		points_t * points = points_construct("arc");
+		points_t * points = points_construct("arc", 181);
 
 		if (!(points->num_points == 181)) {
 			return -6;
@@ -84,7 +84,7 @@ int test_points(void) {
 
 	{
 
-		points_t * points = points_construct("arc");
+		points_t * points = points_construct("arc", 181);
 
 		for (unsigned int index_point = 0; index_point < points->num_points; index_point++) {
 			if (!(fabsf(xyz_mag(points->points[index_point]) - 1.0f) < eps)) {
@@ -98,7 +98,7 @@ int test_points(void) {
 
 	{
 
-		points_t * points = points_construct("arc");
+		points_t * points = points_construct("arc", 181);
 
 		for (unsigned int index_point = 0; index_point < points->num_points; index_point++) {
 			if (!(points->points[index_point].z == 0.0f)) {

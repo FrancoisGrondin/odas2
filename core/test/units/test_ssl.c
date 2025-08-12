@@ -7,7 +7,7 @@ int test_ssl(void) {
     {
 
         mics_t * mics = mics_construct("respeaker_usb_4");
-        points_t * points = points_construct("halfsphere");
+        points_t * points = points_construct("halfsphere", 1000);
 
         const float sample_rate = 16000.0f;
         const float sound_speed = 343.0f;
