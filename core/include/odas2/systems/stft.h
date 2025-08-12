@@ -26,8 +26,8 @@ typedef struct stft_t {
 
     fft_t ** ffts;
 
-    float * frame_real;
-    cplx_t * frame_cplx;
+    float ** frames_real;
+    cplx_t ** frames_cplx;
 
 } stft_t;
 
@@ -43,8 +43,8 @@ typedef struct istft_t {
 
     fft_t ** ffts;
 
-    float * frame_real;
-    cplx_t * frame_cplx;
+    float ** frames_real;
+    cplx_t ** frames_cplx;
 
 } istft_t;
 
