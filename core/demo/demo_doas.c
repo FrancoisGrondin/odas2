@@ -89,7 +89,7 @@ int main(int argc, char * argv[]) {
     phat_t * phat = phat_construct(num_channels, num_bins);
     ODAS2_CHECK_PTR(phat);
     fcc_t * fcc = fcc_construct(num_sources, num_channels, num_bins);
-    ODAS2_CHECK_PTR(fcc);
+    //ODAS2_CHECK_PTR(fcc);
     gcc_t * gcc = gcc_construct(num_sources, num_channels, num_bins);
     ODAS2_CHECK_PTR(gcc);
     ssl_t * ssl = ssl_construct(mics, points, (float)sample_rate, sound_speed, num_sources, num_directions);
