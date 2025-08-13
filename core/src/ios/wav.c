@@ -154,7 +154,7 @@ wavin_t * wavin_construct(const char * file_name, const unsigned int num_shifts,
     obj->num_shifts = num_shifts;
     obj->sample_rate = sample_rate;
 
-    obj->buffer = (short *) calloc(obj->num_channels * obj->num_shifts, sizeof(short));
+    obj->buffer = calloc(obj->bits_per_sample / 8 * obj->num_channels * obj->num_shifts, sizeof(char));
 
     return obj;
 

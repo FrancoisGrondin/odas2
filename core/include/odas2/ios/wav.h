@@ -43,7 +43,7 @@ typedef struct wavin_t {
     unsigned short bits_per_sample;
 
     FILE * file_pointer;
-    short * buffer;
+    char * buffer;
 
     void (*read_samples)(struct wavin_t* obj, hops_t* hops);
 
