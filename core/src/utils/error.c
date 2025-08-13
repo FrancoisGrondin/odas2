@@ -68,6 +68,11 @@ const char* odas2_error_message() {
         case ODAS2_ERROR_HOPS_CONSTRUCT_NUM_SHIFTS:
             return "hops_construct: number of shifts must be at least 1.";
 
+        case ODAS2_ERROR_IMGS_CONSTRUCT_LABEL:
+            return "imgs_construct: label must be a string with less than " XSTR(SIGNAL_LABEL_SIZE) " characters.";
+        case ODAS2_ERROR_IMGS_CONSTRUCT_NUM_POINTS:
+            return "imgs_construct: number of points must be at least 1.";
+
         case ODAS2_ERROR_MASKS_CONSTRUCT_LABEL:
             return "masks_construct: label must be a string with less than " XSTR(SIGNAL_LABEL_SIZE) " characters.";
         case ODAS2_ERROR_MASKS_CONSTRUCT_NUM_CHANNELS:

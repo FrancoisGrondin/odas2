@@ -63,6 +63,7 @@ set(SRC
     src/signals/dsf.c
     src/signals/freqs.c
     src/signals/hops.c
+    src/signals/imgs.c
     src/signals/masks.c
     src/signals/tdoas.c
     src/signals/weights.c
