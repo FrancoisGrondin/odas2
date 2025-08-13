@@ -18,7 +18,7 @@ else()
     set(DEFAULT_BUILD_SHARED_LIBS ON)
 endif()
 
-option(OPENMP_ENABLED "Enable OpenMP support" ON)
+option(OPENMP_ENABLED "Enable OpenMP support" OFF)
 option(BUILD_SHARED_LIBS "Build using shared libraries" ${DEFAULT_BUILD_SHARED_LIBS})
 
 if (OPENMP_ENABLED AND NOT MSVC)
