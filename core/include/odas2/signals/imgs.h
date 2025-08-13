@@ -31,8 +31,9 @@ typedef struct imgs_t {
 
     char label[SIGNAL_LABEL_SIZE];             /**< Signal label. Limited to 64 characters, including null character. */
 
-    unsigned int num_points;    /**< Number of points. */
-    float * energies;           /**< Array of energies. */
+    unsigned int num_points;        /**< Number of points. */
+    unsigned int num_directions;    /**< Number of scans. */
+    float ** energies;              /**< Arrays of energies, one for each scan. */
 
 } imgs_t;
 
@@ -46,7 +47,7 @@ typedef struct imgs_t {
  *
  * @return  A pointer to the structure with allocated memory.
  */
-imgs_t * imgs_construct(const char * label, const unsigned int num_points);
+imgs_t * imgs_construct(const char * label, const unsigned int num_points, const unsigned int num_directions);
 
 /**
  * @brief   Imgs signal destructor.

@@ -72,6 +72,8 @@ const char* odas2_error_message() {
             return "imgs_construct: label must be a string with less than " XSTR(SIGNAL_LABEL_SIZE) " characters.";
         case ODAS2_ERROR_IMGS_CONSTRUCT_NUM_POINTS:
             return "imgs_construct: number of points must be at least 1.";
+        case ODAS2_ERROR_IMGS_CONSTRUCT_NUM_DIRECTIONS:
+            return "imgs_construct: number of directions must be at least 1.";
 
         case ODAS2_ERROR_MASKS_CONSTRUCT_LABEL:
             return "masks_construct: label must be a string with less than " XSTR(SIGNAL_LABEL_SIZE) " characters.";
@@ -250,6 +252,10 @@ const char* odas2_error_message() {
             return "ssl_process: number of channels in TDOAs must match the number of channels in the ssl.";
         case ODAS2_ERROR_SSL_PROCESS_DOAS_NUM_DIRECTIONS:
             return "ssl_process: number of directions in DOAs must match the number of directions in the ssl.";
+        case ODAS2_ERROR_SSL_PROCESS_IMGS_NUM_DIRECTIONS:
+            return "ssl_process: number of directions in IMGs must match the number of directions in the ssl.";
+        case ODAS2_ERROR_SSL_PROCESS_IMGS_NUM_POINTS:
+            return "ssl_process: number of points in IMGs must match the number of points in the ssl.";
 
         case ODAS2_ERROR_SST_CONSTRUCT_NUM_TRACKS:
             return "sst_construct: number of tracks must be at least 1.";

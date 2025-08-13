@@ -98,7 +98,7 @@ int main(int argc, char * argv[]) {
         ODAS2_CHECK_CODE(scm_process(scm, freqs, masks, covs));
         ODAS2_CHECK_CODE(phat_process(phat, covs, covs_phat));
         ODAS2_CHECK_CODE(gcc_process(gcc, covs_phat, tdoas));
-        ODAS2_CHECK_CODE(ssl_process(ssl, tdoas, doas));
+        ODAS2_CHECK_CODE(ssl_process(ssl, tdoas, doas, NULL));
 
         ODAS2_CHECK_CODE(msgout_write_doas(msgout, doas));
 

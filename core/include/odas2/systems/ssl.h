@@ -3,6 +3,7 @@
 
 #include "../signals/doas.h"
 #include "../signals/tdoas.h"
+#include "../signals/imgs.h"
 #include "../utils/mics.h"
 #include "../utils/points.h"
 
@@ -49,7 +50,7 @@ ssl_t * ssl_construct(const mics_t * mics, const points_t * points, const float 
 
 void ssl_destroy(ssl_t * obj);
 
-int ssl_process(ssl_t * obj, const tdoas_t * tdoas, doas_t * doas);
+int ssl_process(ssl_t * obj, const tdoas_t * tdoas, doas_t * doas, imgs_t * imgs);
 
 void ssl_printf(const ssl_t * obj);
 

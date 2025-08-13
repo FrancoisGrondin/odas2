@@ -28,7 +28,7 @@ int test_ssl(void) {
         doas_src->dirs[3] = (dir_t) { .type = TARGET, .coord = (xyz_t) { .x = +0.577f, .y = +0.577f, .z = +0.577f }, .energy = 0.05f, .tracking_id = 0 };
 
         steering_process(steering, doas_src, tdoas);
-        ssl_process(ssl, tdoas, doas_dst);
+        ssl_process(ssl, tdoas, doas_dst, NULL);
 
         if (!((fabsf(doas_src->dirs[0].coord.x - doas_dst->dirs[0].coord.x) < eps) &&
               (fabsf(doas_src->dirs[0].coord.y - doas_dst->dirs[0].coord.y) < eps) &&

@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <string.h>
 
-imgs_t * imgs_construct(const char * label, const unsigned int num_points) {
+imgs_t * imgs_construct(const char * label, const unsigned int num_points, const unsigned int num_directions) {
 
     if (label == NULL || strlen(label) >= SIGNAL_LABEL_SIZE) {
         odas2_set_error_number(ODAS2_ERROR_IMGS_CONSTRUCT_LABEL);
@@ -15,6 +15,9 @@ imgs_t * imgs_construct(const char * label, const unsigned int num_points) {
         odas2_set_error_number(ODAS2_ERROR_IMGS_CONSTRUCT_NUM_POINTS);
         return NULL;
     }
+    if (num_directions < 1) {
+        odas2_set_error_number(ODAS2_ERROR_IMGS_CONSTRUCT_NUM_DIRECTIONS);
+    }
 
     imgs_t * obj = (imgs_t *) malloc(sizeof(imgs_t));
 
@@ -22,7 +25,11 @@ imgs_t * imgs_construct(const char * label, const unsigned int num_points) {
     strcpy(obj->label, label);
 
     obj->num_points = num_points;
-    obj->energies = (float *) calloc(num_points, sizeof(float));
+    obj->num_directions = num_directions;
+    obj->energies = (float **) malloc(sizeof(float*) * num_directions);
+    for (unsigned int index_direction = 0; index_direction < num_directions; index_direction++) {
+        obj->energies[index_direction] = (float *) calloc(num_points, sizeof(float));    
+    }
 
     return obj;
 
@@ -30,6 +37,9 @@ imgs_t * imgs_construct(const char * label, const unsigned int num_points) {
 
 void imgs_destroy(imgs_t * obj) {
 
+    for (unsigned int index_direction = 0; index_direction < obj->num_directions; index_direction++) {
+        free(obj->energies[index_direction]);
+    }
     free(obj->energies);
 
     free(obj);

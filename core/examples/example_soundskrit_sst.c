@@ -127,7 +127,7 @@ int main(int argc, char * argv[]) {
             ODAS2_CHECK_CODE(fcc_process(fcc, covs_phat, tdoas));
         }
 
-        ODAS2_CHECK_CODE(ssl_process(ssl, tdoas, doas_potential));
+        ODAS2_CHECK_CODE(ssl_process(ssl, tdoas, doas_potential, NULL));
         ODAS2_CHECK_CODE(sst_process(sst, dsf, doas_potential, doas_tracked));
 
         //ODAS2_CHECK_CODE(msgout_write_freqs(msgout, freqs));

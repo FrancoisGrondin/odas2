@@ -110,7 +110,7 @@ int main(int argc, char * argv[]) {
             ODAS2_CHECK_CODE(fcc_process(fcc, covs_phat, tdoas));
         }
 
-        ODAS2_CHECK_CODE(ssl_process(ssl, tdoas, doas));
+        ODAS2_CHECK_CODE(ssl_process(ssl, tdoas, doas, NULL));
 
         ODAS2_CHECK_CODE(msgout_write_doas(msgout, doas));
 
