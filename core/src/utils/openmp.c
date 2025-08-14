@@ -5,7 +5,7 @@
 
 #define MAX_THREAD_COUNT 4
 
-inline uint16_t get_thread_count(void)
+uint16_t get_thread_count(void)
 {
     static int initialized = 0;
     static uint16_t thread_count = 0;
@@ -23,12 +23,12 @@ inline uint16_t get_thread_count(void)
 
 #else
 
-inline uint16_t get_thread_count(void)
+uint16_t get_thread_count(void)
 {
     return 1;
 }
 
-inline int omp_get_thread_num(void)
+int omp_get_thread_num(void)
 {
     return 0;
 }
