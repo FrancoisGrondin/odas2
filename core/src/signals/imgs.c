@@ -17,6 +17,7 @@ imgs_t * imgs_construct(const char * label, const unsigned int num_points, const
     }
     if (num_directions < 1) {
         odas2_set_error_number(ODAS2_ERROR_IMGS_CONSTRUCT_NUM_DIRECTIONS);
+        return NULL;
     }
 
     imgs_t * obj = (imgs_t *) malloc(sizeof(imgs_t));
@@ -38,10 +39,8 @@ imgs_t * imgs_construct(const char * label, const unsigned int num_points, const
 
 void imgs_destroy(imgs_t * obj) {
 
-    for (unsigned int index_direction = 0; index_direction < obj->num_directions; index_direction++) {
-        free(obj->energies[index_direction]);
-    }
     free(obj->energies);
+    free(obj->energies_buffer);
 
     free(obj);
 
