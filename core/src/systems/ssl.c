@@ -118,7 +118,7 @@ ssl_t * ssl_construct(const mics_t * mics, const points_t * points, const float 
                     index_table = 0;
                 }
 
-                obj->table[index_point * obj->num_pairs + index_pair] = index_table;
+                obj->table[index_pair * obj->num_points + index_point] = index_table;
                 if (num_hits > 0) {
                     obj->norms[index_point] = 1.0f / ((float) num_hits);
                 }
@@ -326,35 +326,37 @@ int ssl_process(ssl_t * obj, const tdoas_t * tdoas, doas_t * doas, imgs_t * imgs
 
             #pragma omp for
             for (unsigned int index_point = 0; index_point < obj->num_points; index_point++) {
+                obj->projections[index_point] = 0.0f;
+            }
 
-                //
-                // Each point is associated to a set of indexes. For instance, for a given
-                // point when we have 6 pairs of microphones, we could have something like this:
-                //
-                // [ 112 |  0  |  4  | 178 | 181 | 100 ]
-                //
-                // This implies that we add the following values:
-                //
-                // 1) The sample of the synthesized signal for angle at 111 degrees for pair 1
-                // 2) A value of 0 for pair 2 (recall 0 stands for a pair that is ignored)
-                // 3) The sample of the synthesized signal for angle at 3 degrees for pair 3
-                // 4) The sample of the synthesized signal for angle at 177 degrees for pair 4
-                // 5) The sample of the synthesized signal for angle at 180 degrees for pair 5
-                // 6) The sample of the synthesized signal for angle at 99 degrees for pair 6
-                //
-                // In this case, the normalisation should be equal to 0.2 (because there are
-                // 5 active elements).
-                //
-
-                float energy = 0.0f;
-
-                for (unsigned int index_pair = 0; index_pair < obj->num_pairs; index_pair++) {
-
-                    energy += obj->synthesis[index_pair][obj->table[index_point * obj->num_pairs + index_pair]];
+            //
+            // Each point is associated to a set of indexes. For instance, for a given
+            // point when we have 6 pairs of microphones, we could have something like this:
+            //
+            // [ 112 |  0  |  4  | 178 | 181 | 100 ]
+            //
+            // This implies that we add the following values:
+            //
+            // 1) The sample of the synthesized signal for angle at 111 degrees for pair 1
+            // 2) A value of 0 for pair 2 (recall 0 stands for a pair that is ignored)
+            // 3) The sample of the synthesized signal for angle at 3 degrees for pair 3
+            // 4) The sample of the synthesized signal for angle at 177 degrees for pair 4
+            // 5) The sample of the synthesized signal for angle at 180 degrees for pair 5
+            // 6) The sample of the synthesized signal for angle at 99 degrees for pair 6
+            //
+            // In this case, the normalisation should be equal to 0.2 (because there are
+            // 5 active elements).
+            //
+            for (unsigned int index_pair = 0; index_pair < obj->num_pairs; index_pair++) {
+                #pragma omp for
+                for (unsigned int index_point = 0; index_point < obj->num_points; index_point++) {
+                    obj->projections[index_point] += obj->synthesis[index_pair][obj->table[index_pair * obj->num_points + index_point]];
                 }
+            }
 
-                obj->projections[index_point] = energy * obj->norms[index_point];
-
+            #pragma omp for
+            for (unsigned int index_point = 0; index_point < obj->num_points; index_point++) {
+                obj->projections[index_point] *= obj->norms[index_point];
             }
 
             //
@@ -423,9 +425,9 @@ int ssl_process(ssl_t * obj, const tdoas_t * tdoas, doas_t * doas, imgs_t * imgs
             #pragma omp for
             for (unsigned int index_pair = 0; index_pair < obj->num_pairs; index_pair++) {
 
-                if (obj->table[max_index * obj->num_pairs + index_pair] != 0) {
+                if (obj->table[index_pair * obj->num_points + max_index] != 0) {
 
-                    float degree = (float) (obj->table[max_index * obj->num_pairs + index_pair] - 1);
+                    float degree = (float) (obj->table[index_pair * obj->num_points + max_index] - 1);
 
                     for (unsigned int index_source = 0; index_source < obj->num_sources; index_source++) {
 
@@ -464,7 +466,7 @@ void ssl_printf(const ssl_t * obj) {
 
         printf("(%+1.3f, %+1.3f, %+1.3f) ", point.x, point.y, point.z);
         for (unsigned int index_pair = 0; index_pair < obj->num_pairs; index_pair++) {
-            printf("%03u ", obj->table[index_point * obj->num_pairs + index_pair]);
+            printf("%03u ", obj->table[index_pair * obj->num_points + index_point]);
         }
 
         printf("> %+1.4f\n", obj->norms[index_point]);
