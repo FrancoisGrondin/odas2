@@ -69,7 +69,7 @@ int delaysum_process(delaysum_t * obj, const tdoas_t * tdoas, weights_t * weight
     float gain = 1.0f / obj->num_channels;
     unsigned int frame_size = (obj->num_bins - 1) * 2;
 
-    #pragma omp parallel for collapse(2)
+    #pragma omp parallel for collapse(2) num_threads(get_thread_count())
     for (unsigned int index_source = 0; index_source < obj->num_sources; index_source++) {
 
         for (unsigned int index_channel = 0; index_channel < obj->num_channels; index_channel++) {

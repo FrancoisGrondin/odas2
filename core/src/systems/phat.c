@@ -51,7 +51,7 @@ int phat_process(phat_t * obj, const covs_t * covs_in, covs_t * covs_out) {
         return -1;
     }
 
-    #pragma omp parallel
+    #pragma omp parallel num_threads(get_thread_count())
     {
         #pragma omp for collapse(2)
         for (unsigned int index_pair = 0; index_pair < obj->num_pairs; index_pair++) {

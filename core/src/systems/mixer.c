@@ -100,7 +100,7 @@ int mixer_process(mixer_t * obj, const hops_t * hops_in, hops_t * hops_out) {
         return -1;
     }
 
-    #pragma omp parallel for
+    #pragma omp parallel for num_threads(get_thread_count())
     for (unsigned int index_channel = 0; index_channel < obj->num_channels; index_channel++) {
 
         memcpy(hops_out->samples[index_channel],

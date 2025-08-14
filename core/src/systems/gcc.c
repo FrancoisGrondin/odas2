@@ -114,7 +114,7 @@ int gcc_process(gcc_t * obj, const covs_t * covs, tdoas_t * tdoas) {
     //
     // Compute GCC for each pair
     //
-    #pragma omp parallel for
+    #pragma omp parallel for num_threads(get_thread_count())
     for (unsigned int index_pair = 0; index_pair < obj->num_pairs; index_pair++) {
 
         uint16_t index_thread = omp_get_thread_num();

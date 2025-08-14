@@ -56,7 +56,7 @@ int postfilter_process(postfilter_t * obj, const freqs_t * freqs_in, const masks
 		return -1;
 	}
 
-	#pragma omp parallel for collapse(2)
+	#pragma omp parallel for collapse(2) num_threads(get_thread_count())
 	for (unsigned int index_channel = 0; index_channel < obj->num_channels; index_channel++) {
 
 		for (unsigned int index_bin = 0; index_bin < obj->num_bins; index_bin++) {

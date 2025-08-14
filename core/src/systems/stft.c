@@ -108,7 +108,7 @@ int stft_process(stft_t * obj, const hops_t * hops, freqs_t * freqs) {
     }
 
     // Process each channel individually
-    #pragma omp parallel for
+    #pragma omp parallel for num_threads(get_thread_count())
     for (unsigned int index_channel = 0; index_channel < obj->num_channels; index_channel++) {
 
         unsigned int index_thread = omp_get_thread_num();
@@ -259,7 +259,7 @@ int istft_process(istft_t * obj, const freqs_t * freqs, hops_t * hops) {
         return -1;
     }
 
-    #pragma omp parallel for
+    #pragma omp parallel for num_threads(get_thread_count())
     for (unsigned int index_channel = 0; index_channel < obj->num_channels; index_channel++) {
 
         unsigned int index_thread = omp_get_thread_num();

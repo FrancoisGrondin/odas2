@@ -205,7 +205,7 @@ int ssl_process(ssl_t * obj, const tdoas_t * tdoas, doas_t * doas, imgs_t * imgs
         return -1;
     }
 
-    #pragma omp parallel
+    #pragma omp parallel num_threads(get_thread_count())
     {
         //
         // Convert TDoAs to AoAs

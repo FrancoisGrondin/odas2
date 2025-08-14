@@ -87,6 +87,7 @@ set(SRC
     src/utils/fft.c
     src/utils/linalg.c
     src/utils/mics.c
+    src/utils/openmp.c
     src/utils/points.c
 )
 

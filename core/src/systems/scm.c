@@ -101,7 +101,7 @@ int scm_process(scm_t * obj, const freqs_t * freqs, const masks_t * masks, covs_
         return -1;
     }
 
-    #pragma omp parallel for collapse(2)
+    #pragma omp parallel for collapse(2) num_threads(get_thread_count())
     for (unsigned int index_channel1 = 0; index_channel1 < obj->num_channels; index_channel1++) {
 
         for (unsigned int index_channel2 = (index_channel1 + 1); index_channel2 < obj->num_channels; index_channel2++) {
@@ -128,7 +128,7 @@ int scm_process(scm_t * obj, const freqs_t * freqs, const masks_t * masks, covs_
 
     }
 
-    #pragma omp parallel for
+    #pragma omp parallel for num_threads(get_thread_count())
     for (unsigned int index_channel = 0; index_channel < obj->num_channels; index_channel++) {
 
         #pragma omp simd

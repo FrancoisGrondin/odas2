@@ -96,7 +96,7 @@ int mvdr_process(mvdr_t * obj, const covs_t * covs, weights_t * weights) {
     // +-                                -+
     //
 
-    #pragma omp parallel for
+    #pragma omp parallel for num_threads(get_thread_count())
     for (unsigned int index_bin = 0; index_bin < obj->num_bins; index_bin++) {
 
         float trace = 0.0f;
