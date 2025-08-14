@@ -33,6 +33,8 @@ typedef struct imgs_t {
 
     unsigned int num_points;        /**< Number of points. */
     unsigned int num_directions;    /**< Number of scans. */
+
+    float * energies_buffer;        /**< Arrays of energies, for all scans. */
     float ** energies;              /**< Arrays of energies, one for each scan. */
 
 } imgs_t;

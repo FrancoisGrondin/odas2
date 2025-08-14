@@ -26,9 +26,10 @@ imgs_t * imgs_construct(const char * label, const unsigned int num_points, const
 
     obj->num_points = num_points;
     obj->num_directions = num_directions;
+    obj->energies_buffer  = (float *) calloc(num_directions * num_points, sizeof(float));
     obj->energies = (float **) malloc(sizeof(float*) * num_directions);
     for (unsigned int index_direction = 0; index_direction < num_directions; index_direction++) {
-        obj->energies[index_direction] = (float *) calloc(num_points, sizeof(float));    
+        obj->energies[index_direction] = obj->energies_buffer + index_direction * num_points;
     }
 
     return obj;

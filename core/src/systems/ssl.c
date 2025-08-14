@@ -196,11 +196,11 @@ int ssl_process(ssl_t * obj, const tdoas_t * tdoas, doas_t * doas, imgs_t * imgs
         odas2_set_error_number(ODAS2_ERROR_SSL_PROCESS_DOAS_NUM_DIRECTIONS);
         return -1;
     }
-    if (obj->num_directions != imgs->num_directions) {
+    if (imgs != NULL && obj->num_directions != imgs->num_directions) {
         odas2_set_error_number(ODAS2_ERROR_SSL_PROCESS_IMGS_NUM_DIRECTIONS);
         return -1;
     }
-    if (obj->num_points != imgs->num_points) {
+    if (imgs != NULL && obj->num_points != imgs->num_points) {
         odas2_set_error_number(ODAS2_ERROR_SSL_PROCESS_IMGS_NUM_POINTS);
         return -1;
     }
