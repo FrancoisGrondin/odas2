@@ -44,6 +44,14 @@ void sst_destroy(sst_t * obj) {
 
 }
 
+unsigned int sst_get_next_tracking_id(sst_t* obj) {
+    obj->last_tracking_id++;
+    if (obj->last_tracking_id == 0) {
+        obj->last_tracking_id = 1;
+    }
+    return obj->last_tracking_id;
+}
+
 int sst_process(sst_t * obj, const dsf_t * dsf, const doas_t * in, doas_t * out) {
     if (obj->num_directions != in->num_directions) {
         odas2_set_error_number(ODAS2_ERROR_SST_PROCESS_NUM_DIRECTIONS);
@@ -154,7 +162,7 @@ int sst_process(sst_t * obj, const dsf_t * dsf, const doas_t * in, doas_t * out)
                         obj->tracks[index_track].type = TRACKED;
                         obj->tracks[index_track].coord = new_source.coord;
                         obj->tracks[index_track].energy = 1.0f;
-                        obj->tracks[index_track].tracking_id = ++obj->last_tracking_id;
+                        obj->tracks[index_track].tracking_id = sst_get_next_tracking_id(obj);
 
                         break;
 
@@ -192,6 +200,7 @@ int sst_process(sst_t * obj, const dsf_t * dsf, const doas_t * in, doas_t * out)
                 obj->tracks[index_track].type = UNDEFINED;
                 obj->tracks[index_track].coord = xyz_cst(0.0f, 0.0f, 0.0f);
                 obj->tracks[index_track].energy = 0.0f;
+                obj->tracks[index_track].tracking_id = 0;
 
             }
 
