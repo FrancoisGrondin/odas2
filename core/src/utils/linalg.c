@@ -162,15 +162,15 @@ int rmat_scale(rmat_t * dst, const rmat_t * op1, const float op2) {
 
 }
 
-int rmat_sum(float * dst, const rmat_t * op1) {
+int rmat_sum(float * dst, const rmat_t * op) {
 
-    unsigned int num_rows = op1->num_rows;
-    unsigned int num_cols = op1->num_cols;
+    unsigned int num_rows = op->num_rows;
+    unsigned int num_cols = op->num_cols;
 
     float total = 0.0f;
 
     for (unsigned int index_element = 0; index_element < (num_rows * num_cols); index_element++) {
-        total += op1->elements[index_element];
+        total += op->elements[index_element];
     }
 
     *dst = total;
@@ -358,15 +358,15 @@ int cmat_scale(cmat_t * dst, const cmat_t * op1, const cplx_t op2) {
 
 }
 
-int cmat_sum(cplx_t * dst, const cmat_t * op1) {
+int cmat_sum(cplx_t * dst, const cmat_t * op) {
 
-    unsigned int num_rows = op1->num_rows;
-    unsigned int num_cols = op1->num_cols;
+    unsigned int num_rows = op->num_rows;
+    unsigned int num_cols = op->num_cols;
 
     cplx_t total = { .real = 0.0f, .imag = 0.0f };
 
     for (unsigned int index_element = 0; index_element < (num_rows * num_cols); index_element++) {
-        total = cplx_add(total, op1->elements[index_element]);
+        total = cplx_add(total, op->elements[index_element]);
     }
 
     *dst = total;
@@ -526,18 +526,18 @@ int smat_rank1(smat_t * dst, const rmat_t * op) {
 
 }
 
-int smat_sum(float * dst, const smat_t * op1) {
+int smat_sum(float * dst, const smat_t * op) {
 
-    unsigned int num_diag_elements = op1->num_rowscols;
-    unsigned int num_utri_elements = op1->num_rowscols * (op1->num_rowscols - 1) / 2;
+    unsigned int num_diag_elements = op->num_rowscols;
+    unsigned int num_utri_elements = op->num_rowscols * (op->num_rowscols - 1) / 2;
 
     float total = 0.0f;
 
     for (unsigned int index_diag_element = 0; index_diag_element < num_diag_elements; index_diag_element++) {
-        total += op1->diag[index_diag_element];
+        total += op->diag[index_diag_element];
     }
     for (unsigned int index_utri_element = 0; index_utri_element < num_utri_elements; index_utri_element++) {
-        total += 2 * op1->utri[index_utri_element];
+        total += 2 * op->utri[index_utri_element];
     }
 
     *dst = total;
@@ -629,8 +629,8 @@ int hmat_eye(hmat_t * obj) {
 
 int hmat_add(hmat_t * dst, const hmat_t * op1, const hmat_t * op2) {
 
-    unsigned num_diag_elements = dst->num_rowscols;
-    unsigned num_utri_elements = dst->num_rowscols * (dst->num_rowscols - 1) / 2;
+    unsigned int num_diag_elements = dst->num_rowscols;
+    unsigned int num_utri_elements = dst->num_rowscols * (dst->num_rowscols - 1) / 2;
 
     for (unsigned int index_diag_element = 0; index_diag_element < num_diag_elements; index_diag_element++) {
         dst->diag[index_diag_element] = op1->diag[index_diag_element] + op2->diag[index_diag_element];
@@ -645,8 +645,8 @@ int hmat_add(hmat_t * dst, const hmat_t * op1, const hmat_t * op2) {
 
 int hmat_sub(hmat_t * dst, const hmat_t * op1, const hmat_t * op2) {
 
-    unsigned num_diag_elements = dst->num_rowscols;
-    unsigned num_utri_elements = dst->num_rowscols * (dst->num_rowscols - 1) / 2;
+    unsigned int num_diag_elements = dst->num_rowscols;
+    unsigned int num_utri_elements = dst->num_rowscols * (dst->num_rowscols - 1) / 2;
 
     for (unsigned int index_diag_element = 0; index_diag_element < num_diag_elements; index_diag_element++) {
         dst->diag[index_diag_element] = op1->diag[index_diag_element] - op2->diag[index_diag_element];
@@ -661,8 +661,8 @@ int hmat_sub(hmat_t * dst, const hmat_t * op1, const hmat_t * op2) {
 
 int hmat_had(hmat_t * dst, const hmat_t * op1, const hmat_t * op2) {
 
-    unsigned num_diag_elements = dst->num_rowscols;
-    unsigned num_utri_elements = dst->num_rowscols * (dst->num_rowscols - 1) / 2;
+    unsigned int num_diag_elements = dst->num_rowscols;
+    unsigned int num_utri_elements = dst->num_rowscols * (dst->num_rowscols - 1) / 2;
 
     for (unsigned int index_diag_element = 0; index_diag_element < num_diag_elements; index_diag_element++) {
         dst->diag[index_diag_element] = op1->diag[index_diag_element] * op2->diag[index_diag_element];
@@ -677,8 +677,8 @@ int hmat_had(hmat_t * dst, const hmat_t * op1, const hmat_t * op2) {
 
 int hmat_scale(hmat_t * dst, const hmat_t * op1, const float op2) {
 
-    unsigned num_diag_elements = dst->num_rowscols;
-    unsigned num_utri_elements = dst->num_rowscols * (dst->num_rowscols - 1) / 2;
+    unsigned int num_diag_elements = dst->num_rowscols;
+    unsigned int num_utri_elements = dst->num_rowscols * (dst->num_rowscols - 1) / 2;
 
     for (unsigned int index_diag_element = 0; index_diag_element < num_diag_elements; index_diag_element++) {
         dst->diag[index_diag_element] = op1->diag[index_diag_element] * op2;
@@ -712,18 +712,18 @@ int hmat_rank1(hmat_t * dst, const cmat_t * op) {
 
 }
 
-int hmat_sum(float * dst, const hmat_t * op1) {
+int hmat_sum(float * dst, const hmat_t * op) {
 
-    unsigned int num_diag_elements = op1->num_rowscols;
-    unsigned int num_utri_elements = op1->num_rowscols * (op1->num_rowscols - 1) / 2;
+    unsigned int num_diag_elements = op->num_rowscols;
+    unsigned int num_utri_elements = op->num_rowscols * (op->num_rowscols - 1) / 2;
 
     float total = 0.0f;
 
     for (unsigned int index_diag_element = 0; index_diag_element < num_diag_elements; index_diag_element++) {
-        total += op1->diag[index_diag_element];
+        total += op->diag[index_diag_element];
     }
     for (unsigned int index_utri_element = 0; index_utri_element < num_utri_elements; index_utri_element++) {
-        total += 2 * op1->utri[index_utri_element].real;
+        total += 2 * op->utri[index_utri_element].real;
     }
 
     *dst = total;

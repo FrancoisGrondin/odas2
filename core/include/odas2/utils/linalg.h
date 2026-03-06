@@ -53,7 +53,7 @@ int rmat_transpose(rmat_t * dst, const rmat_t * op);
 
 int rmat_scale(rmat_t * dst, const rmat_t * op1, const float op2);
 
-int rmat_sum(float * dst, const rmat_t * op1);
+int rmat_sum(float * dst, const rmat_t * op);
 
 void rmat_printf(const rmat_t * obj);
 
@@ -75,7 +75,7 @@ int cmat_htranspose(cmat_t * dst, const cmat_t * op);
 
 int cmat_scale(cmat_t * dst, const cmat_t * op1, const cplx_t op2);
 
-int cmat_sum(cplx_t * dst, const cmat_t * op1);
+int cmat_sum(cplx_t * dst, const cmat_t * op);
 
 void cmat_printf(const cmat_t * obj);
 
@@ -97,7 +97,7 @@ int smat_scale(smat_t * dst, const smat_t * op1, const float op2);
 
 int smat_rank1(smat_t * dst, const rmat_t * op);
 
-int smat_sum(float * dst, const smat_t * op1);
+int smat_sum(float * dst, const smat_t * op);
 
 void smat_printf(const smat_t * obj);
 
@@ -119,7 +119,7 @@ int hmat_scale(hmat_t * dst, const hmat_t * op1, const float op2);
 
 int hmat_rank1(hmat_t * dst, const cmat_t * op);
 
-int hmat_sum(float * dst, const hmat_t * op1);
+int hmat_sum(float * dst, const hmat_t * op);
 
 void hmat_printf(const hmat_t * obj);
 
