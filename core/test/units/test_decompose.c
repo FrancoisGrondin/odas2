@@ -38,6 +38,45 @@ int test_decompose(void) {
 
     }
 
+    {
+
+        const unsigned int num_diags = 3;
+        const unsigned int num_trius = 3;
+
+        const float in_diag[3] = { 16.0f, 44.0f, 84.0f };
+        const cplx_t in_triu[3] = { { .real = -8.000f, .imag = -8.000f }, 
+                                    { .real = +4.000f, .imag = +4.000f }, 
+                                    { .real = +14.000f, .imag = +18.000f } };
+
+        float out_diag[3];
+        cplx_t out_triu[3];
+
+        const float rtn_diag[3] = { +0.086155f, +0.035590f, +0.015625f };
+        const cplx_t rtn_triu[3] = { { .real = +0.021701f, .imag = +0.017795f },
+                                     { .real = -0.003906f, .imag = -0.011719f },
+                                     { .real = -0.007813f, .imag = -0.007813f } };
+
+        invpdh_t * invpdh = invpdh_construct(num_diags);
+
+        invpdh_process(invpdh, in_diag, in_triu, out_diag, out_triu);
+
+        for (unsigned int index_diag = 0; index_diag < num_diags; index_diag++) {
+            if (!(fabsf(out_diag[index_diag] - rtn_diag[index_diag]) < eps)) {
+                return -1;
+            }
+        }
+
+        for (unsigned int index_triu = 0; index_triu < num_trius; index_triu++) {
+            if (!((fabsf(out_triu[index_triu].real - rtn_triu[index_triu].real) < eps) &&
+                  (fabsf(out_triu[index_triu].imag - rtn_triu[index_triu].imag) < eps))) {
+                return -1;
+            }            
+        }
+
+        invpdh_destroy(invpdh);
+
+    }
+
     return 0;
 
 }
