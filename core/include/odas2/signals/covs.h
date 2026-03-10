@@ -1,6 +1,6 @@
 /**
  * @file    covs.h
- * @author  Francois Grondin
+ * @author  Francois Grondin <francois.grondin2@usherbrooke.ca>
  * @brief   Contains structure and basic functions for a covs signal.
  *
  * This file contains the functions to construct, destroy and print
@@ -36,16 +36,16 @@ extern "C" {
  */
 typedef struct covs_t {
 
-    char label[SIGNAL_LABEL_SIZE];             /**< Signal label. Limited to 64 characters, including null character. */
+    char label[SIGNAL_LABEL_SIZE];  /**< Signal label. */
 
-    unsigned int num_channels;  /**< Number of channels. */
-    unsigned int num_pairs;     /**< Number of pairs (number of channels * (number of channels - 1) / 2). */
-    unsigned int num_bins;      /**< Number of frequency bins. */
+    unsigned int num_channels;      /**< Number of channels. */
+    unsigned int num_pairs;         /**< Number of pairs of channels. */
+    unsigned int num_bins;          /**< Number of frequency bins. */
 
-    cplx_t * xcorrs_buffer;     /**< Array of arrays of complex numbers, for cross-correlation terms, for all pairs. */
-    cplx_t ** xcorrs;           /**< Array of arrays of complex numbers, for cross-correlation terms. */
-    float *  acorrs_buffer;     /**< Array of arrays of real numbers, for auto-correlation terms, for all channels. */
-    float ** acorrs;            /**< Array of arrays of real numbers, for auto-correlation terms. */
+    cplx_t * buffer_cplx;           /**< Array of complex numbers, for cross-correlation terms, for all pairs. */
+    cplx_t ** xcorrs;               /**< Array of pointers. Each pointer links to the array of cross-correlation terms for all frequencies, for a specific pair. */
+    float *  buffer_real;           /**< Array of real numbers, for auto-correlation terms, for all channels. */
+    float ** acorrs;                /**< Array of pointers. Each pointer links to the array of auto-correlation terms for all frequencies, for a specific channel. */
 
 } covs_t;
 
@@ -54,9 +54,9 @@ typedef struct covs_t {
  *
  * This function allocates memory for a covs signal.
  *
- * @param   label               String that contains the unique name of this signal (max 64 characters).
- * @param   num_channels        Number of channels.
- * @param   num_bins            Number of bins per channel in each frame.
+ * @param   label                   String that contains the unique name of this signal.
+ * @param   num_channels            Number of channels.
+ * @param   num_bins                Number of bins per channel in each frame.
  *
  * @return  A pointer to the structure with allocated memory.
  */
@@ -67,7 +67,7 @@ covs_t * covs_construct(const char * label, const unsigned int num_channels, con
  *
  * This function frees memory allocated to a covs signal.
  *
- * @param   obj                 Pointer to the structure to be destroyed.
+ * @param   obj                     Pointer to the structure to be destroyed.
  */
 void covs_destroy(covs_t * obj);
 
@@ -78,8 +78,8 @@ void covs_destroy(covs_t * obj);
  * point format that to read easily in console or file the content
  * of this signal.
  *
- * @param   obj                 Pointer to the hops signal.
- * @param   fp                  Pointer to the file where to print content.
+ * @param   obj                     Pointer to the hops signal.
+ * @param   fp                      Pointer to the file where to print content.
  */
 void covs_fprintf(const covs_t * obj, FILE * fp);
 

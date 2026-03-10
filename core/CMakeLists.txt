@@ -78,6 +78,7 @@ set(SRC
     src/systems/phat.c
     src/systems/postfilter.c
     src/systems/scm.c
+    src/systems/spatialwhitening.c
     src/systems/ssl.c
     src/systems/sst.c
     src/systems/steering.c

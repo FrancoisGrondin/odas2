@@ -22,7 +22,7 @@ doas_t * doas_construct(const char * label, const unsigned int num_directions) {
     strcpy(obj->label, label);
 
     obj->num_directions = num_directions;
-    obj->dirs = (dir_t *) calloc(sizeof(dir_t), num_directions);
+    obj->dirs = (dir_t *) calloc(sizeof(dir_t), obj->num_directions);
 
     return obj;
 

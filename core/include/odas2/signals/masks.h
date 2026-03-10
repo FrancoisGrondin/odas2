@@ -1,6 +1,6 @@
 /**
  * @file    masks.h
- * @author  Francois Grondin
+ * @author  Francois Grondin <francois.grondin2@usherbrooke.ca>
  * @brief   Contains structure and basic functions for a masks signal.
  *
  * This file contains the functions to construct, destroy and print
@@ -30,13 +30,13 @@ extern "C" {
  */
 typedef struct masks_t {
 
-    char label[SIGNAL_LABEL_SIZE];             /**< Signal label. Limited to 64 characters, including null character. */
+    char label[SIGNAL_LABEL_SIZE];  /**< Signal label. */
 
-    unsigned int num_channels;  /**< Number of channels. */
-    unsigned int num_bins;      /**< Number of bins per channel. */
+    unsigned int num_channels;      /**< Number of channels. */
+    unsigned int num_bins;          /**< Number of bins per channel. */
 
-    float * gains_buffer;       /**< Array of arrays of gains, for all channels. */
-    float ** gains;             /**< Array of arrays of gains. */
+    float * buffer;                 /**< Array of gains, for all channels. */
+    float ** gains;                 /**< Array of pointers. Each pointer links to the array of gains for a specific channel. */
 
 } masks_t;
 
@@ -45,9 +45,9 @@ typedef struct masks_t {
  *
  * This function allocates memory for a masks signal.
  *
- * @param   label               String that contains the unique name of this signal (max 64 characters).
- * @param   num_channels        Number of channels.
- * @param   num_bins            Number of bins per channel in each frame.
+ * @param   label                   String that contains the unique name of this signal.
+ * @param   num_channels            Number of channels.
+ * @param   num_bins                Number of bins per channel in each frame.
  *
  * @return  A pointer to the structure with allocated memory.
  */
@@ -58,7 +58,7 @@ masks_t * masks_construct(const char * label, const unsigned int num_channels, c
  *
  * This function frees memory allocated to a masks signal.
  *
- * @param   obj                 Pointer to the structure to be destroyed.
+ * @param   obj                     Pointer to the structure to be destroyed.
  */
 void masks_destroy(masks_t * obj);
 
@@ -67,7 +67,7 @@ void masks_destroy(masks_t * obj);
  *
  * This function sets all the gains in a mask to 1.0.
  *
- * @param   obj                 Pointer to the masks signal.
+ * @param   obj                     Pointer to the masks signal.
  */
 void masks_ones(masks_t * obj);
 
@@ -76,7 +76,7 @@ void masks_ones(masks_t * obj);
  *
  * This function sets all the gains in a mask to 0.0.
  *
- * @param   obj                 Pointer to the masks signal.
+ * @param   obj                     Pointer to the masks signal.
  */
 void masks_zeros(masks_t * obj);
 
@@ -86,14 +86,13 @@ void masks_zeros(masks_t * obj);
  * Print the samples contained in each channel in floating point format that
  * to read easily in console or file the content of this signal.
  *
- * @param   obj                 Pointer to the masks signal.
- * @param   fp                  Pointer to the file where to print content.
+ * @param   obj                     Pointer to the masks signal.
+ * @param   fp                      Pointer to the file where to print content.
  */
 void masks_fprintf(const masks_t * obj, FILE * fp);
 
 #ifdef __cplusplus
 } //extern "C"
 #endif
-
 
 #endif // __MASKS_H

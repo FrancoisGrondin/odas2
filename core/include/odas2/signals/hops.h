@@ -1,6 +1,6 @@
 /**
  * @file    hops.h
- * @author  Francois Grondin
+ * @author  Francois Grondin <francois.grondin2@usherbrooke.ca>
  * @brief   Contains structure and basic functions for a hops signal.
  *
  * This file contains the functions to construct, destroy and print
@@ -29,13 +29,13 @@ extern "C" {
  */
 typedef struct hops_t {
 
-    char label[SIGNAL_LABEL_SIZE];             /**< Signal label. Limited to 64 characters, including null character. */
+    char label[SIGNAL_LABEL_SIZE];  /**< Signal label. */
 
-    unsigned int num_channels;  /**< Number of channels. */
-    unsigned int num_shifts;    /**< Number of samples per channel. */
+    unsigned int num_channels;      /**< Number of channels. */
+    unsigned int num_shifts;        /**< Number of samples per channel. */
 
-    float * samples_buffer;     /**< Arrays of samples, for all channels. */
-    float ** samples;           /**< Array of arrays of samples. */
+    float * buffer;                 /**< Buffer that contains all samples, for all channels. */
+    float ** samples;               /**< Array of pointers. Each pointer links to the array of samples for a specific channel. */
 
 } hops_t;
 
@@ -44,9 +44,9 @@ typedef struct hops_t {
  *
  * This function allocates memory for a hops signal.
  *
- * @param   label               String that contains the unique name of this signal (max 64 characters).
- * @param   num_channels        Number of channels.
- * @param   num_shifts          Number of samples per channel in each frame.
+ * @param   label                   String that contains the unique name of this signal.
+ * @param   num_channels            Number of channels.
+ * @param   num_shifts              Number of samples per channel in each frame.
  *
  * @return  A pointer to the structure with allocated memory.
  */
@@ -57,7 +57,7 @@ hops_t * hops_construct(const char * label, const unsigned int num_channels, con
  *
  * This function frees memory allocated to a hops signal.
  *
- * @param   obj                 Pointer to the structure to be destroyed.
+ * @param   obj                     Pointer to the structure to be destroyed.
  */
 void hops_destroy(hops_t * obj);
 
@@ -67,8 +67,8 @@ void hops_destroy(hops_t * obj);
  * Print the samples contained in each channel in floating point format that
  * to read easily in console or file the content of this signal.
  *
- * @param   obj                 Pointer to the hops signal.
- * @param   fp                  Pointer to the file where to print content.
+ * @param   obj                     Pointer to the hops signal.
+ * @param   fp                      Pointer to the file where to print content.
  */
 void hops_fprintf(const hops_t * obj, FILE * fp);
 

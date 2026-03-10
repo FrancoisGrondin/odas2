@@ -28,10 +28,10 @@ hops_t * hops_construct(const char * label, const unsigned int num_channels, con
     obj->num_channels = num_channels;
     obj->num_shifts = num_shifts;
 
-    obj->samples_buffer  = (float *) calloc(num_channels * num_shifts, sizeof(float));
+    obj->buffer  = (float *) calloc(num_channels * num_shifts, sizeof(float));
     obj->samples = (float **) malloc(sizeof(float *) * num_channels);
     for (unsigned int index_channel = 0; index_channel < num_channels; index_channel++) {
-        obj->samples[index_channel] = obj->samples_buffer + index_channel * num_shifts;
+        obj->samples[index_channel] = obj->buffer + index_channel * num_shifts;
     }
 
     return obj;
@@ -41,7 +41,7 @@ hops_t * hops_construct(const char * label, const unsigned int num_channels, con
 void hops_destroy(hops_t * obj) {
 
     free(obj->samples);
-    free(obj->samples_buffer);
+    free(obj->buffer);
 
     free(obj);
 

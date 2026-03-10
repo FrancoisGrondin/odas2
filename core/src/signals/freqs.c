@@ -28,10 +28,10 @@ freqs_t * freqs_construct(const char * label, const unsigned int num_channels, c
 	obj->num_channels = num_channels;
 	obj->num_bins = num_bins;
 
-	obj->bins_buffer = (cplx_t *) calloc(num_channels * num_bins, sizeof(cplx_t));
+	obj->buffer = (cplx_t *) calloc(num_channels * num_bins, sizeof(cplx_t));
 	obj->bins = (cplx_t **) malloc(sizeof(cplx_t *) * num_channels);
 	for (unsigned int index_channel = 0; index_channel < num_channels; index_channel++) {
-		obj->bins[index_channel] = obj->bins_buffer + index_channel * num_bins;
+		obj->bins[index_channel] = obj->buffer + index_channel * num_bins;
 	}
 
 	return obj;
@@ -41,7 +41,7 @@ freqs_t * freqs_construct(const char * label, const unsigned int num_channels, c
 void freqs_destroy(freqs_t * obj) {
 
 	free(obj->bins);
-	free(obj->bins_buffer);
+	free(obj->buffer);
 
 	free(obj);
 

@@ -29,16 +29,16 @@ covs_t * covs_construct(const char * label, const unsigned int num_channels, con
     obj->num_pairs = num_channels * (num_channels-1) / 2;
     obj->num_bins = num_bins;
 
-    obj->xcorrs_buffer = (cplx_t *) calloc(obj->num_pairs * num_bins, sizeof(cplx_t));
+    obj->buffer_cplx = (cplx_t *) calloc(obj->num_pairs * obj->num_bins, sizeof(cplx_t));
     obj->xcorrs = (cplx_t **) malloc(sizeof(cplx_t *) * obj->num_pairs);
     for (unsigned int index_pair = 0; index_pair < obj->num_pairs; index_pair++) {
-        obj->xcorrs[index_pair] = obj->xcorrs_buffer + index_pair * num_bins;
+        obj->xcorrs[index_pair] = obj->buffer_cplx + index_pair * obj->num_bins;
     }
 
-    obj->acorrs_buffer = (float *) calloc(obj->num_channels * num_bins, sizeof(float));
+    obj->buffer_real = (float *) calloc(obj->num_channels * obj->num_bins, sizeof(float));
     obj->acorrs = (float **) malloc(sizeof(float *) * obj->num_channels);
     for (unsigned int index_channel = 0; index_channel < obj->num_channels; index_channel++) {
-        obj->acorrs[index_channel] = obj->acorrs_buffer + index_channel * num_bins;
+        obj->acorrs[index_channel] = obj->buffer_real + index_channel * obj->num_bins;
     }
 
     return obj;
@@ -48,10 +48,10 @@ covs_t * covs_construct(const char * label, const unsigned int num_channels, con
 void covs_destroy(covs_t * obj) {
 
     free(obj->acorrs);
-    free(obj->acorrs_buffer);
+    free(obj->buffer_real);
 
     free(obj->xcorrs);
-    free(obj->xcorrs_buffer);
+    free(obj->buffer_cplx);
 
     free(obj);
 

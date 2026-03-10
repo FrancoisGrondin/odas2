@@ -29,9 +29,10 @@ tdoas_t * tdoas_construct(const char * label, const unsigned int num_channels, c
     obj->num_channels = num_channels;
     obj->num_pairs = num_channels * (num_channels - 1) / 2;
 
-    obj->taus = (tau_t **) malloc(sizeof(tau_t *) * num_sources);
-    for (unsigned int index_source = 0; index_source < num_sources; index_source++) {
-        obj->taus[index_source] = (tau_t *) calloc(sizeof(tau_t), obj->num_pairs);
+    obj->buffer = (tau_t *) calloc(obj->num_sources * obj->num_pairs, sizeof(tau_t));
+    obj->taus = (tau_t **) malloc(sizeof(tau_t *) * obj->num_sources);
+    for (unsigned int index_source = 0; index_source < obj->num_sources; index_source++) {
+        obj->taus[index_source] = obj->buffer + index_source * obj->num_pairs;
     }
 
     return obj;
@@ -40,9 +41,7 @@ tdoas_t * tdoas_construct(const char * label, const unsigned int num_channels, c
 
 void tdoas_destroy(tdoas_t * obj) {
 
-    for (unsigned int index_source = 0; index_source < obj->num_sources; index_source++) {
-        free(obj->taus[index_source]);
-    }
+    free(obj->buffer);
     free(obj->taus);
 
     free(obj);

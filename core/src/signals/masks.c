@@ -28,10 +28,10 @@ masks_t * masks_construct(const char * label, const unsigned int num_channels, c
     obj->num_channels = num_channels;
     obj->num_bins = num_bins;
 
-    obj->gains_buffer = (float *) calloc(num_channels * num_bins, sizeof(float));
-    obj->gains = (float **) malloc(sizeof(float *) * num_channels);
-    for (unsigned int index_channel = 0; index_channel < num_channels; index_channel++) {
-        obj->gains[index_channel] = obj->gains_buffer + index_channel * num_bins;
+    obj->buffer = (float *) calloc(obj->num_channels * obj->num_bins, sizeof(float));
+    obj->gains = (float **) malloc(sizeof(float *) * obj->num_channels);
+    for (unsigned int index_channel = 0; index_channel < obj->num_channels; index_channel++) {
+        obj->gains[index_channel] = obj->buffer + index_channel * obj->num_bins;
     }
 
     return obj;
@@ -41,7 +41,7 @@ masks_t * masks_construct(const char * label, const unsigned int num_channels, c
 void masks_destroy(masks_t * obj) {
 
     free(obj->gains);
-    free(obj->gains_buffer);
+    free(obj->buffer);
 
     free(obj);
 

@@ -16,6 +16,7 @@ dsf_t * dsf_construct(const char * label) {
     memset(obj->label, 0x00, SIGNAL_LABEL_SIZE);
     strcpy(obj->label, label);
 
+    // Default values
 	obj->sigmoid_mean = 0.3f;
 	obj->sigmoid_slope = 40.0f;
 	obj->tracked_source_sigma2 = 0.05f;

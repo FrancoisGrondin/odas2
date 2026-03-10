@@ -1,11 +1,11 @@
 /**
  * @file    imgs.h
- * @author  Francois Grondin
+ * @author  Francois Grondin <francois.grondin2@usherbrooke.ca>
  * @brief   Contains structure and basic functions for an image signal.
  *
- * This file contains the functions to construct, destroy and print
- * the content of a hops signal. This signal holds the samples in the
- * time domain with float precision, and support multiple channels.
+ * This file contains the functions to construct and destroy the 
+ * acoustic image signal. It holds the energy for each point in the
+ * space scanned by the beamformer.
  */
 
 #ifndef __IMGS_H
@@ -29,12 +29,12 @@ extern "C" {
  */
 typedef struct imgs_t {
 
-    char label[SIGNAL_LABEL_SIZE];             /**< Signal label. Limited to 64 characters, including null character. */
+    char label[SIGNAL_LABEL_SIZE];  /**< Signal label. */
 
     unsigned int num_points;        /**< Number of points. */
     unsigned int num_directions;    /**< Number of scans. */
 
-    float * energies_buffer;        /**< Arrays of energies, for all scans. */
+    float * buffer;                 /**< Arrays of energies, for all scans. */
     float ** energies;              /**< Arrays of energies, one for each scan. */
 
 } imgs_t;
@@ -44,8 +44,8 @@ typedef struct imgs_t {
  *
  * This function allocates memory for a imgs signal.
  *
- * @param   label               String that contains the unique name of this signal (max 64 characters).
- * @param   num_points          Number of points.
+ * @param   label                   String that contains the unique name of this signal.
+ * @param   num_points              Number of points.
  *
  * @return  A pointer to the structure with allocated memory.
  */
@@ -56,7 +56,7 @@ imgs_t * imgs_construct(const char * label, const unsigned int num_points, const
  *
  * This function frees memory allocated to a imgs signal.
  *
- * @param   obj                 Pointer to the structure to be destroyed.
+ * @param   obj                     Pointer to the structure to be destroyed.
  */
 void imgs_destroy(imgs_t * obj);
 

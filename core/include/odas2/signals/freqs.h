@@ -1,6 +1,6 @@
 /**
  * @file    freqs.h
- * @author  Francois Grondin
+ * @author  Francois Grondin <francois.grondin2@usherbrooke.ca>
  * @brief   Contains structure and basic functions for a freqs signal.
  *
  * This file contains the functions to construct, destroy and print
@@ -30,13 +30,13 @@ extern "C" {
  */
 typedef struct freqs_t {
 
-    char label[SIGNAL_LABEL_SIZE];             /**< Signal label. Limited to 64 characters, including null character. */
+    char label[SIGNAL_LABEL_SIZE];  /**< Signal label. */
 
-    unsigned int num_channels;  /**< Number of channels. */
-    unsigned int num_bins;      /**< Number of bins per channel. */
+    unsigned int num_channels;      /**< Number of channels. */
+    unsigned int num_bins;          /**< Number of bins per channel. */
 
-    cplx_t * bins_buffer;       /**< Array of arrays of bins (complex numbers), for all channels. */
-    cplx_t ** bins;             /**< Array of arrays of bins (complex numbers). */
+    cplx_t * buffer;                /**< Buffer that contains all bins, for all channels. */
+    cplx_t ** bins;                 /**< Array of pointers. Each pointer links to the array of bins for a specific channel. */
 
 } freqs_t;
 
@@ -45,9 +45,9 @@ typedef struct freqs_t {
  *
  * This function allocates memory for a freqs signal.
  *
- * @param   label               String that contains the unique name of this signal (max 64 characters).
- * @param   num_channels        Number of channels.
- * @param   num_bins            Number of bins per channel in each frame in the frequency domain.
+ * @param   label                   String that contains the unique name of this signal.
+ * @param   num_channels            Number of channels.
+ * @param   num_bins                Number of bins per channel in each frame in the frequency domain.
  *
  * @return  A pointer to the structure with allocated memory.
  */
@@ -58,7 +58,7 @@ freqs_t * freqs_construct(const char * label, const unsigned int num_channels, c
  *
  * This function frees memory allocated to a freqs signal.
  *
- * @param   obj                 Pointer to the structure to be destroyed.
+ * @param   obj                     Pointer to the structure to be destroyed.
  */
 void freqs_destroy(freqs_t * obj);
 
@@ -68,8 +68,8 @@ void freqs_destroy(freqs_t * obj);
  * Print the bins contained in each channel in complex number format that
  * to read easily in console or file the content of this signal.
  *
- * @param   obj                 Pointer to the freqs signal.
- * @param   fp                  Pointer to the file where to print content.
+ * @param   obj                     Pointer to the freqs signal.
+ * @param   fp                      Pointer to the file where to print content.
  */
 void freqs_fprintf(const freqs_t * obj, FILE * fp);
 
