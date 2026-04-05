@@ -52,12 +52,12 @@ unsigned int sst_get_next_tracking_id(sst_t* obj) {
     return obj->last_tracking_id;
 }
 
-int sst_process(sst_t * obj, const dsf_t * dsf, const doas_t * in, doas_t * out) {
-    if (obj->num_directions != in->num_directions) {
+int sst_process(sst_t * obj, const dsf_t * dsf, const doas_t * doas_in, doas_t * doas_out) {
+    if (obj->num_directions != doas_in->num_directions) {
         odas2_set_error_number(ODAS2_ERROR_SST_PROCESS_NUM_DIRECTIONS);
         return -1;
     }
-    if (obj->num_tracks < out->num_directions) {
+    if (obj->num_tracks < doas_out->num_directions) {
         odas2_set_error_number(ODAS2_ERROR_SST_PROCESS_NUM_TRACKS);
         return -1;
     }
@@ -73,7 +73,7 @@ int sst_process(sst_t * obj, const dsf_t * dsf, const doas_t * in, doas_t * out)
         // Get current potential source and fix the energy according to sigmoid
         //
 
-        dir_t pot = in->dirs[index_direction];
+        dir_t pot = doas_in->dirs[index_direction];
         pot.energy = 1.0f / (1.0f + expf(-1.0f * dsf->sigmoid_slope * (pot.energy - dsf->sigmoid_mean)));
 
         //
@@ -215,42 +215,16 @@ int sst_process(sst_t * obj, const dsf_t * dsf, const doas_t * in, doas_t * out)
     for (unsigned int index_track = 0; index_track < obj->num_tracks; index_track++) {
 
         if (obj->tracks[index_track].type != UNDEFINED) {
-            out->dirs[index_track] = obj->tracks[index_track];
+            doas_out->dirs[index_track] = obj->tracks[index_track];
         }
         else {
-            out->dirs[index_track].type = UNDEFINED;
-            out->dirs[index_track].coord = xyz_cst(0.0f, 0.0f, 0.0f);
-            out->dirs[index_track].energy = 0.0f;
+            doas_out->dirs[index_track].type = UNDEFINED;
+            doas_out->dirs[index_track].coord = xyz_cst(0.0f, 0.0f, 0.0f);
+            doas_out->dirs[index_track].energy = 0.0f;
         }
 
     }
 
     return 0;
-
-}
-
-void sst_printf(const sst_t * obj) {
-
-    for (unsigned int index_track = 0; index_track < obj->num_tracks; index_track++) {
-
-        dir_t dir = obj->tracks[index_track];
-
-        printf("[%02u]: { { .x = %+1.3f, .y = %+1.3f, .z = %+1.3f }, .energy = %+1.3f }\n",
-            index_track, dir.coord.x, dir.coord.y, dir.coord.z, dir.energy);
-
-    }
-
-    printf("\n");
-
-    for (unsigned int index_past = 0; index_past < obj->num_pasts; index_past++) {
-
-        dir_t dir = obj->pasts[index_past];
-
-        printf("[%02u]: { { .x = %+1.3f, .y = %+1.3f, .z = %+1.3f }, .energy = %+1.3f }\n",
-            index_past, dir.coord.x, dir.coord.y, dir.coord.z, dir.energy);
-
-    }
-
-    printf("\n");
 
 }

@@ -35,32 +35,32 @@ void beamformer_destroy(beamformer_t * obj) {
 
 }
 
-int beamformer_process(beamformer_t * obj, const freqs_t * in, const weights_t * weights, freqs_t * out) {
-    if (obj->num_sources != weights->num_sources) {
+int beamformer_process(beamformer_t * obj, const freqs_t * freqs_in, const weights_t * weights_in, freqs_t * freqs_out) {
+    if (obj->num_sources != weights_in->num_sources) {
         odas2_set_error_number(ODAS2_ERROR_BEAMFORMER_PROCESS_WEIGHTS_NUM_SOURCES);
         return -1;
     }
-    if (obj->num_sources != out->num_channels) {
+    if (obj->num_sources != freqs_out->num_channels) {
         odas2_set_error_number(ODAS2_ERROR_BEAMFORMER_PROCESS_OUT_NUM_CHANNELS);
         return -1;
     }
-    if (obj->num_channels != in->num_channels) {
+    if (obj->num_channels != freqs_in->num_channels) {
         odas2_set_error_number(ODAS2_ERROR_BEAMFORMER_PROCESS_IN_NUM_CHANNELS);
         return -1;
     }
-    if (obj->num_channels != weights->num_channels) {
+    if (obj->num_channels != weights_in->num_channels) {
         odas2_set_error_number(ODAS2_ERROR_BEAMFORMER_PROCESS_WEIGHTS_NUM_CHANNELS);
         return -1;
     }
-    if (obj->num_bins != in->num_bins) {
+    if (obj->num_bins != freqs_in->num_bins) {
         odas2_set_error_number(ODAS2_ERROR_BEAMFORMER_PROCESS_IN_NUM_BINS);
         return -1;
     }
-    if (obj->num_bins != weights->num_bins) {
+    if (obj->num_bins != weights_in->num_bins) {
         odas2_set_error_number(ODAS2_ERROR_BEAMFORMER_PROCESS_WEIGHTS_NUM_BINS);
         return -1;
     }
-    if (obj->num_bins != out->num_bins) {
+    if (obj->num_bins != freqs_out->num_bins) {
         odas2_set_error_number(ODAS2_ERROR_BEAMFORMER_PROCESS_OUT_NUM_BINS);
         return -1;
     }
@@ -68,17 +68,17 @@ int beamformer_process(beamformer_t * obj, const freqs_t * in, const weights_t *
 
     for (unsigned int index_source = 0; index_source < obj->num_sources; index_source++) {
 
-        memset(out->bins[index_source], 0x00, sizeof(cplx_t) * obj->num_bins);
+        memset(freqs_out->bins[index_source], 0x00, sizeof(cplx_t) * obj->num_bins);
 
         for (unsigned int index_channel = 0; index_channel < obj->num_channels; index_channel++) {
 
             for (unsigned int index_bin = 0; index_bin < obj->num_bins; index_bin++) {
 
-                cplx_t coeff = cplx_conj(weights->bins[index_source][index_channel][index_bin]);
-                cplx_t bin_in = in->bins[index_channel][index_bin];
-                cplx_t bin_out = out->bins[index_source][index_bin];
+                cplx_t coeff = cplx_conj(weights_in->bins[index_source][index_channel][index_bin]);
+                cplx_t bin_in = freqs_in->bins[index_channel][index_bin];
+                cplx_t bin_out = freqs_out->bins[index_source][index_bin];
 
-                out->bins[index_source][index_bin] = cplx_add(cplx_mul(coeff, bin_in), bin_out);
+                freqs_out->bins[index_source][index_bin] = cplx_add(cplx_mul(coeff, bin_in), bin_out);
 
             }
 

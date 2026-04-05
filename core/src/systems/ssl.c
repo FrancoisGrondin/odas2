@@ -456,20 +456,3 @@ int ssl_process(ssl_t * obj, const tdoas_t * tdoas, doas_t * doas, imgs_t * imgs
     return 0;
 
 }
-
-void ssl_printf(const ssl_t * obj) {
-
-    for (unsigned int index_point = 0; index_point < obj->num_points; index_point++) {
-
-        printf("[%04u]: ", index_point);
-        xyz_t point = obj->points->points[index_point];
-
-        printf("(%+1.3f, %+1.3f, %+1.3f) ", point.x, point.y, point.z);
-        for (unsigned int index_pair = 0; index_pair < obj->num_pairs; index_pair++) {
-            printf("%03u ", obj->table[index_pair * obj->num_points + index_point]);
-        }
-
-        printf("> %+1.4f\n", obj->norms[index_point]);
-    }
-
-}

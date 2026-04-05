@@ -37,18 +37,6 @@ scm_t * scm_construct(const unsigned int num_channels, const unsigned int num_bi
         obj->acorrs[index_channel] = (float *) calloc(sizeof(float), num_bins);
     }
 
-    unsigned int index_pair = 0;
-    obj->map_index_pair = (unsigned int**)malloc(sizeof(unsigned int*) * num_channels);
-    for (unsigned int index_channel1 = 0; index_channel1 < obj->num_channels; index_channel1++)
-    {
-        obj->map_index_pair[index_channel1] = (unsigned int*)malloc(sizeof(unsigned int) * num_channels);
-        for (unsigned int index_channel2 = (index_channel1 + 1); index_channel2 < obj->num_channels; index_channel2++)
-        {
-            obj->map_index_pair[index_channel1][index_channel2] = index_pair;
-            index_pair++;
-        }
-    }
-
     return obj;
 
 }
@@ -64,11 +52,6 @@ void scm_destroy(scm_t * obj) {
         free(obj->acorrs[index_channel]);
     }
     free(obj->acorrs);
-
-    for (unsigned int index_channel1 = 0; index_channel1 < obj->num_channels; index_channel1++) {
-        free(obj->map_index_pair[index_channel1]);
-    }
-    free(obj->map_index_pair);
 
     free(obj);
 
@@ -106,7 +89,22 @@ int scm_process(scm_t * obj, const freqs_t * freqs, const masks_t * masks, covs_
 
         for (unsigned int index_channel2 = (index_channel1 + 1); index_channel2 < obj->num_channels; index_channel2++) {
 
-            unsigned int index_pair = obj->map_index_pair[index_channel1][index_channel2];
+            //
+            // k = i(N-1) - i(i-1)/2 + (j-i-1)
+            //
+            // Ex:    
+            //         0     1     2     3        
+            //      +-----+-----+-----+-----+     
+            //   0  |  -  |  0  |  1  |  2  |     i=0, j=1 : k = 0 * (4-1) - 0*(0-1)/2 + (1-0-1) = 0
+            //      +-----+-----+-----+-----+     i=0, j=2 : k = 0 * (4-1) - 0*(0-1)/2 + (2-0-1) = 1
+            //   1  |  -  |  -  |  3  |  4  |     i=0, j=3 : k = 0 * (4-1) - 0*(0-1)/2 + (3-0-1) = 2
+            //      +-----+-----+-----+-----+     i=1, j=2 : k = 1 * (4-1) - 1*(1-1)/2 + (2-1-1) = 3
+            //   2  |  -  |  -  |  -  |  5  |     i=1, j=3 : k = 1 * (4-1) - 1*(1-1)/2 + (3-1-1) = 4
+            //      +-----+-----+-----+-----+     i=2, j=3 : k = 2 * (4-1) - 2*(2-1)/2 + (3-2-1) = 5
+            //   3  |  -  |  -  |  -  |  -  |
+            //      +-----+-----+-----+-----+
+            //
+            unsigned int index_pair = index_channel1 * (obj->num_channels-1) - index_channel1 * (index_channel1-1) / 2 + (index_channel2 - index_channel1 - 1);
 
             #pragma omp simd
             for (unsigned int index_bin = 0; index_bin < obj->num_bins; index_bin++) {

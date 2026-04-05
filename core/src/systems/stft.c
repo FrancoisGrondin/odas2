@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+static float * window_rect(const unsigned int num_samples);
 static float * window_hann(const unsigned int num_samples);
 static float * window_sine(const unsigned int num_samples);
 
@@ -34,7 +35,10 @@ stft_t * stft_construct(const unsigned int num_channels, const unsigned int num_
 
     obj->window = NULL;
 
-    if (window == STFT_WINDOW_HANN) {
+    if (window == STFT_WINDOW_RECT) {
+        obj->window = window_rect(num_samples);
+    }
+    else if (window == STFT_WINDOW_HANN) {
         obj->window = window_hann(num_samples);
     }
     else if (window == STFT_WINDOW_SINE) {
@@ -51,7 +55,7 @@ stft_t * stft_construct(const unsigned int num_channels, const unsigned int num_
         obj->frames[index_channel] = (float *) calloc(sizeof(float), num_samples);
     }
 
-    uint16_t thread_count = get_thread_count();
+    unsigned int thread_count = get_thread_count();
 
     obj->ffts = malloc(sizeof(fft_t *) * thread_count);
     obj->frames_real = malloc(sizeof(float *) * thread_count);
@@ -186,7 +190,10 @@ istft_t * istft_construct(const unsigned int num_channels, const unsigned int nu
 
     obj->window = NULL;
 
-    if (window == STFT_WINDOW_HANN) {
+    if (window == STFT_WINDOW_RECT) {
+        obj->window = window_rect(num_samples);
+    }
+    else if (window == STFT_WINDOW_HANN) {
         obj->window = window_hann(num_samples);
     }
     else if (window == STFT_WINDOW_SINE) {
@@ -203,7 +210,7 @@ istft_t * istft_construct(const unsigned int num_channels, const unsigned int nu
         obj->frames[index_channel] = (float *) calloc(sizeof(float), num_samples);
     }
 
-    uint16_t thread_count = get_thread_count();
+    unsigned int thread_count = get_thread_count();
 
     obj->ffts = (fft_t **) malloc(sizeof(fft_t *) * thread_count);
     obj->frames_real = (float **) malloc(sizeof(float *) * thread_count);
@@ -319,6 +326,19 @@ int istft_process(istft_t * obj, const freqs_t * freqs, hops_t * hops) {
     }
 
     return 0;
+
+}
+
+static float * window_rect(const unsigned int num_samples) {
+
+    float * window = (float *) calloc(sizeof(float), num_samples);
+
+    unsigned int N = num_samples - 1;
+    for (unsigned int n = 0; n <= N; n++) {
+        window[n] = 1.0f;
+    }
+
+    return window;
 
 }
 
