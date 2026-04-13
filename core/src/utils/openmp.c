@@ -5,10 +5,10 @@
 
 #define MAX_THREAD_COUNT 4
 
-uint16_t get_thread_count(void)
+unsigned int get_thread_count(void)
 {
     static int initialized = 0;
-    static uint16_t thread_count = 0;
+    static unsigned int thread_count = 0;
 
     if (!initialized) {
         thread_count = omp_get_num_procs();
@@ -23,7 +23,7 @@ uint16_t get_thread_count(void)
 
 #else
 
-uint16_t get_thread_count(void)
+unsigned int get_thread_count(void)
 {
     return 1;
 }

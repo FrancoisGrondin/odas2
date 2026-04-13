@@ -1,3 +1,12 @@
+/**
+ * @file    fcc.h
+ * @author  Francois Grondin <francois.grondin2@usherbrooke.ca>
+ * @brief   Contains structure and basic functions for a fcc system.
+ *
+ * This file contains the functions to construct, destroy and process
+ * a fast cross-correlation operation.
+ */
+
 #ifndef __FCC_H
 #define __FCC_H
 

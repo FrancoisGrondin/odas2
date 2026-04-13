@@ -1,20 +1,20 @@
-#include <utils/decompose.h>
+#include <utils/cholesky.h>
 #include <utils/error.h>
 
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
 
-static int cholesky_decompose_real(float * dst, const float * src, const unsigned int num_rowscols);
+static int decompose_real(float * dst, const float * src, const unsigned int num_rowscols);
 static int invert_tril_real(float * dst, const float * src, const unsigned int num_rowscols);
 static int mult_tril_transpose(float * dst, const float * src, const unsigned int num_rowscols);
-static int cholesky_decompose_cplx(cplx_t * dst, const cplx_t * src, const unsigned int num_rowscols);
+static int decompose_cplx(cplx_t * dst, const cplx_t * src, const unsigned int num_rowscols);
 static int invert_tril_cplx(cplx_t * dst, const cplx_t * src, const unsigned int num_rowscols);
 static int mult_tril_hermitian(cplx_t * dst, const cplx_t * src, const unsigned int num_rowscols);
 
-invpds_t * invpds_construct(const unsigned int num_rowscols) {
+choleskyreal_t * choleskyreal_construct(const unsigned int num_rowscols) {
 
-	invpds_t * obj = (invpds_t *) malloc(sizeof(invpds_t));
+	choleskyreal_t * obj = (choleskyreal_t *) malloc(sizeof(choleskyreal_t));
 
 	obj->num_rowscols = num_rowscols;
 
@@ -27,7 +27,7 @@ invpds_t * invpds_construct(const unsigned int num_rowscols) {
 
 }
 
-void invpds_destroy(invpds_t * obj) {
+void choleskyreal_destroy(choleskyreal_t * obj) {
 
 	free((void *) obj->A);
 	free((void *) obj->L);
@@ -38,7 +38,7 @@ void invpds_destroy(invpds_t * obj) {
 
 }
 
-int invpds_process(invpds_t * obj, const float * in_diag, const float * in_triu, float * out_diag, float * out_triu) {
+int choleskyreal_process(choleskyreal_t * obj, const float * in_diag, const float * in_triu, float * out_diag, float * out_triu) {
 
 	unsigned int num_rowscols = obj->num_rowscols;
 	unsigned int num_rows = obj->num_rowscols;
@@ -62,7 +62,7 @@ int invpds_process(invpds_t * obj, const float * in_diag, const float * in_triu,
 	}
 
 	// A = L @ L^T
-	cholesky_decompose_real(obj->L, obj->A, num_rowscols);
+	decompose_real(obj->L, obj->A, num_rowscols);
 
 	// L > L^-1
 	invert_tril_real(obj->Linv, obj->L, num_rowscols);
@@ -88,9 +88,9 @@ int invpds_process(invpds_t * obj, const float * in_diag, const float * in_triu,
 
 }
 
-invpdh_t * invpdh_construct(const unsigned int num_rowscols) {
+choleskycplx_t * choleskycplx_construct(const unsigned int num_rowscols) {
 
-	invpdh_t * obj = (invpdh_t *) malloc(sizeof(invpdh_t));
+	choleskycplx_t * obj = (choleskycplx_t *) malloc(sizeof(choleskycplx_t));
 
 	obj->num_rowscols = num_rowscols;
 
@@ -103,7 +103,7 @@ invpdh_t * invpdh_construct(const unsigned int num_rowscols) {
 
 }
 
-void invpdh_destroy(invpdh_t * obj) {
+void choleskycplx_destroy(choleskycplx_t * obj) {
 
 	free((void *) obj->A);
 	free((void *) obj->L);
@@ -114,7 +114,7 @@ void invpdh_destroy(invpdh_t * obj) {
 
 }
 
-int invpdh_process(invpdh_t * obj, const float * in_diag, const cplx_t * in_triu, float * out_diag, cplx_t * out_triu) {
+int choleskycplx_process(choleskycplx_t * obj, const float * in_diag, const cplx_t * in_triu, float * out_diag, cplx_t * out_triu) {
 
 	unsigned int num_rowscols = obj->num_rowscols;
 	unsigned int num_rows = obj->num_rowscols;
@@ -138,7 +138,7 @@ int invpdh_process(invpdh_t * obj, const float * in_diag, const cplx_t * in_triu
 	}
 
 	// A = L @ L^T
-	cholesky_decompose_cplx(obj->L, obj->A, num_rowscols);
+	decompose_cplx(obj->L, obj->A, num_rowscols);
 
 	// L > L^-1
 	invert_tril_cplx(obj->Linv, obj->L, num_rowscols);
@@ -164,7 +164,7 @@ int invpdh_process(invpdh_t * obj, const float * in_diag, const cplx_t * in_triu
 
 }
 
-static int cholesky_decompose_real(float * dst, const float * src, const unsigned int num_rowscols) {
+static int decompose_real(float * dst, const float * src, const unsigned int num_rowscols) {
 
 	//
 	// A = L @ L^T
@@ -300,7 +300,7 @@ static int mult_tril_transpose(float * dst, const float * src, const unsigned in
 
 }
 
-static int cholesky_decompose_cplx(cplx_t * dst, const cplx_t * src, const unsigned int num_rowscols) {
+static int decompose_cplx(cplx_t * dst, const cplx_t * src, const unsigned int num_rowscols) {
 
 	//
 	// A = L @ L^H

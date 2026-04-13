@@ -1,6 +1,6 @@
-#include "test_decompose.h"
+#include "test_cholesky.h"
 
-int test_decompose(void) {
+int test_cholesky(void) {
 
     const float eps = 0.001f;
 
@@ -18,9 +18,9 @@ int test_decompose(void) {
         const float rtn_diag[3] = { +49.361111f, +3.777777f, +0.111111f };
         const float rtn_triu[3] = { -13.555556f, +2.111111f, -0.555556f };
 
-        invpds_t * invpds = invpds_construct(num_diags);
+        choleskyreal_t * choleskyreal = choleskyreal_construct(num_diags);
 
-        invpds_process(invpds, in_diag, in_triu, out_diag, out_triu);
+        choleskyreal_process(choleskyreal, in_diag, in_triu, out_diag, out_triu);
 
         for (unsigned int index_diag = 0; index_diag < num_diags; index_diag++) {
             if (!(fabsf(out_diag[index_diag] - rtn_diag[index_diag]) < eps)) {
@@ -34,7 +34,7 @@ int test_decompose(void) {
             }            
         }
 
-        invpds_destroy(invpds);
+        choleskyreal_destroy(choleskyreal);
 
     }
 
@@ -56,9 +56,9 @@ int test_decompose(void) {
                                      { .real = -0.003906f, .imag = -0.011719f },
                                      { .real = -0.007813f, .imag = -0.007813f } };
 
-        invpdh_t * invpdh = invpdh_construct(num_diags);
+        choleskycplx_t * choleskycplx = choleskycplx_construct(num_diags);
 
-        invpdh_process(invpdh, in_diag, in_triu, out_diag, out_triu);
+        choleskycplx_process(choleskycplx, in_diag, in_triu, out_diag, out_triu);
 
         for (unsigned int index_diag = 0; index_diag < num_diags; index_diag++) {
             if (!(fabsf(out_diag[index_diag] - rtn_diag[index_diag]) < eps)) {
@@ -73,7 +73,7 @@ int test_decompose(void) {
             }            
         }
 
-        invpdh_destroy(invpdh);
+        choleskycplx_destroy(choleskycplx);
 
     }
 

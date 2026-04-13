@@ -84,7 +84,7 @@ set(SRC
     src/systems/steering.c
     src/systems/stft.c
 
-    src/utils/decompose.c
+    src/utils/cholesky.c
     src/utils/error.c
     src/utils/fft.c
     src/utils/linalg.c
@@ -108,8 +108,8 @@ endif()
 add_executable(tests
     test/tests.c
     test/units/test_beamformer.c
+    test/units/test_cholesky.c
     test/units/test_cplx.c
-    test/units/test_decompose.c
     test/units/test_delaysum.c
     test/units/test_fft.c
     test/units/test_gcc.c

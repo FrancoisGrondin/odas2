@@ -1,8 +1,8 @@
 #include <stdio.h>
 
 #include "units/test_beamformer.h"
+#include "units/test_cholesky.h"
 #include "units/test_cplx.h"
-#include "units/test_decompose.h"
 #include "units/test_delaysum.h"
 #include "units/test_fft.h"
 #include "units/test_gcc.h"
@@ -38,7 +38,7 @@ int main(int argc, char * argv[]) {
     error += test("Testing system stft.............. ", test_stft());
     error += test("Testing type xyz................. ", test_xyz());
     error += test("Testing type cplx................ ", test_cplx());
-    error += test("Testing util decompose........... ", test_decompose());
+    error += test("Testing util cholesky............ ", test_cholesky());
     error += test("Testing util fft................. ", test_fft());
     error += test("Testing util linalg.............. ", test_linalg());
     error += test("Testing util mics................ ", test_mics());

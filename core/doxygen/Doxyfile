@@ -19,4 +19,4 @@ RECURSIVE				= YES
 
 # Documentation output
 OUTPUT_LANGUAGE			= English
-
+HTML_EXTRA_STYLESHEET 		= doxygen-awesome.css

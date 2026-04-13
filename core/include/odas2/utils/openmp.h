@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-uint16_t get_thread_count(void);
+unsigned int get_thread_count(void);
 int omp_get_thread_num(void);
 
 #endif // __OPENMP_H

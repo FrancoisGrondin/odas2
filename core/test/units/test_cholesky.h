@@ -1,6 +1,6 @@
-#include <odas2/utils/decompose.h>
+#include <odas2/utils/cholesky.h>
 
 #include <math.h>
 #include <stdlib.h>
 
-int test_decompose(void);
+int test_cholesky(void);
