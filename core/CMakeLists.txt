@@ -120,6 +120,7 @@ add_executable(tests
     test/units/test_phat.c
     test/units/test_points.c
     test/units/test_scm.c
+    test/units/test_spw.c
     test/units/test_ssl.c
     test/units/test_sst.c
     test/units/test_steering.c

@@ -23,8 +23,6 @@ spw_t * spw_construct(const unsigned int num_channels, const unsigned int num_bi
     obj->interf_xcorr = (cplx_t *) calloc(obj->num_pairs, sizeof(cplx_t));
     obj->interfinv_acorr = (float *) calloc(obj->num_channels, sizeof(float));
     obj->interfinv_xcorr = (cplx_t *) calloc(obj->num_pairs, sizeof(cplx_t));
-    obj->whitened_acorr = (float *) calloc(obj->num_channels, sizeof(float));
-    obj->whitened_xcorr = (cplx_t *) calloc(obj->num_pairs, sizeof(cplx_t));
 
     obj->A = (cplx_t *) calloc(obj->num_channels * obj->num_channels, sizeof(cplx_t));
     obj->B = (cplx_t *) calloc(obj->num_channels * obj->num_channels, sizeof(cplx_t));
@@ -46,8 +44,6 @@ void spw_destroy(spw_t * obj) {
     free(obj->interf_xcorr);
     free(obj->interfinv_acorr);
     free(obj->interfinv_xcorr);
-    free(obj->whitened_acorr);
-    free(obj->whitened_xcorr);
 
     choleskycplx_destroy(obj->inv);
 
@@ -133,14 +129,17 @@ int spw_process(spw_t * obj, const covs_t * target, const covs_t * interf, covs_
 
             for (unsigned int index_col = 0; index_col < obj->num_channels; index_col++) {
 
+                cplx_t c = cplx_cst(0.0f, 0.0f);
+
                 for (unsigned int index_element = 0; index_element < obj->num_channels; index_element++) {
 
                     cplx_t a = obj->A[index_row * obj->num_channels + index_element];
                     cplx_t b = obj->B[index_element * obj->num_channels + index_col];
-                    cplx_t c = cplx_mul(a, b);
-                    obj->C[index_row * obj->num_channels + index_col] = c;
-
+                    c = cplx_add(c, cplx_mul(a, b));
+                    
                 }
+
+                obj->C[index_row * obj->num_channels + index_col] = c;
 
             }
 
@@ -160,7 +159,7 @@ int spw_process(spw_t * obj, const covs_t * target, const covs_t * interf, covs_
 
                     cplx_t c1 = obj->C[index_channel1 * obj->num_channels + index_channel2];
                     cplx_t c2 = obj->C[index_channel2 * obj->num_channels + index_channel1];
-                    obj->whitened_xcorr[index_pair] = cplx_mul(cplx_cst(0.5f, 0.0f), cplx_add(c1, cplx_conj(c2)));
+                    whitened->xcorrs[index_pair][index_bin] = cplx_mul(cplx_cst(0.5f, 0.0f), cplx_add(c1, cplx_conj(c2)));
 
                     index_pair++;
 
@@ -170,7 +169,7 @@ int spw_process(spw_t * obj, const covs_t * target, const covs_t * interf, covs_
 
             for (unsigned int index_channel = 0; index_channel < obj->num_channels; index_channel++) {
 
-                obj->whitened_acorr[index_channel] = obj->C[index_channel * obj->num_channels + index_channel].real;
+                whitened->acorrs[index_channel][index_bin] = obj->C[index_channel * obj->num_channels + index_channel].real;
 
             }
 

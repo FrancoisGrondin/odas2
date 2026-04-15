@@ -13,6 +13,7 @@
 #include "units/test_points.h"
 #include "units/test_phat.h"
 #include "units/test_scm.h"
+#include "units/test_spw.h"
 #include "units/test_ssl.h"
 #include "units/test_sst.h"
 #include "units/test_steering.h"
@@ -32,6 +33,7 @@ int main(int argc, char * argv[]) {
     error += test("Testing system mvdr.............. ", test_mvdr());
     error += test("Testing system phat.............. ", test_phat());
     error += test("Testing system scm............... ", test_scm());
+    error += test("Testing system spw............... ", test_spw());
     error += test("Testing system ssl............... ", test_ssl());
     error += test("Testing system sst............... ", test_sst());
     error += test("Testing system steering.......... ", test_steering());
