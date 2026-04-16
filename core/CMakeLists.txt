@@ -78,6 +78,7 @@ set(SRC
     src/systems/phat.c
     src/systems/postfilter.c
     src/systems/scm.c
+    src/systems/spinv.c
     src/systems/spw.c
     src/systems/ssl.c
     src/systems/sst.c
@@ -120,6 +121,7 @@ add_executable(tests
     test/units/test_phat.c
     test/units/test_points.c
     test/units/test_scm.c
+    test/units/test_spinv.c
     test/units/test_spw.c
     test/units/test_ssl.c
     test/units/test_sst.c
