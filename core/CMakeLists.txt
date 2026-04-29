@@ -144,6 +144,9 @@ target_link_libraries(demo_tdoas odas2)
 add_executable(demo_doas demo/demo_doas.c)
 target_link_libraries(demo_doas odas2)
 
+add_executable(demo_wfdoas demo/demo_wfdoas.c)
+target_link_libraries(demo_wfdoas odas2)
+
 add_executable(demo_steer demo/demo_steer.c)
 target_link_libraries(demo_steer odas2)
 
