@@ -57,6 +57,22 @@ void covs_destroy(covs_t * obj) {
 
 }
 
+void covs_eyes(covs_t * obj) {
+
+    for (unsigned int index_pair = 0; index_pair < obj->num_pairs; index_pair++) {
+        for (unsigned int index_bin = 0; index_bin < obj->num_bins; index_bin++) {
+            obj->xcorrs[index_pair][index_bin] = cplx_cst(0.0f, 0.0f);
+        }
+    }
+
+    for (unsigned int index_channel = 0; index_channel < obj->num_channels; index_channel++) {
+        for (unsigned int index_bin = 0; index_bin < obj->num_bins; index_bin++) {
+            obj->acorrs[index_channel][index_bin] = 1.0f;
+        }
+    }
+
+}
+
 void covs_fprintf(const covs_t * obj, FILE * fp) {
 
     for (unsigned int index_bin = 0; index_bin < obj->num_bins; index_bin++) {

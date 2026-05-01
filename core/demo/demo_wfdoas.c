@@ -51,10 +51,10 @@ int main(int argc, char * argv[]) {
     const unsigned int      num_bins          = 257;
     const unsigned int      sample_rate       = 16000;
     const float             sound_speed       = 343.0f;
-    const float             alpha_target      = 0.50f;    
+    const float             alpha_target      = 0.1f;    
     const float             alpha_noise       = 0.01f;
-    const float             epsilon           = 1e-20f;
-    const float             gamma             = 0.1f;
+    const float             epsilon           = 0.00001f;
+    const float             gamma             = 0.001f;
     const unsigned int      num_sources       = 1;
     const unsigned int      num_directions    = 1;
     const mics_hardware_t   micarray          = MICS_HARDWARE_RESPEAKER_USB_4;
@@ -97,13 +97,21 @@ int main(int argc, char * argv[]) {
     //
 
     masks_ones(masks);
+    covs_eyes(covs_noiseinv);
+
+    signed int frame_count = 0;
+    const signed int noise_refresh = 100;
 
     while (wavin_read(wavin, hops) == 0) {
 
         ODAS2_CHECK_CODE(stft_process(stft, hops, freqs));
         ODAS2_CHECK_CODE(scm_process(scm_target, freqs, masks, covs_target));
         ODAS2_CHECK_CODE(scm_process(scm_noise, freqs, masks, covs_noise));
-        ODAS2_CHECK_CODE(spinv_process(spinv, covs_noise, covs_noiseinv));
+        
+        if (frame_count == noise_refresh) {
+            ODAS2_CHECK_CODE(spinv_process(spinv, covs_noise, covs_noiseinv));
+        }
+        
         ODAS2_CHECK_CODE(spw_process(spw, covs_target, covs_noiseinv, covs_transient));
         ODAS2_CHECK_CODE(phat_process(phat, covs_transient, covs_phat));
         ODAS2_CHECK_CODE(gcc_process(gcc, covs_phat, tdoas));
@@ -111,6 +119,8 @@ int main(int argc, char * argv[]) {
         ODAS2_CHECK_CODE(ssl_process(ssl, tdoas, doas, NULL));
 
         ODAS2_CHECK_CODE(msgout_write_doas(msgout, doas));
+
+        frame_count++;
 
     }
 

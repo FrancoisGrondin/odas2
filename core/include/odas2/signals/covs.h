@@ -72,6 +72,15 @@ covs_t * covs_construct(const char * label, const unsigned int num_channels, con
 void covs_destroy(covs_t * obj);
 
 /**
+ * @brief   Covs identity matrices.
+ * 
+ * This function sets all covariance matrices to identity.
+ * 
+ * @param   obj                     Pointer to the structure.
+ */
+void covs_eyes(covs_t * obj);
+
+/**
  * @brief   Print formatted content of covs signal in file.
  *
  * Print the content of each spatial covariance matrix in floating
