@@ -77,6 +77,7 @@ set(SRC
     src/systems/mvdr.c
     src/systems/phat.c
     src/systems/postfilter.c
+    src/systems/rankone.c
     src/systems/scm.c
     src/systems/spinv.c
     src/systems/spw.c
