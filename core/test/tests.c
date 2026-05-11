@@ -12,6 +12,7 @@
 #include "units/test_mvdr.h"
 #include "units/test_points.h"
 #include "units/test_phat.h"
+#include "units/test_rankone.h"
 #include "units/test_scm.h"
 #include "units/test_spinv.h"
 #include "units/test_spw.h"
@@ -33,6 +34,7 @@ int main(int argc, char * argv[]) {
     error += test("Testing system mixer............. ", test_mixer());
     error += test("Testing system mvdr.............. ", test_mvdr());
     error += test("Testing system phat.............. ", test_phat());
+    error += test("Testing system rankone........... ", test_rankone());
     error += test("Testing system scm............... ", test_scm());
     error += test("Testing system spinv............. ", test_spinv());
     error += test("Testing system spw............... ", test_spw());

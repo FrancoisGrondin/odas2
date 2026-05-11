@@ -57,6 +57,7 @@ int rankone_process(rankone_t * obj, const covs_t * full, const covs_t * proj) {
                 for (unsigned int index_channel2 = (index_channel1+1); index_channel2 < obj->num_channels; index_channel2++) {
                 
                     obj->A[index_channel1 * obj->num_channels + index_channel2] = full->xcorrs[index_pair][index_bin];
+                    obj->A[index_channel2 * obj->num_channels + index_channel1] = cplx_conj(full->xcorrs[index_pair][index_bin]);
                     index_pair++;
                 
                 }
@@ -156,16 +157,17 @@ int rankone_process(rankone_t * obj, const covs_t * full, const covs_t * proj) {
         {
 
             for (unsigned int index_channel = 0; index_channel < obj->num_channels; index_channel++) {
-                proj->acorrs[index_channel][index_bin] = cplx_l2(obj->bk[index_channel]);
+                proj->acorrs[index_channel][index_bin] = lambda * cplx_l2(obj->bk[index_channel]);
             }
 
             unsigned int index_pair = 0;
 
             for (unsigned int index_channel1 = 0; index_channel1 < obj->num_channels; index_channel1++) {
 
-                for (unsigned int index_channel2 = 0; index_channel2 < obj->num_channels; index_channel2++) {
+                for (unsigned int index_channel2 = (index_channel1+1); index_channel2 < obj->num_channels; index_channel2++) {
 
-                    proj->xcorrs[index_pair][index_pair] = cplx_mul(cplx_cst(lambda, 0.0f), cplx_mul(obj->bk[index_channel1], cplx_conj(obj->bk[index_channel2])));
+                    proj->xcorrs[index_pair][index_bin] = cplx_mul(cplx_cst(lambda, 0.0f), cplx_mul(obj->bk[index_channel1], cplx_conj(obj->bk[index_channel2])));
+                    index_pair++;
 
                 }
 

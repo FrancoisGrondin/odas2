@@ -37,6 +37,12 @@ if(NOT MSVC AND NOT APPLE AND NOT ${CMAKE_SYSTEM_PROCESSOR} MATCHES "arm64")
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -ffast-math")
 endif()
 
+if(MSVC)
+    add_compile_options(/wd4068)
+else()
+    add_compile_options(-Wno-unknown-pragmas)
+endif()
+
 set(EXECUTABLE_OUTPUT_PATH "${PROJECT_SOURCE_DIR}/bin")
 set(LIBRARY_OUTPUT_PATH "${PROJECT_SOURCE_DIR}/lib")
 
@@ -121,6 +127,7 @@ add_executable(tests
     test/units/test_mvdr.c
     test/units/test_phat.c
     test/units/test_points.c
+    test/units/test_rankone.c
     test/units/test_scm.c
     test/units/test_spinv.c
     test/units/test_spw.c
