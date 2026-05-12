@@ -10,6 +10,7 @@
 #include <odas2/systems/fcc.h>
 #include <odas2/systems/gcc.h>
 #include <odas2/systems/phat.h>
+#include <odas2/systems/rankone.h>
 #include <odas2/systems/scm.h>
 #include <odas2/systems/spinv.h>
 #include <odas2/systems/spw.h>
@@ -28,9 +29,9 @@ int main(int argc, char * argv[]) {
     //                             Ms (all 1's)                                                       
     //                                  |                                                             
     //                                  *                                                             
-    // +----+   xs   +------+   Xs   +-----+   XXs   +-----+   SSs   +------+   SSps   +-----+  tdoas   +-----+  doas   +-----+
-    // | In | -----* | STFT | --+--* | SCM | ------* | SPW | ------* | PHAT | -------* | GCC | -------* | SSL | ------* | Out |
-    // +----+        +------+   |    +-----+         +-----+         +------+          +-----+          +-----+         +-----+
+    // +----+   xs   +------+   Xs   +-----+   XXs   +-----+   WWs   +-------+   RRs   +------+   PPs   +-----+  tdoas   +-----+  doas   +-----+
+    // | In | -----* | STFT | --+--* | SCM | ------* | SPW | ------* | Rank1 | ------* | PHAT | ------* | GCC | -------* | SSL | ------* | Out |
+    // +----+        +------+   |    +-----+         +-----+         +-------+         +------+         +-----+          +-----+         +-----+
     //                          |                       *
     //                          |                       | NNinvs
     //                          |                       |
@@ -60,6 +61,7 @@ int main(int argc, char * argv[]) {
     const mics_hardware_t   micarray          = MICS_HARDWARE_RESPEAKER_USB_4;
     const points_geometry_t geometry          = POINTS_GEOMETRY_HALFSPHERE;
     const unsigned int      num_points        = 1000;
+    const unsigned int      num_iterations    = 10;
 
     //
     // Allocate memory
@@ -76,8 +78,9 @@ int main(int argc, char * argv[]) {
     covs_t * covs_target = covs_construct("XXs", num_channels, num_bins); ODAS2_CHECK_PTR(covs_target);
     covs_t * covs_noise = covs_construct("NNs", num_channels, num_bins); ODAS2_CHECK_PTR(covs_noise);
     covs_t * covs_noiseinv = covs_construct("NNinvs", num_channels, num_bins); ODAS2_CHECK_PTR(covs_noiseinv);
-    covs_t * covs_transient = covs_construct("SSs", num_channels, num_bins); ODAS2_CHECK_PTR(covs_transient);
-    covs_t * covs_phat = covs_construct("SSps", num_channels, num_bins); ODAS2_CHECK_PTR(covs_phat);
+    covs_t * covs_whitened = covs_construct("WWs", num_channels, num_bins); ODAS2_CHECK_PTR(covs_whitened);
+    covs_t * covs_rankone = covs_construct("RRs", num_channels, num_bins); ODAS2_CHECK_PTR(covs_rankone);
+    covs_t * covs_phat = covs_construct("PPs", num_channels, num_bins); ODAS2_CHECK_PTR(covs_phat);
     tdoas_t * tdoas = tdoas_construct("tdoas", num_channels, num_sources); ODAS2_CHECK_PTR(tdoas);
     doas_t * doas = doas_construct("doas", num_directions); ODAS2_CHECK_PTR(doas);
 
@@ -86,6 +89,7 @@ int main(int argc, char * argv[]) {
     scm_t * scm_noise = scm_construct(num_channels, num_bins, alpha_noise); ODAS2_CHECK_PTR(scm_noise);
     spinv_t * spinv = spinv_construct(num_channels, num_bins, epsilon, gamma); ODAS2_CHECK_PTR(spinv);
     spw_t * spw = spw_construct(num_channels, num_bins); ODAS2_CHECK_PTR(spw);
+    rankone_t * rankone = rankone_construct(num_channels, num_bins, num_iterations);
     phat_t * phat = phat_construct(num_channels, num_bins); ODAS2_CHECK_PTR(phat);
     gcc_t * gcc = gcc_construct(num_sources, num_channels, num_bins); ODAS2_CHECK_PTR(gcc);
     ssl_t * ssl = ssl_construct(mics, points, (float)sample_rate, sound_speed, num_sources, num_directions); ODAS2_CHECK_PTR(ssl);
@@ -112,8 +116,9 @@ int main(int argc, char * argv[]) {
             ODAS2_CHECK_CODE(spinv_process(spinv, covs_noise, covs_noiseinv));
         }
         
-        ODAS2_CHECK_CODE(spw_process(spw, covs_target, covs_noiseinv, covs_transient));
-        ODAS2_CHECK_CODE(phat_process(phat, covs_transient, covs_phat));
+        ODAS2_CHECK_CODE(spw_process(spw, covs_target, covs_noiseinv, covs_whitened));
+        ODAS2_CHECK_CODE(rankone_process(rankone, covs_whitened, covs_rankone));
+        ODAS2_CHECK_CODE(phat_process(phat, covs_rankone, covs_phat));
         ODAS2_CHECK_CODE(gcc_process(gcc, covs_phat, tdoas));
 
         ODAS2_CHECK_CODE(ssl_process(ssl, tdoas, doas, NULL));
@@ -139,7 +144,8 @@ int main(int argc, char * argv[]) {
     covs_destroy(covs_target);
     covs_destroy(covs_noise);
     covs_destroy(covs_noiseinv);
-    covs_destroy(covs_transient);
+    covs_destroy(covs_whitened);
+    covs_destroy(covs_rankone);
     covs_destroy(covs_phat);
     tdoas_destroy(tdoas);
     doas_destroy(doas);
