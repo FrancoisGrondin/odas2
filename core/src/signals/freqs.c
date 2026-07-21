@@ -56,3 +56,9 @@ void freqs_fprintf(const freqs_t * obj, FILE * fp) {
     }
 
 }
+
+unsigned int freqs_getsize(const freqs_t * obj) {
+
+	return obj->num_channels * obj->num_bins * sizeof(cplx_t);
+
+}

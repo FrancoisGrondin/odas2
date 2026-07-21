@@ -73,6 +73,8 @@ void freqs_destroy(freqs_t * obj);
  */
 void freqs_fprintf(const freqs_t * obj, FILE * fp);
 
+unsigned int freqs_getsize(const freqs_t * obj);
+
 #ifdef __cplusplus
 } //extern "C"
 #endif
