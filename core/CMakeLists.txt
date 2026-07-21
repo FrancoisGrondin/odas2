@@ -92,6 +92,7 @@ set(SRC
     src/systems/steering.c
     src/systems/stft.c
 
+    src/utils/buffers.c
     src/utils/cholesky.c
     src/utils/error.c
     src/utils/fft.c
@@ -116,6 +117,7 @@ endif()
 add_executable(tests
     test/tests.c
     test/units/test_beamformer.c
+    test/units/test_buffers.c
     test/units/test_cholesky.c
     test/units/test_cplx.c
     test/units/test_delaysum.c
