@@ -60,6 +60,7 @@ set(SRC
     src/dnns/layers.c
     src/dnns/tensors.c
 
+    src/ios/buf.c
     src/ios/msg.c
     src/ios/wav.c
     src/ios/raw.c
