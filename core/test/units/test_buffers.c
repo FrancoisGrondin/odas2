@@ -4,13 +4,13 @@ int test_buffers(void) {
 
 	{
 
-		const unsigned int max_elements = 5;
+		const unsigned int max_bytes = 10;
+		const unsigned int num_bytes = 15;
+		const char bytes[15] = {0};
 
-		fifo_t * obj = fifo_construct(max_elements);
+		fifo_t * obj = fifo_construct(max_bytes);
 
-		void * ptr = fifo_pop(obj);
-
-		if (!(ptr == NULL)) {
+		if (!(fifo_push(obj, bytes, num_bytes) == -1)) {
 			return -1;
 		}
 
@@ -20,44 +20,57 @@ int test_buffers(void) {
 
 	{
 
-		const unsigned int max_elements = 5;
-		const unsigned int num_elements = 5;
+		const unsigned int max_bytes = 10;
+		const unsigned int num_bytes = 5;
+		char bytes[5] = {0};
 
-		void * ptrs[5] = { (void *) 0x01, (void *) 0x02, (void *) 0x03, (void *) 0x04, (void *) 0x05 };
+		fifo_t * obj = fifo_construct(max_bytes);
 
-		fifo_t * obj = fifo_construct(max_elements);
-
-		for (unsigned int index_ptr = 0; index_ptr < num_elements; index_ptr++) {
-			fifo_push(obj, ptrs[index_ptr]);	
+		if (!(fifo_pop(obj, bytes, num_bytes) == -1)) {
+			return -2;
 		}
 
-		for (unsigned int index_ptr = 0; index_ptr < num_elements; index_ptr++) {
-			
-			if (!(fifo_pop(obj) == ptrs[index_ptr])) {
-				return -2;
-			}
-
-		}
-
-		fifo_destroy(obj);
+		fifo_destroy(obj);		
 
 	}
 
 	{
 
-		const unsigned int max_elements = 5;
+		const unsigned int max_bytes = 10;
+		const unsigned int num_bytes = 4;
+		char bytes1[4] = {1,2,3,4};
+		char bytes2[4] = {5,6,7,8};
+		char bytes3[4] = {9,10,11,12};
+		char bytes_dest[4];
 
-		fifo_t * obj = fifo_construct(max_elements);
+		fifo_t * obj = fifo_construct(max_bytes);
 
-		for (unsigned int index_ptr = 0; index_ptr < max_elements; index_ptr++) {
-			fifo_push(obj, (void *) NULL);
+		fifo_push(obj, bytes1, num_bytes);
+		fifo_push(obj, bytes2, num_bytes);
+		fifo_pop(obj, bytes_dest, num_bytes);
+
+		for (unsigned int index_byte = 0; index_byte < num_bytes; index_byte++) {
+			if (!(bytes_dest[index_byte] == bytes1[index_byte])) {
+				return -3;
+			}
 		}
 
-		if (!(fifo_push(obj, (void *) NULL) == -1)) {
-			return -3;
-		}
+		fifo_push(obj, bytes3, num_bytes);
+		fifo_pop(obj, bytes_dest, num_bytes);
 
-		fifo_destroy(obj);
+		for (unsigned int index_byte = 0; index_byte < num_bytes; index_byte++) {
+			if (!(bytes_dest[index_byte] == bytes2[index_byte])) {
+				return -3;
+			}
+		}		
+
+		fifo_pop(obj, bytes_dest, num_bytes);
+
+		for (unsigned int index_byte = 0; index_byte < num_bytes; index_byte++) {
+			if (!(bytes_dest[index_byte] == bytes3[index_byte])) {
+				return -3;
+			}
+		}	
 
 	}
 

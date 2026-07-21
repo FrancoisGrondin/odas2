@@ -7,19 +7,19 @@ extern "C" {
 
 typedef struct fifo_t {
 
-    void ** buffer;
-    unsigned int num_elements;
-    unsigned int max_elements;
+    char * bytes;
+    unsigned int num_bytes;
+    unsigned int max_bytes;
 
 } fifo_t;
 
-fifo_t * fifo_construct(const unsigned int max_elements);
+fifo_t * fifo_construct(const unsigned int max_bytes);
 
 void fifo_destroy(fifo_t * obj);
 
-int fifo_push(fifo_t * obj, void * ptr);
+int fifo_push(fifo_t * obj, const char * bytes, const unsigned int num_bytes);
 
-void * fifo_pop(fifo_t * obj);
+int fifo_pop(fifo_t * obj, char * bytes, const unsigned int num_bytes);
 
 #ifdef __cplusplus
 } //extern "C"
