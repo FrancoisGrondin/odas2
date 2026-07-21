@@ -89,7 +89,6 @@ def main():
             waveforms = np.reshape(hops, (num_channels, num_frames * hops_size))
 
             fig, axs = plt.subplots(num_channels)
-            
             if num_channels == 1:
                 axs = [axs]
 
@@ -103,6 +102,8 @@ def main():
             num_channels = spex.shape[0]
             
             fig, axs = plt.subplots(num_channels)
+            if num_channels == 1:
+                axs = [axs]
 
             for index_channel in range(num_channels):
 
