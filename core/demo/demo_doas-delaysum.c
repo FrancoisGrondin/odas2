@@ -27,9 +27,9 @@
 int main(int argc, char * argv[]) {
 
     //
-    //                             Ms (all 1's)                                                       dsf (default values)
-    //                                  |                                                                      |
-    //                                  *                                                                      *
+    //                             Ms (all 1's)                                                  dsf (default values)
+    //                                  |                                                                  |
+    //                                  *                                                                  *
     // +----+   xs   +------+   Xs   +-----+   XXs   +------+   XXps   +-----+  tdoas   +-----+  doas   +-----+  doas   +-----+
     // | In | -----* | STFT | --+--* | SCM | ------* | PHAT | -------* | GCC | -------* | SSL | ------* | SST | ---+--* | Out |
     // +----+        +------+   |    +-----+         +------+          +-----+          +-----+         +-----+    |    +-----+
