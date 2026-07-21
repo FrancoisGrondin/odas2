@@ -49,6 +49,7 @@ int fifo_pop(fifo_t * obj, char * bytes, const unsigned int num_bytes) {
 		memmove(&(obj->bytes[0]), &(obj->bytes[num_bytes]), (obj->num_bytes-num_bytes) * sizeof(char));
 		memset(&(obj->bytes[obj->num_bytes-num_bytes]), 0x00, num_bytes * sizeof(char));
 		obj->num_bytes -= num_bytes;
+		rtn = 0;
 
 	}
 
