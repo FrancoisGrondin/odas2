@@ -32,7 +32,7 @@ gcc_t * gcc_construct(const unsigned int num_sources, const unsigned int num_cha
 
     uint16_t thread_count = get_thread_count();
 
-    obj->ffts = (fft_t **) malloc(sizeof(fft_t) * thread_count);
+    obj->ffts = (fft_t **) malloc(sizeof(fft_t*) * thread_count);
     for (unsigned int index_thread = 0; index_thread < thread_count; index_thread++) {
         obj->ffts[index_thread] = fft_construct(obj->num_samples * obj->interpolation_factor);
     }
