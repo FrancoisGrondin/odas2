@@ -225,7 +225,10 @@ int wavout_write(wavout_t * obj, const hops_t * hops) {
 
     for (unsigned int index_channel = 0; index_channel < obj->num_channels; index_channel++) {
         for (unsigned int index_shift = 0; index_shift < obj->num_shifts; index_shift++) {
-            obj->buffer[index_shift * obj->num_channels + index_channel] = (short) (hops->samples[index_channel][index_shift] * 32768.0);
+            float sample = hops->samples[index_channel][index_shift];
+            sample = sample < -1.0f ? -1.0f : sample;
+            sample = sample > +1.0f ? +1.0f : sample;
+            obj->buffer[index_shift * obj->num_channels + index_channel] = (short) (sample * 32768.0);
         }
     }
 
