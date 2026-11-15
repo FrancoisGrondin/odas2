@@ -230,8 +230,20 @@ int ssl_process(ssl_t * obj, const tdoas_t * tdoas, doas_t * doas, imgs_t * imgs
 
             for (unsigned int index_pair = 0; index_pair < obj->num_pairs; index_pair++) {
 
-                obj->aoas[index_source][index_pair].degree = (180.0f / PI_F) * acosf((obj->sound_speed/obj->sample_rate) * tdoas->taus[index_source][index_pair].delay / obj->distances[index_pair]);
-                obj->aoas[index_source][index_pair].amplitude = tdoas->taus[index_source][index_pair].amplitude;
+                float arg = (obj->sound_speed/obj->sample_rate) * tdoas->taus[index_source][index_pair].delay / obj->distances[index_pair];
+
+                if ((arg >= -1.0f) && (arg <= +1.0f)) {
+
+                    obj->aoas[index_source][index_pair].degree = (180.0f / PI_F) * acosf(arg);
+                    obj->aoas[index_source][index_pair].amplitude = tdoas->taus[index_source][index_pair].amplitude;
+
+                }
+                else {
+
+                    obj->aoas[index_source][index_pair].degree = 0;
+                    obj->aoas[index_source][index_pair].amplitude = 0;
+
+                }
 
             }
 
