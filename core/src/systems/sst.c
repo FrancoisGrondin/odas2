@@ -53,11 +53,12 @@ unsigned int sst_get_next_tracking_id(sst_t* obj) {
 }
 
 int sst_process(sst_t * obj, const dsf_t * dsf, const doas_t * doas_in, doas_t * doas_out) {
+    
     if (obj->num_directions != doas_in->num_directions) {
         odas2_set_error_number(ODAS2_ERROR_SST_PROCESS_NUM_DIRECTIONS);
         return -1;
     }
-    if (obj->num_tracks < doas_out->num_directions) {
+    if (obj->num_tracks != doas_out->num_directions) {
         odas2_set_error_number(ODAS2_ERROR_SST_PROCESS_NUM_TRACKS);
         return -1;
     }
