@@ -46,6 +46,7 @@ mixer_t * mixer_construct(const char * channels) {
     if (obj->num_channels == 0) {
         odas2_set_error_number(ODAS2_ERROR_MIXER_CONSTRUCT_NUM_CHANNELS);
         free(str);
+        free(obj);
         return NULL; // No channels specified
     }
 
