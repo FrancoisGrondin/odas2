@@ -10,7 +10,7 @@ typedef struct cplx_t {
 
 } cplx_t;
 
-inline cplx_t cplx_cst(const float real, const float imag) {
+static inline cplx_t cplx_cst(const float real, const float imag) {
 
     cplx_t rtn;
 
@@ -22,7 +22,7 @@ inline cplx_t cplx_cst(const float real, const float imag) {
 
 }
 
-inline cplx_t cplx_add(const cplx_t op1, const cplx_t op2) {
+static inline cplx_t cplx_add(const cplx_t op1, const cplx_t op2) {
 
     cplx_t rtn;
 
@@ -34,7 +34,7 @@ inline cplx_t cplx_add(const cplx_t op1, const cplx_t op2) {
 
 }
 
-inline cplx_t cplx_sub(const cplx_t op1, const cplx_t op2) {
+static inline cplx_t cplx_sub(const cplx_t op1, const cplx_t op2) {
 
     cplx_t rtn;
 
@@ -46,7 +46,7 @@ inline cplx_t cplx_sub(const cplx_t op1, const cplx_t op2) {
 
 }
 
-inline cplx_t cplx_mul(const cplx_t op1, const cplx_t op2) {
+static inline cplx_t cplx_mul(const cplx_t op1, const cplx_t op2) {
 
     cplx_t rtn;
 
@@ -58,7 +58,7 @@ inline cplx_t cplx_mul(const cplx_t op1, const cplx_t op2) {
 
 }
 
-inline cplx_t cplx_div(const cplx_t op1, const cplx_t op2) {
+static inline cplx_t cplx_div(const cplx_t op1, const cplx_t op2) {
 
     cplx_t rtn;
 
@@ -72,7 +72,7 @@ inline cplx_t cplx_div(const cplx_t op1, const cplx_t op2) {
 
 }
 
-inline cplx_t cplx_conj(const cplx_t op) {
+static inline cplx_t cplx_conj(const cplx_t op) {
 
     cplx_t rtn;
 
@@ -84,7 +84,7 @@ inline cplx_t cplx_conj(const cplx_t op) {
 
 }
 
-inline cplx_t cplx_unit(const cplx_t op) {
+static inline cplx_t cplx_unit(const cplx_t op) {
 
     cplx_t rtn;
     const float eps = 1e-20f;
@@ -98,7 +98,7 @@ inline cplx_t cplx_unit(const cplx_t op) {
 
 }
 
-inline float cplx_l2(const cplx_t op) {
+static inline float cplx_l2(const cplx_t op) {
 
     float rtn;
 
