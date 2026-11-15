@@ -555,7 +555,11 @@ int test_linalg(void) {
             if (!(fabsf(rtn->utri[index_utri_element] - rtn_utri[index_utri_element]) < eps)) {
                 return -15;
             } 
-        }          
+        }
+
+        smat_destroy(matrix1);
+        smat_destroy(matrix2);
+        smat_destroy(rtn);
 
     }
 
@@ -593,6 +597,10 @@ int test_linalg(void) {
             } 
         }          
 
+        smat_destroy(matrix1);
+        smat_destroy(matrix2);
+        smat_destroy(rtn);
+
     }
 
     {
@@ -627,7 +635,11 @@ int test_linalg(void) {
             if (!(fabsf(rtn->utri[index_utri_element] - rtn_utri[index_utri_element]) < eps)) {
                 return -17;
             } 
-        }               
+        }
+
+        smat_destroy(matrix1);
+        smat_destroy(matrix2);
+        smat_destroy(rtn);               
 
     }
 
@@ -659,7 +671,10 @@ int test_linalg(void) {
             if (!(fabsf(rtn->utri[index_utri_element] - rtn_utri[index_utri_element]) < eps)) {
                 return -18;
             } 
-        }               
+        }            
+
+        smat_destroy(matrix);
+        smat_destroy(rtn);   
 
     }    
 
@@ -680,7 +695,9 @@ int test_linalg(void) {
 
         if (!(fabsf(rtn - rtn_sum) < eps)) {
             return -19;
-        } 
+        }
+
+        smat_destroy(matrix);
 
     }
 
@@ -733,7 +750,11 @@ int test_linalg(void) {
                   (fabsf(rtn->utri[index_utri_element].real - rtn_utri[index_utri_element].real) < eps))) {
                 return -20;
             } 
-        }         
+        }
+
+        hmat_destroy(matrix1);
+        hmat_destroy(matrix2);
+        hmat_destroy(rtn);
 
     }
 
@@ -786,7 +807,11 @@ int test_linalg(void) {
                   (fabsf(rtn->utri[index_utri_element].real - rtn_utri[index_utri_element].real) < eps))) {
                 return -21;
             } 
-        }         
+        }
+
+        hmat_destroy(matrix1);
+        hmat_destroy(matrix2);
+        hmat_destroy(rtn);
 
     }    
 
@@ -831,7 +856,10 @@ int test_linalg(void) {
                   (fabsf(rtn->utri[index_utri_element].real - rtn_utri[index_utri_element].real) < eps))) {
                 return -22;
             } 
-        }         
+        }
+
+        hmat_destroy(matrix);
+        hmat_destroy(rtn);
 
     }
 
@@ -859,6 +887,9 @@ int test_linalg(void) {
                 return -23;
             } 
         }
+
+        smat_destroy(matrix);
+        rmat_destroy(rtn);
 
     }
 
@@ -891,7 +922,10 @@ int test_linalg(void) {
             if (!(fabsf(rtn->utri[index_utri_element] - rtn_utri[index_utri_element]) < eps)) {
                 return -24;
             } 
-        }       
+        }
+
+        rmat_destroy(matrix);
+        smat_destroy(rtn);     
 
     }
 
@@ -926,6 +960,9 @@ int test_linalg(void) {
             } 
         }
 
+        hmat_destroy(matrix);
+        cmat_destroy(rtn);
+
     }
 
     {
@@ -953,7 +990,10 @@ int test_linalg(void) {
             if (!(fabsf(rtn->utri[index_utri_element] - rtn_utri[index_utri_element]) < eps)) {
                 return -26;
             } 
-        }       
+        }
+
+        rmat_destroy(vector);
+        smat_destroy(rtn);    
 
     }
 
@@ -991,7 +1031,10 @@ int test_linalg(void) {
                   (fabsf(rtn->utri[index_utri_element].imag - rtn_utri[index_utri_element].imag) < eps))) {
                 return -27;
             } 
-        }       
+        }
+
+        cmat_destroy(vector);
+        hmat_destroy(rtn);     
 
     }
 
