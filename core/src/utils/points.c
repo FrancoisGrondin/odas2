@@ -72,7 +72,7 @@ static xyz_t * generate_arc(const unsigned int num_points) {
 
     for (unsigned int index_point = 0; index_point < num_points; index_point++) {
 
-        float theta = 2.f * PI_F * ((float) index_point) / ((float) (num_points-1));
+        float theta = PI_F * ((float) index_point) / ((float) (num_points-1));
 
         points[index_point].x = cosf(theta);
         points[index_point].y = sinf(theta);
