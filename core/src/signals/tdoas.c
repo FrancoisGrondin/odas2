@@ -52,15 +52,15 @@ void tdoas_fprintf(const tdoas_t * obj, FILE * fp) {
 
     for (unsigned int index_source = 0; index_source < obj->num_sources; index_source++) {
 
-        printf("[%02u]: ", index_source);
+        fprintf(fp, "[%02u]: ", index_source);
 
         for (unsigned int index_pair = 0; index_pair < obj->num_pairs; index_pair++) {
 
-            printf("(%+1.4f, %+1.4f) ", obj->taus[index_source][index_pair].delay, obj->taus[index_source][index_pair].amplitude);
+            fprintf(fp, "(%+1.4f, %+1.4f) ", obj->taus[index_source][index_pair].delay, obj->taus[index_source][index_pair].amplitude);
 
         }
 
-        printf("\n");
+        fprintf(fp, "\n");
 
     }
 
