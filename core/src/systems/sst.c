@@ -222,6 +222,7 @@ int sst_process(sst_t * obj, const dsf_t * dsf, const doas_t * doas_in, doas_t *
             doas_out->dirs[index_track].type = UNDEFINED;
             doas_out->dirs[index_track].coord = xyz_cst(0.0f, 0.0f, 0.0f);
             doas_out->dirs[index_track].energy = 0.0f;
+            doas_out->dirs[index_track].tracking_id = 0;
         }
 
     }
