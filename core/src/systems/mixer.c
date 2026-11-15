@@ -1,5 +1,6 @@
 #include <systems/mixer.h>
 #include <utils/error.h>
+#include <utils/openmp.h>
 
 #include <stdlib.h>
 #include <string.h>

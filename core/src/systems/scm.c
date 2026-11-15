@@ -1,5 +1,6 @@
 #include <systems/scm.h>
 #include <utils/error.h>
+#include <utils/openmp.h>
 
 #include <math.h>
 #include <stdlib.h>
